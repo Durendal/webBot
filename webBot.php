@@ -114,7 +114,7 @@
 		public function changeHeader($header, $val)
 		{
 			$this->delHeader($header);
-			if(strpos($val, $header))
+			if(stristr($val, $header))
 				$this->addHeader($val);
 			else
 				$this->addHeader($header.": ".$val);
