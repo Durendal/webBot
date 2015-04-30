@@ -84,10 +84,9 @@
 		*/
 		public function checkHeader($header)
 		{
-
 			if(count($this->headers) > 0)
 				foreach($this->headers as $i => $head)
-					if(substr($head, 0, strlen($header)-1) == $header)
+					if(stristr($head, $header))
 						return $i;
 
 			return null;
