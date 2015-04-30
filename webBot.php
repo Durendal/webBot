@@ -29,7 +29,7 @@
 			$this->ch = $this->setProxy($proxy, $type, $credentials);
 			$this->urls = array();
 			$verbose = true;
-			$this->headers = $this->defaultHeaders();
+			$this->defaultHeaders();
 			
 		}
 
@@ -84,9 +84,11 @@
 		*/
 		public function checkHeader($header)
 		{
-			foreach($this->headers as $i => $head)
-				if(substr($head, 0, strlen($header)-1) == $header)
-					return true;
+
+			if(count($this->headers) > 0)
+				foreach($this->headers as $i => $head)
+					if(substr($head, 0, strlen($header)-1) == $header)
+						return true;
 
 			return false;
 		}

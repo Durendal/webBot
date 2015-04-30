@@ -31,9 +31,6 @@
 	// Assign a Proxy to our bot
 	$bot->setProxy("127.0.0.1:9050", "SOCKS");
 
-	// Check the User-Agent
-	print "User-Agent: " . $bot->getAgent() . "\n";
-
 	// View Proxy Settings
 	var_dump($bot->getProxy());
 
