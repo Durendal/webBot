@@ -88,9 +88,9 @@
 			if(count($this->headers) > 0)
 				foreach($this->headers as $i => $head)
 					if(substr($head, 0, strlen($header)-1) == $header)
-						return true;
+						return $i;
 
-			return false;
+			return null;
 		}
 
 		/*
@@ -100,7 +100,7 @@
 		*/
 		public function delHeader($header)
 		{
-			if($this->checkHeader($header))
+			if($i = $this->checkHeader($header))
 			{
 				unset($this->headers[$i]);
 				$this->headers = array_values($this->headers);
@@ -418,7 +418,8 @@
 			if($ref == '')
 				$ref = $url;
 			$this->addHeader("Referer: $ref");
-						
+			if($this->checkHeader("Referer"))
+				$this->delHeader("Referer");
 			curl_setopt($this->ch, CURLOPT_URL, $url);
 			curl_setopt($this->ch, CURLOPT_POST, 0);
 			curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
@@ -448,6 +449,8 @@
 				}
 			if($ref == '')
 				$ref = $purl;
+			if($this->checkHeader("Referer"))
+				$this->delHeader("Referer");
 			$this->addHeader("Referer: $ref");
 						
 			curl_setopt($this->ch, CURLOPT_URL, $purl);
@@ -500,7 +503,6 @@
 
 	        $curl_array = array(); 
 
-	        //foreach($nodes as $i => $url) 
 	        for($i = 0; $i < $this->urlCount(); $i++)
 	        { 
 	        	$url = $this->popURL();
