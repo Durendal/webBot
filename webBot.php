@@ -581,7 +581,6 @@
 		{
 			$this->setupCURL();
 			$this->setProxy($this->proxy, $this->credentials, $this->proxtype);
-			$this->setRandomAgent();
 		}
 
 		/*
