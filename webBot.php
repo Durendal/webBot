@@ -501,8 +501,8 @@
 	        $mh = curl_multi_init();
 
 	        $curl_array = array(); 
-
-	        for($i = 0; $i < $this->urlCount(); $i++)
+	        $counter = $this->urlCount();
+	        for($i = 0; $i < $counter; $i++)
 	        { 
 	        	$url = $this->popURL();
 	        	$curl_array[$i] = $this->setupCURL();
@@ -539,9 +539,9 @@
     		}
     		if ($mrc != CURLM_OK)
       			trigger_error("Curl multi read error $mrc\n", E_USER_WARNING);
-    		$nodes = $this->urls;
+    		
 	        $res = array(); 
-	      
+
 	        foreach($nodes as $i => $url) 
 	        {
 
