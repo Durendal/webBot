@@ -496,7 +496,7 @@
 			if($nodes != null)
 				$this->urls = $nodes;
 			else
-				$nodes = $this->urls;
+				$nodes = array_reverse($this->urls);
 
 	        $mh = curl_multi_init();
 
@@ -666,7 +666,7 @@
 					$cleaned_html = tidy_get_output();  
 				}
 				# Tidy for PHP version 5
-				if(substr(phpversion(), 0, 1) == 5)
+				if(substr(phpversion(), 0, 1) >= 5)
 				{
 					$config = array(
 								   'uppercase-attributes' => true,
