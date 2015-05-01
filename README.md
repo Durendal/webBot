@@ -140,15 +140,15 @@ Example:
 		file_put_contents("$key.html", $page);
 	}
 
-	TODO:
+TODO:
 
-		Adhere to PSR-4 standards - Viviparous
-		add phpDocumentor - Viviparous
-		Add proper SSL Support - Yani
-		tidy_html() will error out on PHP 6, use >= instead of == (fix) - Yani
+	Adhere to PSR-4 standards - Viviparous
+	add phpDocumentor - Viviparous
+	Add proper SSL Support - Yani
+	tidy_html() will error out on PHP 6, use >= instead of == (fix) - Yani
 
-	Contributors
+Contributors
 
-		Durendal - 1GicRCkw8EigtNdFwfTR6cFxM7uA8nNwbd
-		Viviparous
-		Yani
+	Durendal - 1GicRCkw8EigtNdFwfTR6cFxM7uA8nNwbd
+	Viviparous
+	Yani
