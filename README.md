@@ -145,10 +145,8 @@ TODO:
 	Adhere to PSR-4 standards - Viviparous
 	add phpDocumentor - Viviparous
 	Add proper SSL Support - Yani
-	tidy_html() will error out on PHP 6, use >= instead of == (fix) - Yani
 
-Contributors
-
-	Durendal - 1GicRCkw8EigtNdFwfTR6cFxM7uA8nNwbd
+Contributed Suggestions:
+ 
 	Viviparous
 	Yani
