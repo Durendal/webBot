@@ -188,7 +188,7 @@ class webBot
 	 *	@param string $py - The address of the proxy to set
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS)
 	 * 	@param string $creds - The credentials to use for the proxy
-	 *	@param curl $ch - The cURL handler to use, if none is specified then $this->ch is used.
+	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used.
 	 *	@return object
 	 */
 	public function setProxy($py = null, $type = 'HTTP', $creds = null, $ch = null)
