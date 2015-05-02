@@ -26,7 +26,7 @@ namespace Durendal\webBot;
  *			Enhanced SSL Support<br>
  *			Parsing methods for extracting useful data from scraped pages<br>
  *
- *		All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at https://github.com/computermacgyver/phpWebCralwer/blob/master/LIB_parse.php
+ *		All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at http://www.schrenk.com/nostarch/webbots/DSP_download.php
  */
 
 class webBot
