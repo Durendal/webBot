@@ -63,13 +63,13 @@ Example:
 	$bot = new webBot();
 	$subreddit = ($argc > 1) ? $argv[1] : 'talesfromtechsupport';
 	$page = $bot->requestGET("http://www.reddit.com/r/$subreddit/.rss");
-	$posts = $bot->parse_array($page, "<item>", "</item>");
+	$posts = $bot->parseArray($page, "<item>", "</item>");
 	$titles = array();
 	$links = array();
 	for($i = 0; $i < count($posts); $i++)
 	{
-		$titles[$i] = $bot->return_between($posts[$i], "<title>", "</title>", 1);
-		$links[$i] = $bot->return_between($posts[$i], "<link>", "</link>", 1);
+		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
+		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
 		print "Title #$i: ".$titles[$i]."\n";
 		print "Link #$i: ".$links[$i]."\n";
 	}
@@ -87,7 +87,7 @@ Example:
 	$bot = new webBot("127.0.0.1:9050", "SOCKS");
 	$creds = array("username" => "Durendal", "password" => "abc&123", "submit" => "true");
 	$sites = array(array("http://www.google.com"), array("http://www.bing.com"), array("http://www.cnn.com"), array("http://zqktlwi4fecvo6ri.onion"), array("http://www.example.com/login.php", $creds));
-	$results = $bot->curl_multi_request($sites);
+	$results = $bot->curlMultiRequest($sites);
 	
 	foreach($results as $key => $page)
 	{
@@ -113,15 +113,15 @@ Example:
 	// Pop the top URL from the stack and execute a request
 	$page = $bot->requestGET();
 
-	$posts = $bot->parse_array($page, "<item>", "</item>");
+	$posts = $bot->parseArray($page, "<item>", "</item>");
 	$titles = array();
 	$links = array();
 
 	for($i = 0; $i < count($posts); $i++)
 	{
 		$ii = $i+1;
-		$titles[$i] = $bot->return_between($posts[$i], "<title>", "</title>", 1);
-		$links[$i] = $bot->return_between($posts[$i], "<link>", "</link>", 1);
+		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
+		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
 		print "Title #$ii: ".$titles[$i]."\n";
 		print "Link #$ii: ".$links[$i]."\n";
 	}
@@ -130,7 +130,7 @@ Example:
 	print "URL Stack Size: " . $bot->urlCount() . "\n";
 
 	// Empty out the $bot->urls stack
-	$results = $bot->curl_multi_request();
+	$results = $bot->curlMultiRequest();
 	
 	foreach($results as $key => $page)
 	{
@@ -145,8 +145,3 @@ TODO:
 	Adhere to PSR-4 standards - Viviparous
 	add phpDocumentor - Viviparous
 	Add proper SSL Support - Yani
-
-Contributed Suggestions:
- 
-	Viviparous
-	Yani
