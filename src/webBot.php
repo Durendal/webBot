@@ -8,7 +8,6 @@ namespace Durendal\webBot;
  *		handles GET and POST HTTP requests but I may add more to it as time and
  *		interest permits. 
  *
- *		@todo Better SSL Support, Better Documentation, Comply to PSR-4 Standards.
  */
 
 	

@@ -140,8 +140,9 @@ Example:
 		file_put_contents("$key.html", $page);
 	}
 
-TODO:
+Special Thanks to:
 
-	Adhere to PSR-4 standards - Viviparous
-	add phpDocumentor - Viviparous
-	Add proper SSL Support - Yani
+	Viviparous	
+	Yani
+
+For providing suggestions to help make webBot better :)
