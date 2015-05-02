@@ -607,14 +607,16 @@ class webBot
 	 */
 	public function requestHTTP($type = "GET", $url = null, $ref = '', $pdata = null)
 	{
-		if($type == "GET")
-			return $this->requestGET($url, $ref);
-		else if($type == "POST" && $pdata != null)
-			return $this->requestPOST($url, $pdata, $ref);
-		
-		if($this->verbose)
-			print "Invalid Request type submitted.\n";
-		return null;
+		switch($type)
+		{
+			case "GET":
+				return $this->requestGET($url, $ref);
+			case "POST":
+				return $this->requestPOST($url, $pdata, $ref);
+			default:
+				print "Invalid Request type submitted.\n";
+				return null;	
+		}
 	}
 
 	/**
