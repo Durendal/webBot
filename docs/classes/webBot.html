@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-941721150"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1147861664"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-941721150" class="accordion-body collapse in">
+            <div id="namespace-1147861664" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -193,6 +193,7 @@ interest permits.</code></pre>
                                                                     <a href="../classes/webBot.html#method_delHeader" class="">delHeader()</a><br />
                                                                     <a href="../classes/webBot.html#method_changeHeader" class="">changeHeader()</a><br />
                                                                     <a href="../classes/webBot.html#method_getHeaders" class="">getHeaders()</a><br />
+                                                                    <a href="../classes/webBot.html#method_setSSL" class="">setSSL()</a><br />
                                                                     <a href="../classes/webBot.html#method_setProxy" class="">setProxy()</a><br />
                                                                     <a href="../classes/webBot.html#method_getProxy" class="">getProxy()</a><br />
                                                                     <a href="../classes/webBot.html#method_setCookie" class="">setCookie()</a><br />
@@ -780,6 +781,72 @@ or if called without any parameters, it will simply invert its current value.</p
                 
                                     <h4>Returns</h4>
                     array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSSL" name="method_setSSL" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSSL()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSSL(boolean  <span class="argument">$verify = false</span>, integer  <span class="argument">$hostval</span>, string  <span class="argument">$certfile = &#039;&#039;</span>, object  <span class="argument">$ch = null</span>) : object</pre>
+                <p><em>setSSL($verify, $hostval, $certfile, $ch)</em></p>
+                <p>Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to true
+then the following $hostval and $certfile parameters are required, otherwise
+they can be ommitted.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$verify </td>
+                                <td><ul>
+<li>Whether or not to verify SSL Certificates</li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$hostval </td>
+                                <td><ul>
+<li>Set the level of verification required:
+<ul>
+<li>0: Don’t check the common name (CN) attribute</li>
+<li>1: Check that the common name attribute at least exists</li>
+<li>2: Check that the common name exists and that it matches the host name of the server</li>
+</ul></li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$certfile </td>
+                                <td><ul>
+<li>The location of the certificate file you wish to use</li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>object</td>
+                                <td>$ch </td>
+                                <td><ul>
+<li>The cURL handle to use</li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
                                     				
                             </article>
         </div>
@@ -1802,7 +1869,7 @@ POST parameters to be sent.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 1st, 2015 at 20:50.
+                    on May 1st, 2015 at 22:53.
                 </section>
             </section>
         </section>

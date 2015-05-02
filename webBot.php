@@ -175,6 +175,43 @@ class webBot
 	}
 
 	/**
+	 *	setSSL($verify, $hostval, $certfile, $ch)
+	 *		
+	 *		Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to true
+	 *		then the following $hostval and $certfile parameters are required, otherwise
+	 *		they can be ommitted.
+	 *
+	 *	@param bool $verify - Whether or not to verify SSL Certificates
+	 *	@param int $hostval - Set the level of verification required:
+	 *						- 0: Don’t check the common name (CN) attribute
+	 *						- 1: Check that the common name attribute at least exists
+	 *						- 2: Check that the common name exists and that it matches the host name of the server
+	 *	@param string $certfile - The location of the certificate file you wish to use
+	 *	@param object $ch - The cURL handle to use 
+	 *	@return object
+	 */
+
+	public function setSSL($verify = false, $hostval = 0, $certfile = '', $ch = null)
+	{
+		if(!$ch)
+			$ch = $this->ch;
+		
+		if($verify)
+		{
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+			if($hostval >= 0 && $hostval < 3 && $certfile != '')
+			{
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
+				curl_setopt($ch, CURLOPT_CAINFO, $certfile);
+			}
+		}
+		else
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+		return $ch;
+	}
+
+	/**
 	 *	setProxy($py, $type, $creds, $ch)
 	 *
 	 *		will set the proxy using the specified credentials and type,
@@ -188,7 +225,7 @@ class webBot
 	 *	@param string $py - The address of the proxy to set
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS)
 	 * 	@param string $creds - The credentials to use for the proxy
-	 *	@param curl $ch - The cURL handler to use, if none is specified then $this->ch is used.
+	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used.
 	 *	@return object
 	 */
 	public function setProxy($py = null, $type = 'HTTP', $creds = null, $ch = null)
