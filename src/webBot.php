@@ -36,8 +36,8 @@ class webBot
 	private $cookies;		
 	/** @var string $proxy - Address of currently set proxy */
 	private $proxy;		
-	/**	@var string $proxtype - Type of proxy (HTTP or SOCKS) */
-	private $proxtype;		
+	/**	@var string $proxyType - Type of proxy (HTTP or SOCKS) */
+	private $proxyType;		
 	/** @var string $credentials - Credentials to use for proxy */
 	private $credentials;	
 	/** @var array $urls - queue of URLs to process */
@@ -231,7 +231,7 @@ class webBot
 	}
 
 	/**
-	 *	setProxy($py, $type, $creds, $ch)
+	 *	setProxy($proxy, $type, $creds, $ch)
 	 *
 	 *		will set the proxy using the specified credentials and type,
 	 *		by default it assumes an HTTP proxy with no credentials. To 
@@ -241,23 +241,23 @@ class webBot
 	 *		an optional curl handler to use instead of $this->ch, this decoupling
 	 *		allows for the curlMultiRequest() method to use it as well.
 	 *
-	 *	@param string $py - The address of the proxy to set (default: null)
+	 *	@param string $proxy - The address of the proxy to set (default: null)
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
 	 * 	@param string $creds - The credentials to use for the proxy (default: null)
 	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
 	 *	@return object
 	 */
-	public function setProxy($py = null, $type = 'HTTP', $creds = null, $ch = null)
+	public function setProxy($proxy = null, $type = 'HTTP', $creds = null, $ch = null)
 	{
-		$this->proxy = $py;
+		$this->proxy = $proxy;
 		$this->credentials = $creds;
-		$this->proxtype = $type;
+		$this->proxyType = $type;
 		if(!$ch)
 			$ch = $this->ch;
-		if($py)
+		if($proxy)
 		{
 			// Check for SOCKS or HTTP Proxy
-			if(strtoupper($this->proxtype) == 'SOCKS')
+			if(strtoupper($this->proxyType) == 'SOCKS')
 				curl_setopt($ch, CURLOPT_PROXYTYPE, 7);
 			else
 				curl_setopt($this->ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
@@ -265,7 +265,7 @@ class webBot
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
 			curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			if($this->verbose)
-				print "Using {$this->proxtype} Proxy: {$this->proxy} ";
+				print "Using {$this->proxyType} Proxy: {$this->proxy} ";
 			if($this->credentials)
 			{
 				if($this->verbose)
@@ -285,7 +285,7 @@ class webBot
 			curl_setopt($ch, CURLOPT_PROXY, null);
 			curl_setopt($ch, CURLOPT_PROXYUSERPWD, null);
 			$this->proxy = null;
-			$this->proxtype = 'HTTP';
+			$this->proxyType = 'HTTP';
 			$this->credentials = null;
 		}
 
@@ -301,7 +301,7 @@ class webBot
 	 */
 	public function getProxy()
 	{
-		return array('proxy' => $this->proxy, 'credentials' => $this->credentials, 'type' => $this->proxtype);
+		return array('proxy' => $this->proxy, 'credentials' => $this->credentials, 'type' => $this->proxyType);
 	}
 
 	/**
@@ -309,7 +309,7 @@ class webBot
 	 *
 	 *		sets the cookie file to $cookie and rebuilds the curl handler.
 	 *		note that if you already have an instance of the curlHandler 
-	 *		instantiated, you will need to rebuild it via rebuildHandler()
+	 *		instantiated, you will need to rebuild it via rebuildHandle()
 	 *		for this to take effect
 	 *
 	 *	@param string $cookie - The file you want cookies written to
@@ -424,20 +424,20 @@ class webBot
 	}
 
 	/**
-	 *	pushURL($url, $pdata)
+	 *	pushURL($url, $pData)
 	 *
 	 *		Adds a URL to $this->urls stack. If it is a POST request, 
 	 *		also send an array of the POST parameters
 	 *
 	 *	@param string $url - The URL to add to the queue.
-	 * 	@param array $pdata - Array of the POST data (only required for POST requests) (default: null)
+	 * 	@param array $pData - Array of the POST data (only required for POST requests) (default: null)
 	 *	@return void
 	 */
-	public function pushURL($url, $pdata = null)
+	public function pushURL($url, $pData = null)
 	{
 		if($this->verbose)
 			print "Pushing $url onto list\n";
-		array_push($this->urls, array($url, $pdata));
+		array_push($this->urls, array($url, $pData));
 	}
 
 	/**
@@ -555,17 +555,17 @@ class webBot
 
 
 	/**
-	 *	requestPOST($url, $pdata, $ref)
+	 *	requestPOST($url, $pData, $ref)
 	 *
 	 *		makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
-	 *		and the parameters specified in $pdata. If no $ref is specified it will use the $url
+	 *		and the parameters specified in $pData. If no $ref is specified it will use the $url
 	 *
 	 *	@param string $purl - The URL to request (default: null)
-	 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
+	 *	@param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
 	 *	@param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
 	 *	@return string
 	 */
-	public function requestPOST($purl = null, $pdata, $ref='')
+	public function requestPOST($purl = null, $pData, $ref='')
 	{
 		if($purl == null)
 			if($this->urlCount() > 0)
@@ -584,7 +584,7 @@ class webBot
 						
 		curl_setopt($this->ch, CURLOPT_URL, $purl);
 		curl_setopt($this->ch, CURLOPT_POST, 1);
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $pdata);
+		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $pData);
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 		
 		$x = curl_exec($this->ch);
@@ -595,24 +595,24 @@ class webBot
 	}
 
 	/**
-	 *	requestHTTP($type, $url, $ref, $pdata)
+	 *	requestHTTP($type, $url, $ref, $pData)
 	 *
 	 *		simple wrapper method for requestGET and requestPOST
 	 *
 	 *	@param string $type - The type of request to make(GET or POST) (default: 'GET')
 	 *	@param string $url - The URL to request (default: null)
 	 *	@param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
-	 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData() (default: null)
+	 *	@param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData() (default: null)
 	 *	@return string
 	 */
-	public function requestHTTP($type = "GET", $url = null, $ref = '', $pdata = null)
+	public function requestHTTP($type = "GET", $url = null, $ref = '', $pData = null)
 	{
 		switch($type)
 		{
 			case "GET":
 				return $this->requestGET($url, $ref);
 			case "POST":
-				return $this->requestPOST($url, $pdata, $ref);
+				return $this->requestPOST($url, $pData, $ref);
 			default:
 				print "Invalid Request type submitted.\n";
 				return null;	
@@ -632,7 +632,7 @@ class webBot
 	 */
 	function curlMultiRequest($nodes = null)
 	{ 
-		$py = $this->getProxy();
+		$proxy = $this->getProxy();
 			
 		if($nodes != null)
 			$this->urls = $nodes;
@@ -641,28 +641,28 @@ class webBot
 
 		$mh = curl_multi_init();
 
-		$curl_array = array(); 
+		$curlArray = array(); 
 		$counter = $this->urlCount();
 		for($i = 0; $i < $counter; $i++)
 		{ 
 			$url = $this->popURL();
-			$curl_array[$i] = $this->setupCURL();
+			$curlArray[$i] = $this->setupCURL();
 			if($this->checkHeader("Referer"))
 				$this->delHeader("Referer");
 			$this->addHeader("Referer: " . $url[0]);
 				
-			$curl_array[$i] = $this->setProxy($py['proxy'], $py['type'], $py['credentials'], $curl_array[$i]);
+			$curlArray[$i] = $this->setProxy($proxy['proxy'], $proxy['type'], $proxy['credentials'], $curlArray[$i]);
 
-			curl_setopt($curl_array[$i], CURLOPT_URL, $url[0]);
-			curl_setopt($curl_array[$i], CURLOPT_RETURNTRANSFER,1);
-			curl_setopt($curl_array[$i], CURLOPT_HTTPHEADER, $this->headers);
-			curl_setopt($curl_array[$i], CURLOPT_POST, 0);
+			curl_setopt($curlArray[$i], CURLOPT_URL, $url[0]);
+			curl_setopt($curlArray[$i], CURLOPT_RETURNTRANSFER,1);
+			curl_setopt($curlArray[$i], CURLOPT_HTTPHEADER, $this->headers);
+			curl_setopt($curlArray[$i], CURLOPT_POST, 0);
 			if(array_key_exists(1, $url) && $url[1] != null)
 			{
-				curl_setopt($curl_array[$i], CURLOPT_POST, 1);
-				curl_setopt($curl_array[$i], CURLOPT_POSTFIELDS, $this->generatePOSTData($url[1]));
+				curl_setopt($curlArray[$i], CURLOPT_POST, 1);
+				curl_setopt($curlArray[$i], CURLOPT_POSTFIELDS, $this->generatePOSTData($url[1]));
 			} 
-			curl_multi_add_handle($mh, $curl_array[$i]); 
+			curl_multi_add_handle($mh, $curlArray[$i]); 
 			$this->delHeader("Referer");
 		} 
 		$active = null; 
@@ -686,13 +686,13 @@ class webBot
 		foreach($nodes as $i => $url) 
 		{
 
-			$curlError = curl_error($curl_array[$i]);
+			$curlError = curl_error($curlArray[$i]);
   			if($curlError == "")
-				$res[$url[0]] = curl_multi_getcontent($curl_array[$i]); 
+				$res[$url[0]] = curl_multi_getcontent($curlArray[$i]); 
 			else
 				if($this->verbose)
 					print "Curl error on handle $url: $curlError\n";
-			curl_multi_remove_handle($mh, $curl_array[$i]); 
+			curl_multi_remove_handle($mh, $curlArray[$i]); 
 		}
 			
 		curl_multi_close($mh);		
@@ -719,16 +719,16 @@ class webBot
 	}
 
 	/**
-	 *	rebuildHandler()
+	 *	rebuildHandle()
 	 *	
 	 *		rebuilds the cURL Handler for the next request
 	 *
 	 *	@return void
 	 */
-	public function rebuildHandler()
+	public function rebuildHandle()
 	{
 		$this->setupCURL();
-		$this->setProxy($this->proxy, $this->credentials, $this->proxtype);
+		$this->setProxy($this->proxy, $this->credentials, $this->proxyType);
 	}
 
 	// Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/
@@ -792,19 +792,19 @@ class webBot
 	}
 
 	/**
-	 *	parseArray($string, $beg_tag, $close_tag)
+	 *	parseArray($string, $begTag, $closeTag)
 	 *
 	 *		Returns an array of strings that exists repeatedly in $string. This function is usful for returning an array that contains links, images, tables or any other data that appears more than once.		
 	 *
 	 *	@param string $string - String that contains the tags
-	 *	@param string $beg_tag - Name of the open tag (i.e. "<a>")
-	 *	@param string $close_tag - Name of the closing tag (i.e. "</title>")
+	 *	@param string $begTag - Name of the open tag (i.e. "<a>")
+	 *	@param string $closeTag - Name of the closing tag (i.e. "</title>")
 	 *	@return array
 	 */
-	public function parseArray($string, $beg_tag, $close_tag)
+	public function parseArray($string, $begTag, $closeTag)
 	{
-		preg_match_all("($beg_tag(.*)$close_tag)siU", $string, $matching_data);
-		return $matching_data[0];
+		preg_match_all("($begTag(.*)$closeTag)siU", $string, $matchingData);
+		return $matchingData[0];
 	}
 
 	/**
@@ -819,45 +819,45 @@ class webBot
 	public function getAttribute($tag, $attribute)
 	{
 		// Use Tidy library to 'clean' input
-		$cleaned_html = $this->tidyHTML($tag);
+		$cleanedHTML = $this->tidyHTML($tag);
 		// Remove all line feeds from the string
-		$cleaned_html = str_replace(array("\r\n", "\n", "\r"), "", $cleaned_html);
+		$cleanedHTML = str_replace(array("\r\n", "\n", "\r"), "", $cleanedHTML);
 		
 		// Use return_between() to find the properly quoted value for the attribute
-		return $this->return_between($cleaned_html, strtoupper($attribute)."=\"", "\"", true);
+		return $this->return_between($cleanedHTML, strtoupper($attribute)."=\"", "\"", true);
 	}
 
 	/**
-	 *	remove($string, $open_tag, $close_tag)
+	 *	remove($string, $openTag, $closeTag)
 	 *
-	 *		Removes all text between $open_tag and $close_tag
+	 *		Removes all text between $openTag and $closeTag
 	 *
 	 *	@param string $string - The target of your parse
-	 *	@param string $open_tag - The starting delimitor
-	 *	@param string $close_tag - The ending delimitor
+	 *	@param string $openTag - The starting delimitor
+	 *	@param string $closeTag - The ending delimitor
 	 *	@return string
 	 */
-	public function remove($string, $open_tag, $close_tag)
+	public function remove($string, $openTag, $closeTag)
 	{
 		# Get array of things that should be removed from the input string
-		$remove_array = $this->parseArray($string, $open_tag, $close_tag);
+		$removeArray = $this->parseArray($string, $openTag, $closeTag);
 			
 		# Remove each occurrence of each array element from string;
-		for($xx=0; $xx<count($remove_array); $xx++)
-			$string = str_replace($remove_array, "", $string);
+		for($xx=0; $xx<count($removeArray); $xx++)
+			$string = str_replace($removeArray, "", $string);
 			
 		return $string;
 	}
 
 	/**
-	 *	tidyHTML($input_string)
+	 *	tidyHTML($inputString)
 	 *	
 	 *		Returns a "Cleans-up" (parsable) version raw HTML
 	 *
-	 *	@param string $input_string - raw HTML
+	 *	@param string $inputString - raw HTML
 	 *	@return string
 	 */
-	public function tidyHTML($input_string)
+	public function tidyHTML($inputString)
 	{
 		// Detect if Tidy is in configured
 		if( function_exists('tidy_get_release') )
@@ -867,8 +867,8 @@ class webBot
 			{
 				tidy_setopt('uppercase-attributes', TRUE);
 				tidy_setopt('wrap', 800);
-				tidy_parse_string($input_string);			
-				$cleaned_html = tidy_get_output();  
+				tidy_parse_string($inputString);			
+				$cleanedHTML = tidy_get_output();  
 			}
 			# Tidy for PHP version 5
 			if(substr(phpversion(), 0, 1) >= 5)
@@ -877,17 +877,17 @@ class webBot
 							   'uppercase-attributes' => true,
 							   'wrap'				 => 800);
 				$tidy = new tidy;
-				$tidy->parseString($input_string, $config, 'utf8');
+				$tidy->parseString($inputString, $config, 'utf8');
 				$tidy->cleanRepair();
-				$cleaned_html  = tidy_get_output($tidy);  
+				$cleanedHTML  = tidy_get_output($tidy);  
 			}
 		}
 		else
 		{
 			# Tidy not configured for this computer
-			$cleaned_html = $input_string;
+			$cleanedHTML = $inputString;
 		}
-		return $cleaned_html;
+		return $cleanedHTML;
 	}
 
 	/**
