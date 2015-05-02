@@ -235,11 +235,11 @@ class webBot
 	 *
 	 *		will set the proxy using the specified credentials and type,
 	 *		by default it assumes an HTTP proxy with no credentials. To 
-	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the third 
+	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the second 
 	 *		parameter. If no parameters are sent, it will remove any proxy
 	 *		settings and begin routing in the clear. The fourth parameter is
 	 *		an optional curl handler to use instead of $this->ch, this decoupling
-	 *		allows for the curl_multi_request() method to use it as well.
+	 *		allows for the curlMultiRequest() method to use it as well.
 	 *
 	 *	@param string $py - The address of the proxy to set (default: null)
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
