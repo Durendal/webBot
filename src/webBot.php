@@ -408,8 +408,8 @@ class webBot
 	 *		Adds a URL to $this->urls stack. If it is a POST request, 
 	 *		also send an array of the POST parameters
 	 *
-	 *	@param string $url - The URL to add to the queue
-	 * 	@param array $pdata - Array of the POST data(only required for POST requests)
+	 *	@param string $url - The URL to add to the queue.
+	 * 	@param array $pdata - Array of the POST data (only required for POST requests)
 	 *	@return void
 	 */
 	public function pushURL($url, $pdata = null)
