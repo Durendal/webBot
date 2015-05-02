@@ -54,10 +54,10 @@ class webBot
 	 *
 	 *		Will Create an instance of webBot, initializes the cookie file, any proxy settings, as well as generating a default set of headers
 	 *
-	 *	@param string $proxy - A string containing the proxy address
-	 *	@param string $type - The type of Proxy to use(HTTP or SOCKS)
-	 *	@param string $credentials - The Credentials to use for the proxy
-	 *	@param string $cookies - The file to store cookies for the bot
+	 *	@param string $proxy - A string containing the proxy address (default: null)
+	 *	@param string $type - The type of Proxy to use(HTTP or SOCKS) (default: 'HTTP')
+	 *	@param string $credentials - The Credentials to use for the proxy (default: null)
+	 *	@param string $cookies - The file to store cookies for the bot (default: 'cookies.txt')
 	 *	@return void
 	 */			
 
@@ -79,7 +79,7 @@ class webBot
 	 *		turns on and off class verbosity. It can take a boolean value directly
 	 *		or if called without any parameters, it will simply invert its current value.
 	 *
-	 *	@param bool $mode - Sets verbosity mode
+	 *	@param bool $mode - Sets verbosity mode (default: null)
 	 *	@return void
 	 */
 
@@ -128,7 +128,9 @@ class webBot
 	/**
 	 *	checkHeader($header)
 	 *
-	 *		checks if $header already exists in the headers array.
+	 *		checks if $header already exists in the headers array. 
+	 *		If it finds the header it returns its index in the array, 
+	 *		otherwise it returns null.
 	 *
 	 *	@param string $header - Contains the Header to check
 	 *	@return int
@@ -176,7 +178,7 @@ class webBot
 		if(stristr($val, $header))
 			$this->addHeader($val);
 		else
-			$this->addHeader($header.": ".$val);
+			$this->addHeader("$header: $val");
 	}
 
 	/**
@@ -198,13 +200,13 @@ class webBot
 	 *		then the following $hostval and $certfile parameters are required, otherwise
 	 *		they can be ommitted.
 	 *
-	 *	@param bool $verify - Whether or not to verify SSL Certificates
-	 *	@param int $hostval - Set the level of verification required:
+	 *	@param bool $verify - Whether or not to verify SSL Certificates (default: false)
+	 *	@param int $hostval - Set the level of verification required: (default: 0)
 	 *						- 0: Don’t check the common name (CN) attribute
 	 *						- 1: Check that the common name attribute at least exists
 	 *						- 2: Check that the common name exists and that it matches the host name of the server
-	 *	@param string $certfile - The location of the certificate file you wish to use
-	 *	@param object $ch - The cURL handle to use 
+	 *	@param string $certfile - The location of the certificate file you wish to use (default: '')
+	 *	@param object $ch - The cURL handle to use (default: $this->ch)
 	 *	@return object
 	 */
 
@@ -239,10 +241,10 @@ class webBot
 	 *		an optional curl handler to use instead of $this->ch, this decoupling
 	 *		allows for the curl_multi_request() method to use it as well.
 	 *
-	 *	@param string $py - The address of the proxy to set
-	 * 	@param string $type - The type of the proxy(HTTP or SOCKS)
-	 * 	@param string $creds - The credentials to use for the proxy
-	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used.
+	 *	@param string $py - The address of the proxy to set (default: null)
+	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
+	 * 	@param string $creds - The credentials to use for the proxy (default: null)
+	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
 	 *	@return object
 	 */
 	public function setProxy($py = null, $type = 'HTTP', $creds = null, $ch = null)
@@ -428,7 +430,7 @@ class webBot
 	 *		also send an array of the POST parameters
 	 *
 	 *	@param string $url - The URL to add to the queue.
-	 * 	@param array $pdata - Array of the POST data (only required for POST requests)
+	 * 	@param array $pdata - Array of the POST data (only required for POST requests) (default: null)
 	 *	@return void
 	 */
 	public function pushURL($url, $pdata = null)
@@ -517,8 +519,8 @@ class webBot
 	 *		makes a GET based HTTP Request to the url specified in $url using the referer specified in $ref
 	 *		if no $ref is specified it will use the $url
 	 *
-	 *	@param string $url - The URL to request
-	 *	@param string $ref - The Referer to use for the request(default is to set the $url value)
+	 *	@param string $url - The URL to request (default: null)
+	 *	@param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
 	 *	@return string
 	 */
 
@@ -558,9 +560,9 @@ class webBot
 	 *		makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
 	 *		and the parameters specified in $pdata. If no $ref is specified it will use the $url
 	 *
-	 *	@param string $purl - The URL to request
+	 *	@param string $purl - The URL to request (default: null)
 	 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
-	 *	@param string $ref - The Referer to use for the request(default is to set the $url value)
+	 *	@param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
 	 *	@return string
 	 */
 	public function requestPOST($purl = null, $pdata, $ref='')
@@ -597,10 +599,10 @@ class webBot
 	 *
 	 *		simple wrapper method for requestGET and requestPOST
 	 *
-	 *	@param string $type - The type of request to make(GET or POST)
-	 *	@param string $url - The URL to request
-	 *	@param string $ref - The Referer to use for the request(default is to set the $url value)
-	 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
+	 *	@param string $type - The type of request to make(GET or POST) (default: 'GET')
+	 *	@param string $url - The URL to request (default: null)
+	 *	@param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
+	 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData() (default: null)
 	 *	@return string
 	 */
 	public function requestHTTP($type = "GET", $url = null, $ref = '', $pdata = null)
@@ -623,7 +625,7 @@ class webBot
 	 *		the subarray should have a second element which is yet another array containing
 	 *		POST parameters to be sent.
 	 *
-	 *	@param array $nodes - Contains an array of arrays, each subarray contains at least one URL and an optional set of POST parameters to send
+	 *	@param array $nodes - Contains an array of arrays, each subarray contains at least one URL and an optional set of POST parameters to send (default: $this->urls)
 	 *	@return array
 	 */
 	function curlMultiRequest($nodes = null)
