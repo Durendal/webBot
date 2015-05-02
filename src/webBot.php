@@ -170,7 +170,7 @@ class webBot
 	 *		deletes $header if it exists, then adds $val as a header. $val can contain the header type and value, or just the value.
 	 *
 	 *	@param string $header - Contains the Header to change
-	 *  @param string $val - The value to change the header to
+	 *	@param string $val - The value to change the header to
 	 *	@return void		 
 	 */
 	public function changeHeader($header, $val)
@@ -677,7 +677,7 @@ class webBot
 		{
 			do 
 			{
-		   		$mrc = curl_multi_exec($mh, $active);
+				$mrc = curl_multi_exec($mh, $active);
 			} while ($mrc == CURLM_CALL_MULTI_PERFORM);
 
 		}
@@ -876,8 +876,8 @@ class webBot
 			if(substr(phpversion(), 0, 1) >= 5)
 			{
 				$config = array(
-							   'uppercase-attributes' => true,
-							   'wrap'				 => 800);
+								'uppercase-attributes' => true,
+								'wrap'				 => 800);
 				$tidy = new tidy;
 				$tidy->parseString($inputString, $config, 'utf8');
 				$tidy->cleanRepair();
