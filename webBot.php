@@ -29,7 +29,7 @@ class webBot
 	private $verbose;		
 	/** @var array $headers - Array of headers to use for requests */
 	private $headers;		
-	/** @var curl $ch - cURL Handle */
+	/** @var object $ch - cURL Handle */
 	private $ch;			
 		
 	/**
@@ -188,8 +188,8 @@ class webBot
 	 *	@param string $py - The address of the proxy to set
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS)
 	 * 	@param string $creds - The credentials to use for the proxy
-	 *	@param curl handler $ch - The cURL handler to use, if none is specified then $this->ch is used.
-	 *	@return curl
+	 *	@param curl $ch - The cURL handler to use, if none is specified then $this->ch is used.
+	 *	@return object
 	 */
 	public function setProxy($py = null, $type = 'HTTP', $creds = null, $ch = null)
 	{
@@ -441,7 +441,7 @@ class webBot
 	 *	
 	 *		Creates and returns a new generic cURL handle
 	 *
-	 *	@return curl
+	 *	@return object
 	 */
 	private function setupCURL()
 	{

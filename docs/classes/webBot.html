@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-2012582931"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1825826369"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-2012582931" class="accordion-body collapse in">
+            <div id="namespace-1825826369" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -468,12 +468,12 @@ interest permits.</code></pre>
             <a id="property_ch" name="property_ch" class="anchor"></a>
             <article class="property">
                 <h3 class="private ">$ch</h3>
-                <pre class="signature">$ch : \curl</pre>
+                <pre class="signature">$ch : object</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                \curl
+                object
                 &mdash; - cURL Handle                            </article>
         </div>
         <aside class="span4 detailsbar">
@@ -800,7 +800,7 @@ or if called without any parameters, it will simply invert its current value.</p
             <article class="method">
                 <h3 class="public ">setProxy()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$py = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>,   <span class="argument">$ch = null</span>) : \curl</pre>
+                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$py = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>, \curl  <span class="argument">$ch = null</span>) : object</pre>
                 <p><em>setProxy($py, $type, $creds, $ch)</em></p>
                 <p>will set the proxy using the specified credentials and type,
 by default it assumes an HTTP proxy with no credentials. To
@@ -832,15 +832,17 @@ allows for the curl_multi_request() method to use it as well.</p>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>\curl</td>
                                 <td>$ch </td>
-                                <td></td>
+                                <td><ul>
+<li>The cURL handler to use, if none is specified then $this-&gt;ch is used.</li>
+</ul></td>
                             </tr>
                                             </table>
                 
                 
                                     <h4>Returns</h4>
-                    \curl
+                    object
                                     				
                             </article>
         </div>
@@ -1729,14 +1731,14 @@ POST parameters to be sent.</p>
             <article class="method">
                 <h3 class="private ">setupCURL()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setupCURL() : \curl</pre>
+                <pre class="signature" style="margin-right: 54px;">setupCURL() : object</pre>
                 <p><em>setupCURL()</em></p>
                 <p>Creates and returns a new generic cURL handle</p>
 
                 
                 
                                     <h4>Returns</h4>
-                    \curl
+                    object
                                     				
                             </article>
         </div>
@@ -1800,7 +1802,7 @@ POST parameters to be sent.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 1st, 2015 at 20:25.
+                    on May 1st, 2015 at 20:33.
                 </section>
             </section>
         </section>
