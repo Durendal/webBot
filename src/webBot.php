@@ -10,8 +10,6 @@ namespace Durendal\webBot;
  *
  */
 
-	
-
 class webBot
 {
 
