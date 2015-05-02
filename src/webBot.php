@@ -1,4 +1,5 @@
 <?php
+namespace Durendal\webBot;
 /**
  *		File: webBot.php
  *		@author: Durendal
