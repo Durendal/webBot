@@ -15,25 +15,22 @@
 	class webBot
 	{
 
-		/**
-	 	 *	@var string $cookies - Location of cookie file
-	 	 *	@var curl $ch - cURL Handle
-	 	 *	@var string $proxy - Address of currently set proxy
-	 	 *	@var string $proxtype - Type of proxy (HTTP or SOCKS)
-	 	 *	@var string $credentials - Credentials to use for proxy
-	 	 *	@var array $urls - queue of URLs to process
-	 	 *	@var bool $verbose - verbose output from class
-	 	 *	@var array $headers - Array of headers to use for requests
-	 	 */
-
+		/** @var string $cookies - Location of cookie file */
 		private $cookies;		
-		private $ch;			
-		private $proxy;			
+		/** @var string $proxy - Address of currently set proxy */
+		private $proxy;		
+		/**	@var string $proxtype - Type of proxy (HTTP or SOCKS) */
 		private $proxtype;		
+		/** @var string $credentials - Credentials to use for proxy */
 		private $credentials;	
+		/** @var array $urls - queue of URLs to process */
 		private $urls;			
+		/** @var bool $verbose - verbose output from class */
 		private $verbose;		
+		/** @var array $headers - Array of headers to use for requests */
 		private $headers;		
+		/** @var curl $ch - cURL Handle */
+		private $ch;			
 		
 		/**
 		 *	__construct($proxy, $type, $credentials, $cookies)
@@ -146,6 +143,7 @@
 			}
 			
 		}
+
 		/**
 		 *	changeHeader($header, $val)
 		 *
@@ -510,7 +508,7 @@
 		 *		makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
 		 *		and the parameters specified in $pdata. If no $ref is specified it will use the $url
 		 *
-		 *	@param string $url - The URL to request
+		 *	@param string $purl - The URL to request
 		 *	@param string $pdata - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
 		 *	@param string $ref - The Referer to use for the request(default is to set the $url value)
 		 *	@return string
@@ -569,7 +567,7 @@
 		}
 
 		/**
-		 *	curl_multi_request($nodes)
+		 *	curlMultiRequest($nodes)
 		 *
 		 *		Accepts an array of URLs to scrape, each element in the array is a sub-array.
 		 *		For GET requests the sub-array needs only one element, the URL. For POST requests
@@ -579,7 +577,7 @@
 		 *	@param array $nodes - Contains an array of arrays, each subarray contains at least one URL and an optional set of POST parameters to send
 		 *	@return array
 		 */
-		function curl_multi_request($nodes = null)
+		function curlMultiRequest($nodes = null)
 		{ 
 			$py = $this->getProxy();
 			
@@ -687,7 +685,21 @@
 		 *	Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/
 		 */
 
-		public function split_string($string, $delineator, $desired, $type)
+		/**
+		 *	splitString($string, $delineator, $desired, $type)
+		 *
+		 *		Returns the portion of a string either before or after a delineator. The returned string may or may not include the delineator.
+		 *
+		 *	@param string $string - Input string to parse
+		 *	@param string $delineator - Delineation point (place where split occurs)
+		 *	@param bool $desired - true: include portion before delineator
+		 *						 - false: include portion after delineator
+		 *	@param bool $type - true: include delineator in parsed string
+		 *					  - false: exclude delineator in parsed string
+		 *	@return string
+		 */
+
+		public function splitString($string, $delineator, $desired, $type)
 		{
 			// Case insensitive parse, convert string and delineator to lower case
 			$lc_str = strtolower($string);
@@ -714,34 +726,77 @@
 			}
 			return $parsed_string;
 		}
+		/**
+		 *	returnBetween($string, $start, $stop, $type)
+		 *
+		 *		Returns a substring of $string delineated by $start and $end The parse is not case sensitive, but the case of the parsed string is not effected.     
+		 *	
+		 *	@param string $string - Input string to parse
+		 *	@param string $start - Defines the beginning of the substring
+		 *	@param string $stop - Defines the end of the substring
+		 *	@param bool $type - true: exclude delineators in parsed string
+		 *					  - false: include delineators in parsed string
+		 *	@return string
+		 */
 
-		public function return_between($string, $start, $stop, $type)
+		public function returnBetween($string, $start, $stop, $type)
 		{
-			$temp = $this->split_string($string, $start, false, $type);
-			return $this->split_string($temp, $stop, true, $type);
+			$temp = $this->splitString($string, $start, false, $type);
+			return $this->splitString($temp, $stop, true, $type);
 		}
 
-		public function parse_array($string, $beg_tag, $close_tag)
+		/**
+		 *	parseArray($string, $beg_tag, $close_tag)
+		 *
+		 *		Returns an array of strings that exists repeatedly in $string. This function is usful for returning an array that contains links, images, tables or any other data that appears more than once.        
+		 *
+		 *	@param string $string - String that contains the tags
+		 *	@param string $beg_tag - Name of the open tag (i.e. "<a>")
+		 *	@param string $close_tag - Name of the closing tag (i.e. "</title>")
+		 *	@return array
+		 */
+
+		public function parseArray($string, $beg_tag, $close_tag)
 		{
 			preg_match_all("($beg_tag(.*)$close_tag)siU", $string, $matching_data);
 			return $matching_data[0];
 		}
 
-		public function get_attribute($tag, $attribute)
+		/**
+		 *	getAttribute($tag, $attribute)
+		 *	
+		 *		Returns the value of an attribute in a given tag.
+		 *
+		 *	@param string $tag - The tag that contains the attribute
+		 *	@param string $attribute - The attribute, whose value you seek
+		 *	@return string
+		 */
+
+		public function getAttribute($tag, $attribute)
 		{
 			// Use Tidy library to 'clean' input
-			$cleaned_html = tidy_html($tag);
+			$cleaned_html = $this->tidyHTML($tag);
 			// Remove all line feeds from the string
 			$cleaned_html = str_replace(array("\r\n", "\n", "\r"), "", $cleaned_html);
 			
 			// Use return_between() to find the properly quoted value for the attribute
-			return return_between($cleaned_html, strtoupper($attribute)."=\"", "\"", true);
+			return $this->return_between($cleaned_html, strtoupper($attribute)."=\"", "\"", true);
 		}
 
+		/**
+		 *	remove($string, $open_tag, $close_tag)
+		 *
+		 *		Removes all text between $open_tag and $close_tag
+		 *
+		 *	@param string $string - The target of your parse
+		 *	@param string $open_tag - The starting delimitor
+		 *	@param string $close_tag - The ending delimitor
+		 *	@return string
+		 */
 		public function remove($string, $open_tag, $close_tag)
 		{
 			# Get array of things that should be removed from the input string
-			$remove_array = parse_array($string, $open_tag, $close_tag);
+			$remove_array = $this->parseArray($string, $open_tag, $close_tag);
 			
 			# Remove each occurrence of each array element from string;
 			for($xx=0; $xx<count($remove_array); $xx++)
@@ -749,7 +804,16 @@
 			
 			return $string;
 		}
-		public function tidy_html($input_string)
+
+		/**
+		 *	tidyHTML($input_string)
+		 *	
+		 *		Returns a "Cleans-up" (parsable) version raw HTML
+		 *
+		 *	@param string $input_string - raw HTML
+		 *	@return string
+		 */
+		public function tidyHTML($input_string)
 		{
 			// Detect if Tidy is in configured
 			if( function_exists('tidy_get_release') )
@@ -782,6 +846,14 @@
 			return $cleaned_html;
 		}
 
+		/**
+		 *	validateURL($url)
+		 *
+		 *		Uses regular expressions to check for the validity of a URL
+		 *
+		 *	@param string $url - The URL to validated
+		 *	@return int
+		 */
 		public function validateURL($url)
 		{	
 			$pattern = '/^(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w]'
