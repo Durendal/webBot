@@ -4,7 +4,7 @@
 
 	// Vanilla instantiation, no proxy
 	$bot = new webBot();
-
+	
 	$bot->setVerbose();
 	$subreddit = ($argc > 1) ? $argv[1] : 'talesfromtechsupport';
 
@@ -12,7 +12,7 @@
 	$page = $bot->requestGET("http://www.reddit.com/r/$subreddit/.rss");
 
 	// Create an array by extracting the text between <item> and </item> elements inclusively
-	$posts = $bot->parse_array($page, "<item>", "</item>");
+	$posts = $bot->parseArray($page, "<item>", "</item>");
 	$titles = array();
 	$links = array();
 
@@ -21,8 +21,8 @@
 		$ii = $i+1;
 
 		// Remove the <title> and </title> tags, ensure the last parameter is 1 or they will remain.
-		$titles[$i] = $bot->return_between($posts[$i], "<title>", "</title>", 1);
-		$links[$i] = $bot->return_between($posts[$i], "<link>", "</link>", 1);
+		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
+		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
 		print "Title #$ii: ".$titles[$i]."\n";
 		print "Link #$ii: ".$links[$i]."\n";
 	}
@@ -42,7 +42,7 @@
 
 	// Lets try scraping multiple pages at once!
 	$sites = array(array("http://www.google.com"), array("http://www.bing.com"), array("http://www.cnn.com"), array("http://zqktlwi4fecvo6ri.onion"));
-	$results = $bot->curl_multi_request($sites);
+	$results = $bot->curlMultiRequest($sites);
 	
 	foreach($results as $key => $page)
 	{
@@ -66,15 +66,15 @@
 	$page = $bot->requestGET();
 
 	// Same subreddit parser as above:
-	$posts = $bot->parse_array($page, "<item>", "</item>");
+	$posts = $bot->parseArray($page, "<item>", "</item>");
 	$titles = array();
 	$links = array();
 
 	for($i = 0; $i < count($posts); $i++)
 	{
 		$ii = $i+1;
-		$titles[$i] = $bot->return_between($posts[$i], "<title>", "</title>", 1);
-		$links[$i] = $bot->return_between($posts[$i], "<link>", "</link>", 1);
+		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
+		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
 		print "Title #$ii: ".$titles[$i]."\n";
 		print "Link #$ii: ".$links[$i]."\n";
 	}
@@ -83,7 +83,7 @@
 	print "URL Stack Size: " . $bot->urlCount() . "\n";
 
 	// Empty out the $bot->urls stack
-	$results = $bot->curl_multi_request();
+	$results = $bot->curlMultiRequest();
 	
 	foreach($results as $key => $page)
 	{
