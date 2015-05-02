@@ -555,7 +555,7 @@ class webBot
 
 
 	/**
-	 *	requestGET($url, $pdata, $ref)
+	 *	requestPOST($url, $pdata, $ref)
 	 *
 	 *		makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
 	 *		and the parameters specified in $pdata. If no $ref is specified it will use the $url
