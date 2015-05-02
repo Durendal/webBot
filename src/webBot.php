@@ -120,7 +120,7 @@ class webBot
 		{
 			if($this->verbose)
 				print "This header is already set. Try deleting it then resetting it.\n";
-			return false;
+			return;
 		}
 		$this->headers[] = $header;
 	}
@@ -155,7 +155,8 @@ class webBot
 	 */
 	public function delHeader($header)
 	{
-		if($i = $this->checkHeader($header))
+		// Ensure that $i is a valid index(which includes 0, if we only tested $i = ..., it would errenously return false)
+		if(($i = $this->checkHeader($header)) >= 0)
 		{
 			unset($this->headers[$i]);
 			$this->headers = array_values($this->headers);
@@ -444,7 +445,8 @@ class webBot
 	 *	popURL()
 	 *
 	 *		returns the top URL from the $this->urls stack or null
-	 *		on error. Removes that item from the array.
+	 *		on error. Removes that item from the array. Returns null
+	 *		if the list is empty.
 	 *
 	 *	@return string
 	 */
@@ -597,7 +599,7 @@ class webBot
 	/**
 	 *	requestHTTP($type, $url, $ref, $pData)
 	 *
-	 *		simple wrapper method for requestGET and requestPOST
+	 *		simple wrapper method for requestGET and requestPOST. Returns null on error
 	 *
 	 *	@param string $type - The type of request to make(GET or POST) (default: 'GET')
 	 *	@param string $url - The URL to request (default: null)
