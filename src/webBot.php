@@ -1,13 +1,32 @@
 <?php
-namespace Durendal\webBot;
 /**
- *		File: webBot.php
- *		@author: Durendal
+ *		webBot.php - A simple interface to cURL with PHP
  *
  *		webBot.php aims to simplify the use of cURL with php. At the moment it only
  *		handles GET and POST HTTP requests but I may add more to it as time and
  *		interest permits. 
  *
+ *		@author Durendal
+ *		@package webBot
+ *		@license GPL
+ *		@link https://github.com/Durendal/webBot
+ */
+
+namespace Durendal\webBot;
+
+/**
+ *		webBot is a class for interacting with cURL through PHP. It should significantly simplify the process
+ *		providing several functions to manipulate the curl_setopt() function in various ways.
+ *		
+ * 		Some of the main features:<br>
+ *			Optional stack based URL queue<br>
+ *			curl_multi_* integration<br>
+ *			Proxy support for HTTP and SOCKS proxies<br>
+ *			Complete header customization<br>
+ *			Enhanced SSL Support<br>
+ *			Parsing methods for extracting useful data from scraped pages<br>
+ *
+ *		All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at https://github.com/computermacgyver/phpWebCralwer/blob/master/LIB_parse.php
  */
 
 class webBot
@@ -708,10 +727,8 @@ class webBot
 		$this->setProxy($this->proxy, $this->credentials, $this->proxtype);
 	}
 
-	/**
-	 *	Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/
-	 */
-
+	// Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/
+	
 	/**
 	 *	splitString($string, $delineator, $desired, $type)
 	 *
