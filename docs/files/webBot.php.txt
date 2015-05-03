@@ -1,8 +1,8 @@
 <?php
 /**
- *        webBot.php - A simple interface to cURL with PHP
+ *        HTTPBot.php - A simple interface to cURL with PHP
  *
- *        webBot.php aims to simplify the use of cURL with php. At the moment it only
+ *        HTTPBot.php aims to simplify the use of cURL with php. At the moment it only
  *        handles GET and POST HTTP requests but I may add more to it as time and
  *        interest permits. 
  *
@@ -14,7 +14,7 @@
 namespace Durendal\webBot;
 
 /**
- *        webBot is a class for interacting with cURL through PHP. It should significantly simplify the process
+ *        HTTPBot is a class for interacting with cURL through PHP. It should significantly simplify the process
  *        providing several functions to manipulate the curl_setopt() function in various ways.
  *        
  *         Some of the main features:<br>
@@ -28,7 +28,7 @@ namespace Durendal\webBot;
  *        All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at http://www.schrenk.com/nostarch/webbots/DSP_download.php
  */
 
-class webBot
+class HTTPBot
 {
 
     /** @var string $cookies - Location of cookie file */
