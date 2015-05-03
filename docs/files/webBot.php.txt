@@ -431,7 +431,7 @@ class webBot
 	 *		also send an array of the POST parameters
 	 *
 	 *	@param string $url - The URL to add to the queue.
-	 * 	@param array $pData - Array of the POST data (only required for POST requests) (default: null)
+	  	@param array $pData - Array of the POST data (only required for POST requests) (default: null)
 	 *	@return void
 	 */
 	public function pushURL($url, $pData = null)
