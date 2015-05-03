@@ -244,8 +244,8 @@ class webBot
 	 *
 	 *	@param string $proxy - The address of the proxy to set (default: null)
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
-	 * 	@param string $creds - The credentials to use for the proxy (default: null)
-	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
+	  	@param string $creds - The credentials to use for the proxy (default: null)
+	 	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
 	 *	@return object
 	 */
 	public function setProxy($proxy = null, $type = 'HTTP', $creds = null, $ch = null)

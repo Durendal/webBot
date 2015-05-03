@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1093693503"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-243449331"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1093693503" class="accordion-body collapse in">
+            <div id="namespace-243449331" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-598090653"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1283488915"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-598090653" class="accordion-body collapse ">
+            <div id="namespace-1283488915" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1340566110"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1272357617"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-1340566110" class="accordion-body collapse ">
+            <div id="namespace-1272357617" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -910,7 +910,7 @@ they can be ommitted.</p>
             <article class="method">
                 <h3 class="public ">setProxy()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$proxy = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
+                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$proxy = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>, string  <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
                 <p><em>setProxy($proxy, $type, $creds, $ch)</em></p>
                 <p>will set the proxy using the specified credentials and type,
 by default it assumes an HTTP proxy with no credentials. To
@@ -927,8 +927,7 @@ allows for the curlMultiRequest() method to use it as well.</p>
                                 <td>$proxy </td>
                                 <td><ul>
 <li>The address of the proxy to set (default: null)
-@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
-@param string $creds - The credentials to use for the proxy (default: null)</li>
+@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')</li>
 </ul></td>
                             </tr>
                                                     <tr>
@@ -937,9 +936,11 @@ allows for the curlMultiRequest() method to use it as well.</p>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$creds </td>
-                                <td></td>
+                                <td><ul>
+<li>The credentials to use for the proxy (default: null)</li>
+</ul></td>
                             </tr>
                                                     <tr>
                                 <td>object</td>
@@ -1915,7 +1916,7 @@ POST parameters to be sent.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 3rd, 2015 at 01:28.
+                    on May 3rd, 2015 at 01:30.
                 </section>
             </section>
         </section>
