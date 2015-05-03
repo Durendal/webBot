@@ -706,6 +706,7 @@ class HTTPBot
      */
     public function rebuildHandle()
     {
+    	curl_close($this->ch);
         $this->ch = $this->setupCURL();
         $this->ch = $this->setProxy($this->proxy, $this->credentials, $this->proxyType);
     }
@@ -861,7 +862,7 @@ class HTTPBot
             # Tidy not configured for this computer
             $cleanedHTML = $inputString;
         }
-        
+
         return $cleanedHTML;
     }
 

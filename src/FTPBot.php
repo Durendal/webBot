@@ -239,6 +239,7 @@ class FTPBot
      */
     public function rebuildHandle()
     {
+    	curl_close($this->ch);
     	$this->ch = $this->setupCURL();
     }
 
