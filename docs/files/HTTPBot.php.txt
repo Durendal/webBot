@@ -19,7 +19,7 @@ namespace Durendal\webBot;
  *        
  *         Some of the main features:<br>
  *            Optional stack based URL queue<br>
- *            curl_multi_* integration<br>
+ *            curl\_multi\_* integration<br>
  *            Proxy support for HTTP and SOCKS proxies<br>
  *            Complete header customization<br>
  *            Enhanced SSL Support<br>
@@ -706,6 +706,7 @@ class HTTPBot
      */
     public function rebuildHandle()
     {
+    	curl_close($this->ch);
         $this->ch = $this->setupCURL();
         $this->ch = $this->setProxy($this->proxy, $this->credentials, $this->proxyType);
     }
@@ -861,7 +862,7 @@ class HTTPBot
             # Tidy not configured for this computer
             $cleanedHTML = $inputString;
         }
-        
+
         return $cleanedHTML;
     }
 

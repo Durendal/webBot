@@ -19,7 +19,7 @@ namespace Durendal\webBot;
  *        
  *         Some of the main features:<br>
  *            Optional stack based URL queue<br>
- *            curl_multi_* integration<br>
+ *            curl\_multi\_* integration<br>
  *            Proxy support for HTTP and SOCKS proxies<br>
  *            Complete header customization<br>
  *            Enhanced SSL Support<br>
