@@ -1,8 +1,8 @@
 <?php
 /**
- *        webBot.php - A simple interface to cURL with PHP
+ *        HTTPBot.php - A simple interface to cURL with PHP
  *
- *        webBot.php aims to simplify the use of cURL with php. At the moment it only
+ *        HTTPBot.php aims to simplify the use of cURL with php. At the moment it only
  *        handles GET and POST HTTP requests but I may add more to it as time and
  *        interest permits. 
  *
@@ -14,7 +14,7 @@
 namespace Durendal\webBot;
 
 /**
- *        webBot is a class for interacting with cURL through PHP. It should significantly simplify the process
+ *        HTTPBot is a class for interacting with cURL through PHP. It should significantly simplify the process
  *        providing several functions to manipulate the curl_setopt() function in various ways.
  *        
  *         Some of the main features:<br>
@@ -62,14 +62,12 @@ class HTTPBot
 
     public function __construct($proxy = null, $type = 'HTTP', $credentials = null, $cookies = 'cookies.txt')
     {
-        
         $this->setCookie($cookies);
         $this->ch = $this->setupCURL();
         $this->ch = $this->setProxy($proxy, $type, $credentials);
         $this->urls = array();
         $verbose = true;
-        $this->defaultHeaders();
-            
+        $this->defaultHeaders();            
     }
 
     /**
@@ -157,8 +155,7 @@ class HTTPBot
         if(($i = $this->checkHeader($header)) >= 0){
             unset($this->headers[$i]);
             $this->headers = array_values($this->headers);
-        }
-            
+        }            
     }
 
     /**
@@ -448,6 +445,7 @@ class HTTPBot
         }
         if($this->verbose)
             print "No URLs to pop.\n";
+        
         return null;
     }
 
@@ -465,8 +463,8 @@ class HTTPBot
             return end($this->urls);
         if($this->verbose)
             print "No URLs to peek.\n";
-        return null;
 
+        return null;
     }
 
     /**
@@ -677,6 +675,7 @@ class HTTPBot
             
         curl_multi_close($mh);        
         $this->urls = array();
+        
         return $res; 
     } 
 
@@ -747,6 +746,7 @@ class HTTPBot
 
             $parsed_string = substr($string, $split_here, strlen($string));
         }
+        
         return $parsed_string;
     }
 
@@ -765,6 +765,7 @@ class HTTPBot
     public function returnBetween($string, $start, $stop, $type)
     {
         $temp = $this->splitString($string, $start, false, $type);
+        
         return $this->splitString($temp, $stop, true, $type);
     }
 
@@ -781,6 +782,7 @@ class HTTPBot
     public function parseArray($string, $begTag, $closeTag)
     {
         preg_match_all("($begTag(.*)$closeTag)siU", $string, $matchingData);
+        
         return $matchingData[0];
     }
 
@@ -859,6 +861,7 @@ class HTTPBot
             # Tidy not configured for this computer
             $cleanedHTML = $inputString;
         }
+        
         return $cleanedHTML;
     }
 
