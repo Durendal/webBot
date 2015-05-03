@@ -632,7 +632,7 @@ class HTTPBot
     /**
      *    requestHTTP($type, $url, $ref, $pData)
      *
-     *        simple wrapper method for requestGET and requestPOST. Returns null on error
+     *        simple wrapper method for requestGET, requestPUT and requestPOST. Returns null on error
      *
      * @param string $type - The type of request to make(GET or POST) (default: 'GET')
      * @param string $url - The URL to request (default: null)
@@ -647,6 +647,8 @@ class HTTPBot
                 return $this->requestGET($url, $ref);
             case "POST":
                 return $this->requestPOST($url, $pData, $ref);
+            case "PUT":
+            	return $this->requestPUT($url, $ref, $pData);
             default:
                 print "Invalid Request type submitted.\n";
                 return null;    
