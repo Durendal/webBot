@@ -114,7 +114,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">4</span>
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">3</span>
                                 </a>
                             </li>
                             <li>
@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1439159590"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1597573144"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1439159590" class="accordion-body collapse in">
+            <div id="namespace-1597573144" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1039982892"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1208042832"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-1039982892" class="accordion-body collapse ">
+            <div id="namespace-1208042832" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1176551392"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1587855206"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-1176551392" class="accordion-body collapse ">
+            <div id="namespace-1587855206" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -255,7 +255,7 @@ Parsing methods for extracting useful data from scraped pages<br></p>
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_requestHTTP" class="">requestHTTP()</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_curlMultiRequest" class="">curlMultiRequest()</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_generatePOSTData" class="">generatePOSTData()</a><br />
-                                                                    <a href="../classes/Durendal.webBot.webBot.html#method_rebuildHandler" class="">rebuildHandler()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.webBot.html#method_rebuildHandle" class="">rebuildHandle()</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_splitString" class="">splitString()</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_returnBetween" class="">returnBetween()</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#method_parseArray" class="">parseArray()</a><br />
@@ -289,7 +289,7 @@ Parsing methods for extracting useful data from scraped pages<br></p>
                             <section class="span4">
                                                                     <a href="../classes/Durendal.webBot.webBot.html#property_cookies" class="">$cookies</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#property_proxy" class="">$proxy</a><br />
-                                                                    <a href="../classes/Durendal.webBot.webBot.html#property_proxtype" class="">$proxtype</a><br />
+                                                                    <a href="../classes/Durendal.webBot.webBot.html#property_proxyType" class="">$proxyType</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#property_credentials" class="">$credentials</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#property_urls" class="">$urls</a><br />
                                                                     <a href="../classes/Durendal.webBot.webBot.html#property_verbose" class="">$verbose</a><br />
@@ -386,10 +386,10 @@ Parsing methods for extracting useful data from scraped pages<br></p>
 
                                     <div class="row-fluid">
         <div class="span8 content class">
-            <a id="property_proxtype" name="property_proxtype" class="anchor"></a>
+            <a id="property_proxyType" name="property_proxyType" class="anchor"></a>
             <article class="property">
-                <h3 class="private ">$proxtype</h3>
-                <pre class="signature">$proxtype : string</pre>
+                <h3 class="private ">$proxyType</h3>
+                <pre class="signature">$proxyType : string</pre>
                 <p><em></em></p>
                 
 
@@ -773,7 +773,7 @@ otherwise it returns null.</p>
             <article class="method">
                 <h3 class="public ">changeHeader()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">changeHeader(string  <span class="argument">$header</span>,   <span class="argument">$val</span>) : void</pre>
+                <pre class="signature" style="margin-right: 54px;">changeHeader(string  <span class="argument">$header</span>, string  <span class="argument">$val</span>) : void</pre>
                 <p><em>changeHeader($header, $val)</em></p>
                 <p>deletes $header if it exists, then adds $val as a header. $val can contain the header type and value, or just the value.</p>
 
@@ -783,14 +783,15 @@ otherwise it returns null.</p>
                                 <td>string</td>
                                 <td>$header </td>
                                 <td><ul>
-<li>Contains the Header to change
-@param string $val - The value to change the header to</li>
+<li>Contains the Header to change</li>
 </ul></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$val </td>
-                                <td></td>
+                                <td><ul>
+<li>The value to change the header to</li>
+</ul></td>
                             </tr>
                                             </table>
                 
@@ -909,21 +910,21 @@ they can be ommitted.</p>
             <article class="method">
                 <h3 class="public ">setProxy()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$py = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
-                <p><em>setProxy($py, $type, $creds, $ch)</em></p>
+                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$proxy = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
+                <p><em>setProxy($proxy, $type, $creds, $ch)</em></p>
                 <p>will set the proxy using the specified credentials and type,
 by default it assumes an HTTP proxy with no credentials. To
-use a SOCKS proxy simply pass the string 'SOCKS' as the third
+use a SOCKS proxy simply pass the string 'SOCKS' as the second
 parameter. If no parameters are sent, it will remove any proxy
 settings and begin routing in the clear. The fourth parameter is
 an optional curl handler to use instead of $this-&gt;ch, this decoupling
-allows for the curl_multi_request() method to use it as well.</p>
+allows for the curlMultiRequest() method to use it as well.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>string</td>
-                                <td>$py </td>
+                                <td>$proxy </td>
                                 <td><ul>
 <li>The address of the proxy to set (default: null)
 @param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
@@ -1004,7 +1005,7 @@ allows for the curl_multi_request() method to use it as well.</p>
                 <p><em>setCookie($cookie)</em></p>
                 <p>sets the cookie file to $cookie and rebuilds the curl handler.
 note that if you already have an instance of the curlHandler
-instantiated, you will need to rebuild it via rebuildHandler()
+instantiated, you will need to rebuild it via rebuildHandle()
 for this to take effect</p>
 
                                     <h4>Parameters</h4>
@@ -1041,7 +1042,7 @@ for this to take effect</p>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">getCookie() : string</pre>
                 <p><em>getCookie()</em></p>
-                <p>returns the current file where cookies are stored</p>
+                <p>returns the name of the current file where cookies are stored</p>
 
                 
                 
@@ -1096,8 +1097,8 @@ for this to take effect</p>
             <article class="method">
                 <h3 class="public ">pushURL()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">pushURL(string  <span class="argument">$url</span>,   <span class="argument">$pdata = null</span>) : void</pre>
-                <p><em>pushURL($url, $pdata)</em></p>
+                <pre class="signature" style="margin-right: 54px;">pushURL(string  <span class="argument">$url</span>,   <span class="argument">$pData = null</span>) : void</pre>
+                <p><em>pushURL($url, $pData)</em></p>
                 <p>Adds a URL to $this-&gt;urls stack. If it is a POST request,
 also send an array of the POST parameters</p>
 
@@ -1108,12 +1109,12 @@ also send an array of the POST parameters</p>
                                 <td>$url </td>
                                 <td><ul>
 <li>The URL to add to the queue.
-@param array $pdata - Array of the POST data (only required for POST requests) (default: null)</li>
+@param array $pData - Array of the POST data (only required for POST requests) (default: null)</li>
 </ul></td>
                             </tr>
                                                     <tr>
                                 <td></td>
-                                <td>$pdata </td>
+                                <td>$pData </td>
                                 <td></td>
                             </tr>
                                             </table>
@@ -1142,7 +1143,8 @@ also send an array of the POST parameters</p>
                 <pre class="signature" style="margin-right: 54px;">popURL() : string</pre>
                 <p><em>popURL()</em></p>
                 <p>returns the top URL from the $this-&gt;urls stack or null
-on error. Removes that item from the array.</p>
+on error. Removes that item from the array. Returns null
+if the list is empty.</p>
 
                 
                 
@@ -1271,10 +1273,10 @@ if no $ref is specified it will use the $url</p>
             <article class="method">
                 <h3 class="public ">requestPOST()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">requestPOST(string  <span class="argument">$purl = null</span>, string  <span class="argument">$pdata</span>, string  <span class="argument">$ref = &#039;&#039;</span>) : string</pre>
-                <p><em>requestPOST($url, $pdata, $ref)</em></p>
+                <pre class="signature" style="margin-right: 54px;">requestPOST(string  <span class="argument">$purl = null</span>, string  <span class="argument">$pData</span>, string  <span class="argument">$ref = &#039;&#039;</span>) : string</pre>
+                <p><em>requestPOST($url, $pData, $ref)</em></p>
                 <p>makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
-and the parameters specified in $pdata. If no $ref is specified it will use the $url</p>
+and the parameters specified in $pData. If no $ref is specified it will use the $url</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -1287,7 +1289,7 @@ and the parameters specified in $pdata. If no $ref is specified it will use the 
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$pdata </td>
+                                <td>$pData </td>
                                 <td><ul>
 <li>The POST parameters to send, this string should have been returned from $this-&gt;generatePOSTData()</li>
 </ul></td>
@@ -1324,9 +1326,9 @@ and the parameters specified in $pdata. If no $ref is specified it will use the 
             <article class="method">
                 <h3 class="public ">requestHTTP()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">requestHTTP(string  <span class="argument">$type = &quot;GET&quot;</span>, string  <span class="argument">$url = null</span>, string  <span class="argument">$ref = &#039;&#039;</span>, string  <span class="argument">$pdata = null</span>) : string</pre>
-                <p><em>requestHTTP($type, $url, $ref, $pdata)</em></p>
-                <p>simple wrapper method for requestGET and requestPOST</p>
+                <pre class="signature" style="margin-right: 54px;">requestHTTP(string  <span class="argument">$type = &quot;GET&quot;</span>, string  <span class="argument">$url = null</span>, string  <span class="argument">$ref = &#039;&#039;</span>, string  <span class="argument">$pData = null</span>) : string</pre>
+                <p><em>requestHTTP($type, $url, $ref, $pData)</em></p>
+                <p>simple wrapper method for requestGET and requestPOST. Returns null on error</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -1353,7 +1355,7 @@ and the parameters specified in $pdata. If no $ref is specified it will use the 
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$pdata </td>
+                                <td>$pData </td>
                                 <td><ul>
 <li>The POST parameters to send, this string should have been returned from $this-&gt;generatePOSTData() (default: null)</li>
 </ul></td>
@@ -1458,12 +1460,12 @@ POST parameters to be sent.</p>
 
                                     <div class="row-fluid">
         <div class="span8 content class">
-            <a id="method_rebuildHandler" name="method_rebuildHandler" class="anchor"></a>
+            <a id="method_rebuildHandle" name="method_rebuildHandle" class="anchor"></a>
             <article class="method">
-                <h3 class="public ">rebuildHandler()</h3>
+                <h3 class="public ">rebuildHandle()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">rebuildHandler() : void</pre>
-                <p><em>rebuildHandler()</em></p>
+                <pre class="signature" style="margin-right: 54px;">rebuildHandle() : void</pre>
+                <p><em>rebuildHandle()</em></p>
                 <p>rebuilds the cURL Handler for the next request</p>
 
                 
@@ -1615,8 +1617,8 @@ POST parameters to be sent.</p>
             <article class="method">
                 <h3 class="public ">parseArray()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">parseArray(string  <span class="argument">$string</span>, string  <span class="argument">$beg_tag</span>, string  <span class="argument">$close_tag</span>) : array</pre>
-                <p><em>parseArray($string, $beg_tag, $close_tag)</em></p>
+                <pre class="signature" style="margin-right: 54px;">parseArray(string  <span class="argument">$string</span>, string  <span class="argument">$begTag</span>, string  <span class="argument">$closeTag</span>) : array</pre>
+                <p><em>parseArray($string, $begTag, $closeTag)</em></p>
                 <p>Returns an array of strings that exists repeatedly in $string. This function is usful for returning an array that contains links, images, tables or any other data that appears more than once.</p>
 
                                     <h4>Parameters</h4>
@@ -1630,14 +1632,14 @@ POST parameters to be sent.</p>
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$beg_tag </td>
+                                <td>$begTag </td>
                                 <td><ul>
 <li>Name of the open tag (i.e. &quot;<a>&quot;)</li>
 </ul></td>
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$close_tag </td>
+                                <td>$closeTag </td>
                                 <td><ul>
 <li>Name of the closing tag (i.e. &quot;</title>&quot;)</li>
 </ul></td>
@@ -1712,9 +1714,9 @@ POST parameters to be sent.</p>
             <article class="method">
                 <h3 class="public ">remove()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">remove(string  <span class="argument">$string</span>, string  <span class="argument">$open_tag</span>, string  <span class="argument">$close_tag</span>) : string</pre>
-                <p><em>remove($string, $open_tag, $close_tag)</em></p>
-                <p>Removes all text between $open_tag and $close_tag</p>
+                <pre class="signature" style="margin-right: 54px;">remove(string  <span class="argument">$string</span>, string  <span class="argument">$openTag</span>, string  <span class="argument">$closeTag</span>) : string</pre>
+                <p><em>remove($string, $openTag, $closeTag)</em></p>
+                <p>Removes all text between $openTag and $closeTag</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -1727,14 +1729,14 @@ POST parameters to be sent.</p>
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$open_tag </td>
+                                <td>$openTag </td>
                                 <td><ul>
 <li>The starting delimitor</li>
 </ul></td>
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$close_tag </td>
+                                <td>$closeTag </td>
                                 <td><ul>
 <li>The ending delimitor</li>
 </ul></td>
@@ -1764,15 +1766,15 @@ POST parameters to be sent.</p>
             <article class="method">
                 <h3 class="public ">tidyHTML()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">tidyHTML(string  <span class="argument">$input_string</span>) : string</pre>
-                <p><em>tidyHTML($input_string)</em></p>
+                <pre class="signature" style="margin-right: 54px;">tidyHTML(string  <span class="argument">$inputString</span>) : string</pre>
+                <p><em>tidyHTML($inputString)</em></p>
                 <p>Returns a &quot;Cleans-up&quot; (parsable) version raw HTML</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>string</td>
-                                <td>$input_string </td>
+                                <td>$inputString </td>
                                 <td><ul>
 <li>raw HTML</li>
 </ul></td>
@@ -1912,7 +1914,7 @@ POST parameters to be sent.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 2nd, 2015 at 01:40.
+                    on May 3rd, 2015 at 01:25.
                 </section>
             </section>
         </section>
