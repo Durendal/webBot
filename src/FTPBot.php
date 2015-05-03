@@ -65,6 +65,7 @@ class FTPBot
     {
             
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "ftp://".$this->host."/");
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -100,7 +101,7 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($filePath));
         curl_exec($this->ch);
         fclose($file);
-        curl_setopt($this->ch, CURLOPT_UPLOAD, false);
+        $this->ch = $this->setupCURL();
     }
 
     /**
@@ -124,6 +125,7 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
         fclose($file);
+        $this->ch = $this->setupCURL();
     }
 
     /**
