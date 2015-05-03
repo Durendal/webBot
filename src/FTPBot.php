@@ -9,7 +9,7 @@
  * @link https://github.com/Durendal/webBot
  */
 
-//namespace Durendal\webBot;
+namespace Durendal\webBot;
 
 /**
  *        FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
@@ -221,14 +221,14 @@ class FTPBot
     }
 
     /**
-     *    addFile($filePath)
+     *    pushFile($filePath)
      *
      *        Add a file to the list of files to upload/download
      *
      * @param string $filePath - The path to the file to add
      * @return void
      */
-    public function addFile($filePath)
+    public function pushFile($filePath)
     {
         array_push($this->files, $filePath);
     }

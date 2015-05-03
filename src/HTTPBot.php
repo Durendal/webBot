@@ -216,9 +216,10 @@ class HTTPBot
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
                 curl_setopt($ch, CURLOPT_CAINFO, $certfile);
             }
-        }
-        else
+        } else {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
 
         return $ch;
     }
