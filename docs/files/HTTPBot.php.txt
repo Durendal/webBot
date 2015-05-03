@@ -582,6 +582,54 @@ class HTTPBot
     }
 
     /**
+     *    requestPUT($url, $ref, $pData)
+     *
+     *        Makes a PUT based HTTP request to the url and POST data specified.
+     *
+     * @param string $url - The URL to send the request to
+     * @param string $ref - The Referer to use in the request
+     * @param string $pData - The POST data to send in the request
+     * @return string
+     */
+    public function requestPUT($url=null, $ref = '', $pData)
+    {
+    	if(!$url)
+    		if($this->urlCount() > 0)
+    			$url = $this->popURL();
+    		else{
+    			if($this->verbose)
+    				print "No URLs currently in stack\n";
+
+    			return 0;
+    		}
+    	if($ref == '')
+    		$ref = $url;
+
+    	$fh = tmpfile();
+    	fwrite($fh, $pData);
+    	fseek($fh, 0);
+
+    	$this->delHeader("Referer");
+    	$this->addHeader("Referer: $ref");
+   		$fh = fopen($file, 'r');
+   		$fileContents = file_get_contents($file);
+    	curl_setopt($this->ch, CURLOPT_URL, $url);
+    	curl_setopt($this->ch, CURLOPT_PUT, true);
+        curl_setopt($this->ch, CURLOPT_INFILE, $fh);
+        curl_setopt($this->ch, CURLOPT_INFILESIZE, strlen($pData));
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+
+        $x = curl_exec($this->ch);
+
+        $this->ch = $this->rebuildHandle();
+        $this->delHeader("Referer");
+
+        return $x;
+    }
+
+    /**
      *    requestHTTP($type, $url, $ref, $pData)
      *
      *        simple wrapper method for requestGET and requestPOST. Returns null on error
