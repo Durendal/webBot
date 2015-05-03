@@ -9,7 +9,7 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+//namespace Durendal\webBot;
 
 /**
  *        FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
@@ -69,7 +69,7 @@ class FTPBot
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_FTP_SSL, CURLFTPSSL_ALL);
+        //curl_setopt($ch, CURLOPT_FTP_SSL, CURLFTPSSL_ALL);
         curl_setopt($ch, CURLOPT_FTPSSLAUTH, CURLFTPAUTH_DEFAULT);
         curl_setopt($ch, CURLOPT_PORT, $this->port);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -115,15 +115,21 @@ class FTPBot
      */
     public function download($downloadTo, $filePath = null)
     {
+        $this->ch = $this->setupCURL();
     	if(!$filePath)
     		if(count($this->files) > 0)
     			$filePath = $this->popFile();
     		else
     			return null;
-        $file = fopen($downloadTo);
+        $file = fopen($downloadTo, 'w+');
+        
         curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/".$filePath);
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
         fclose($file);
         $this->rebuildHandle();
     }
@@ -138,10 +144,23 @@ class FTPBot
      */
     public function ls($dir = '')
     {
-        curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/".$dir);
+        if($dir[0] != '/')
+            $dir = '/'.$dir;
+        $url = "ftp://".$this->host.'/'.$dir."/";
+        print $url."\n";
+        curl_setopt($this->ch, CURLOPT_URL, $url);
+        //curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/");
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
+        //curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'CWD $dir');
+        curl_exec($this->ch);
+        //curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'MLSD');
         $result = curl_exec($this->ch);
-        curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 0);
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
+        $this->rebuildHandle();
 
         return $result;
     }
