@@ -535,6 +535,11 @@ class HTTPBot
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
         $x = curl_exec($this->ch);
 
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
+
         $this->delHeader("Referer");
         
         return $x;
@@ -574,6 +579,11 @@ class HTTPBot
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
         
         $x = curl_exec($this->ch);
+
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
 
         curl_setopt($this->ch, CURLOPT_POST, 0);
         $this->delHeader("Referer");
@@ -622,6 +632,11 @@ class HTTPBot
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 
         $x = curl_exec($this->ch);
+
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
 
         $this->ch = $this->rebuildHandle();
         $this->delHeader("Referer");

@@ -100,6 +100,10 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_INFILE, $file);
         curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($filePath));
         curl_exec($this->ch);
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if(strlen($err) > 0)
+            die("$errno: $err\n");
         fclose($file);
         $this->rebuildHandle();
     }
@@ -115,7 +119,6 @@ class FTPBot
      */
     public function download($downloadTo, $filePath = null)
     {
-        $this->ch = $this->setupCURL();
     	if(!$filePath)
     		if(count($this->files) > 0)
     			$filePath = $this->popFile();
@@ -149,11 +152,8 @@ class FTPBot
         $url = "ftp://".$this->host.'/'.$dir."/";
         print $url."\n";
         curl_setopt($this->ch, CURLOPT_URL, $url);
-        //curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/");
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
-        //curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'CWD $dir');
         curl_exec($this->ch);
-        //curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'MLSD');
         $result = curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
