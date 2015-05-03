@@ -140,6 +140,7 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
         $result = curl_exec($this->ch);
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 0);
+
         return $result;
     }
 
@@ -156,7 +157,7 @@ class FTPBot
     {
         $this->username = $username;
         $this->password = $password;
-        curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
+        curl_setopt($this->ch, CURLOPT_USERPWD, $this->username.":".$this->password);
     }
 
     /**
@@ -223,6 +224,7 @@ class FTPBot
     {
     	if(count($this->files) > 0)
             return array_pop($this->files);
+
         return null;
     }
 
