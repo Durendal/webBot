@@ -331,7 +331,7 @@ class webBot
 	}
 
 	/**
-	 *	setRandomAgent()
+	 *	randomAgent()
 	 *	
 	 *		returns a useragent at random to one from the list below
 	 *			
@@ -541,14 +541,17 @@ class webBot
 			
 		if($ref == '')
 			$ref = $url;
+
+		$this->delHeader("Referer");
 		$this->addHeader("Referer: $ref");
-		if($this->checkHeader("Referer"))
-			$this->delHeader("Referer");
+
 		curl_setopt($this->ch, CURLOPT_URL, $url);
 		curl_setopt($this->ch, CURLOPT_POST, 0);
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 		$x = curl_exec($this->ch);
 
+		$this->delHeader("Referer");
+		
 		return $x;
 	}
 
@@ -577,8 +580,8 @@ class webBot
 			}
 		if($ref == '')
 			$ref = $purl;
-		if($this->checkHeader("Referer"))
-			$this->delHeader("Referer");
+		
+		$this->delHeader("Referer");
 		$this->addHeader("Referer: $ref");
 						
 		curl_setopt($this->ch, CURLOPT_URL, $purl);
@@ -589,6 +592,7 @@ class webBot
 		$x = curl_exec($this->ch);
 
 		curl_setopt($this->ch, CURLOPT_POST, 0);
+		$this->delHeader("Referer");
 
 		return $x;
 	}
@@ -725,8 +729,8 @@ class webBot
 	 */
 	public function rebuildHandle()
 	{
-		$this->setupCURL();
-		$this->setProxy($this->proxy, $this->credentials, $this->proxyType);
+		$this->ch = $this->setupCURL();
+		$this->ch = $this->setProxy($this->proxy, $this->credentials, $this->proxyType);
 	}
 
 	// Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/

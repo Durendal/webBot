@@ -234,18 +234,15 @@ class webBot
 	/**
 	 *	setProxy($proxy, $type, $creds, $ch)
 	 *
-	 *		will set the proxy using the specified credentials and type,
-	 *		by default it assumes an HTTP proxy with no credentials. To 
-	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the second 
-	 *		parameter. If no parameters are sent, it will remove any proxy
-	 *		settings and begin routing in the clear. The fourth parameter is
-	 *		an optional curl handler to use instead of $this->ch, this decoupling
+	 *		will set the proxy using the specified credentials and type, by default it assumes an HTTP proxy with no credentials. To 
+	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the second parameter. If no parameters are sent, it will remove any proxy
+	 *		settings and begin routing in the clear. The fourth parameter is an optional curl handler to use instead of $this->ch, this decoupling
 	 *		allows for the curlMultiRequest() method to use it as well.
 	 *
 	 *	@param string $proxy - The address of the proxy to set (default: null)
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
 	 * 	@param string $creds - The credentials to use for the proxy (default: null)
-	 *	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
+	 *	@param object $ch - The cURL handle to use (default: $this->ch)
 	 *	@return object
 	 */
 	public function setProxy($proxy = null, $type = 'HTTP', $creds = null, $ch = null)
@@ -324,7 +321,7 @@ class webBot
 	/**
 	 *	getCookie()
 	 *	
-	 *		returns the current file where cookies are stored
+	 *		returns the name of the current file where cookies are stored
 	 *
 	 *	@return string
 	 */
@@ -334,7 +331,7 @@ class webBot
 	}
 
 	/**
-	 *	setRandomAgent()
+	 *	randomAgent()
 	 *	
 	 *		returns a useragent at random to one from the list below
 	 *			
@@ -544,14 +541,17 @@ class webBot
 			
 		if($ref == '')
 			$ref = $url;
+
+		$this->delHeader("Referer");
 		$this->addHeader("Referer: $ref");
-		if($this->checkHeader("Referer"))
-			$this->delHeader("Referer");
+
 		curl_setopt($this->ch, CURLOPT_URL, $url);
 		curl_setopt($this->ch, CURLOPT_POST, 0);
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 		$x = curl_exec($this->ch);
 
+		$this->delHeader("Referer");
+		
 		return $x;
 	}
 
@@ -580,8 +580,8 @@ class webBot
 			}
 		if($ref == '')
 			$ref = $purl;
-		if($this->checkHeader("Referer"))
-			$this->delHeader("Referer");
+		
+		$this->delHeader("Referer");
 		$this->addHeader("Referer: $ref");
 						
 		curl_setopt($this->ch, CURLOPT_URL, $purl);
@@ -592,6 +592,7 @@ class webBot
 		$x = curl_exec($this->ch);
 
 		curl_setopt($this->ch, CURLOPT_POST, 0);
+		$this->delHeader("Referer");
 
 		return $x;
 	}
@@ -649,8 +650,7 @@ class webBot
 		{ 
 			$url = $this->popURL();
 			$curlArray[$i] = $this->setupCURL();
-			if($this->checkHeader("Referer"))
-				$this->delHeader("Referer");
+			$this->delHeader("Referer");
 			$this->addHeader("Referer: " . $url[0]);
 				
 			$curlArray[$i] = $this->setProxy($proxy['proxy'], $proxy['type'], $proxy['credentials'], $curlArray[$i]);
@@ -729,8 +729,8 @@ class webBot
 	 */
 	public function rebuildHandle()
 	{
-		$this->setupCURL();
-		$this->setProxy($this->proxy, $this->credentials, $this->proxyType);
+		$this->ch = $this->setupCURL();
+		$this->ch = $this->setProxy($this->proxy, $this->credentials, $this->proxyType);
 	}
 
 	// Parsing subroutines adapted from Mike Schrenks LIB_PARSE.php in Webbots spiders and screenscrapers http://webbotsspidersscreenscrapers.com/
