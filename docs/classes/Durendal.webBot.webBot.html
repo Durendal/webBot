@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-243449331"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-549220110"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-243449331" class="accordion-body collapse in">
+            <div id="namespace-549220110" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1283488915"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-604779848"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-1283488915" class="accordion-body collapse ">
+            <div id="namespace-604779848" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1272357617"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1709099717"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-1272357617" class="accordion-body collapse ">
+            <div id="namespace-1709099717" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -910,14 +910,11 @@ they can be ommitted.</p>
             <article class="method">
                 <h3 class="public ">setProxy()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$proxy = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>, string  <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
+                <pre class="signature" style="margin-right: 54px;">setProxy(string  <span class="argument">$proxy = null</span>,   <span class="argument">$type = &#039;HTTP&#039;</span>,   <span class="argument">$creds = null</span>, object  <span class="argument">$ch = null</span>) : object</pre>
                 <p><em>setProxy($proxy, $type, $creds, $ch)</em></p>
-                <p>will set the proxy using the specified credentials and type,
-by default it assumes an HTTP proxy with no credentials. To
-use a SOCKS proxy simply pass the string 'SOCKS' as the second
-parameter. If no parameters are sent, it will remove any proxy
-settings and begin routing in the clear. The fourth parameter is
-an optional curl handler to use instead of $this-&gt;ch, this decoupling
+                <p>will set the proxy using the specified credentials and type, by default it assumes an HTTP proxy with no credentials. To
+use a SOCKS proxy simply pass the string 'SOCKS' as the second parameter. If no parameters are sent, it will remove any proxy
+settings and begin routing in the clear. The fourth parameter is an optional curl handler to use instead of $this-&gt;ch, this decoupling
 allows for the curlMultiRequest() method to use it as well.</p>
 
                                     <h4>Parameters</h4>
@@ -927,7 +924,8 @@ allows for the curlMultiRequest() method to use it as well.</p>
                                 <td>$proxy </td>
                                 <td><ul>
 <li>The address of the proxy to set (default: null)
-@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')</li>
+@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
+@param string $creds - The credentials to use for the proxy (default: null)</li>
 </ul></td>
                             </tr>
                                                     <tr>
@@ -936,17 +934,15 @@ allows for the curlMultiRequest() method to use it as well.</p>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td>string</td>
+                                <td></td>
                                 <td>$creds </td>
-                                <td><ul>
-<li>The credentials to use for the proxy (default: null)</li>
-</ul></td>
+                                <td></td>
                             </tr>
                                                     <tr>
                                 <td>object</td>
                                 <td>$ch </td>
                                 <td><ul>
-<li>The cURL handler to use, if none is specified then $this-&gt;ch is used. (default: $this-&gt;ch)</li>
+<li>The cURL handle to use (default: $this-&gt;ch)</li>
 </ul></td>
                             </tr>
                                             </table>
@@ -1916,7 +1912,7 @@ POST parameters to be sent.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 3rd, 2015 at 01:30.
+                    on May 3rd, 2015 at 01:34.
                 </section>
             </section>
         </section>

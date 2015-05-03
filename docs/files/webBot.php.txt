@@ -234,18 +234,15 @@ class webBot
 	/**
 	 *	setProxy($proxy, $type, $creds, $ch)
 	 *
-	 *		will set the proxy using the specified credentials and type,
-	 *		by default it assumes an HTTP proxy with no credentials. To 
-	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the second 
-	 *		parameter. If no parameters are sent, it will remove any proxy
-	 *		settings and begin routing in the clear. The fourth parameter is
-	 *		an optional curl handler to use instead of $this->ch, this decoupling
+	 *		will set the proxy using the specified credentials and type, by default it assumes an HTTP proxy with no credentials. To 
+	 *		use a SOCKS proxy simply pass the string 'SOCKS' as the second parameter. If no parameters are sent, it will remove any proxy
+	 *		settings and begin routing in the clear. The fourth parameter is an optional curl handler to use instead of $this->ch, this decoupling
 	 *		allows for the curlMultiRequest() method to use it as well.
 	 *
 	 *	@param string $proxy - The address of the proxy to set (default: null)
 	 * 	@param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
-	  	@param string $creds - The credentials to use for the proxy (default: null)
-	 	@param object $ch - The cURL handler to use, if none is specified then $this->ch is used. (default: $this->ch)
+	 * 	@param string $creds - The credentials to use for the proxy (default: null)
+	 *	@param object $ch - The cURL handle to use (default: $this->ch)
 	 *	@return object
 	 */
 	public function setProxy($proxy = null, $type = 'HTTP', $creds = null, $ch = null)
