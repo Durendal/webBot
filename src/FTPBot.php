@@ -101,7 +101,7 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($filePath));
         curl_exec($this->ch);
         fclose($file);
-        $this->ch = $this->setupCURL();
+        $this->rebuildHandle();
     }
 
     /**
@@ -125,7 +125,7 @@ class FTPBot
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
         fclose($file);
-        $this->ch = $this->setupCURL();
+        $this->rebuildHandle();
     }
 
     /**
