@@ -28,7 +28,7 @@ namespace Durendal\webBot;
  *        All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at http://www.schrenk.com/nostarch/webbots/DSP_download.php
  */
 
-class webBot
+class HTTPBot
 {
 
     /** @var string $cookies - Location of cookie file */
@@ -879,4 +879,3 @@ class webBot
     }
 
 }
-
