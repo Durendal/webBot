@@ -9,7 +9,7 @@
  * @link https://github.com/Durendal/webBot
  */
 
-//namespace Durendal\webBot;
+namespace Durendal\webBot;
 
 /**
  *        FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process

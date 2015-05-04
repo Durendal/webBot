@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1437027501"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-293709090"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1437027501" class="accordion-body collapse in">
+            <div id="namespace-293709090" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-843517312"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1947538345"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-843517312" class="accordion-body collapse ">
+            <div id="namespace-1947538345" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2003165833"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-792540725"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-2003165833" class="accordion-body collapse ">
+            <div id="namespace-792540725" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -230,6 +230,7 @@
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_upload" class="">upload()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_download" class="">download()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_ls" class="">ls()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#method_setSSL" class="">setSSL()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_setCredentials" class="">setCredentials()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_getCredentials" class="">getCredentials()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_setHost" class="">setHost()</a><br />
@@ -237,6 +238,7 @@
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_pushFile" class="">pushFile()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_popFile" class="">popFile()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_rebuildHandle" class="">rebuildHandle()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#method_setProtocol" class="">setProtocol()</a><br />
                                                             </section>
                             <section class="span4">
                                                                     <em>No public properties found</em>
@@ -267,6 +269,7 @@
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_port" class="">$port</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_files" class="">$files</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_ch" class="">$ch</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#property_protocol" class="">$protocol</a><br />
                                                             </section>
                             <section class="span4">
                                 <em>N/A</em>
@@ -440,6 +443,30 @@
                                 <h4>Type</h4>
                 object
                 &mdash; - The cURL handle to use                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_protocol" name="property_protocol" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$protocol</h3>
+                <pre class="signature">$protocol : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; - The protocol to use (default: ftp)                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -627,6 +654,72 @@ FTP Server</p>
                 
                                     <h4>Returns</h4>
                     string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSSL" name="method_setSSL" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSSL()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSSL(boolean  <span class="argument">$verify = false</span>, integer  <span class="argument">$hostval</span>, string  <span class="argument">$certfile = &#039;&#039;</span>, object  <span class="argument">$ch = null</span>) : object</pre>
+                <p><em>setSSL($verify, $hostval, $certfile, $ch)</em></p>
+                <p>Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to true
+then the following $hostval and $certfile parameters are required, otherwise
+they can be ommitted.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$verify </td>
+                                <td><ul>
+<li>Whether or not to verify SSL Certificates (default: false)</li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$hostval </td>
+                                <td><ul>
+<li>Set the level of verification required: (default: 0)
+<ul>
+<li>0: Don’t check the common name (CN) attribute</li>
+<li>1: Check that the common name attribute at least exists</li>
+<li>2: Check that the common name exists and that it matches the host name of the server</li>
+</ul></li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$certfile </td>
+                                <td><ul>
+<li>The location of the certificate file you wish to use (default: '')</li>
+</ul></td>
+                            </tr>
+                                                    <tr>
+                                <td>object</td>
+                                <td>$ch </td>
+                                <td><ul>
+<li>The cURL handle to use (default: $this-&gt;ch)</li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
                                     				
                             </article>
         </div>
@@ -874,6 +967,45 @@ Returns null if the list is empty.</p>
         </aside>
     </div>
 
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setProtocol" name="method_setProtocol" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setProtocol()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setProtocol(string  <span class="argument">$protocol = &#039;ftp://&#039;</span>) : integer</pre>
+                <p><em>setProtocol($protocol)</em></p>
+                <p>Set the protocol to use e.g.: ftp, sftp, ftps, tftp
+Returns 1 on success or 0 on failure.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$protocol </td>
+                                <td><ul>
+<li>The protocol to use in calls</li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
                                                                     <div class="row-fluid">
         <div class="span8 content class">
             <a id="method_setupCURL" name="method_setupCURL" class="anchor"></a>
@@ -952,7 +1084,7 @@ Returns null if the list is empty.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 3rd, 2015 at 18:42.
+                    on May 3rd, 2015 at 21:51.
                 </section>
             </section>
         </section>
