@@ -14,7 +14,11 @@ Donations Appreciated:
 
 An example of using it with tor:
 
-	$bot = new webBot("127.0.0.1:9050", "SOCKS");
+    require_once 'src/HTTPBot.php';
+    
+    use Durendal\webBot as webBot;
+	
+	$bot = new webBot\HTTPBot("127.0.0.1:9050", "SOCKS");
 	$page = $bot->requestGET("http://zqktlwi4fecvo6ri.onion/wiki/index.php/Main_Page");
 	file_put_contents("index.html", $page);
 	// index.html contains the html of the page
@@ -59,7 +63,7 @@ This class also comes packaged with a number of parsing routines written by Mike
 
 Example:
 
-	require_once 'HTTPBot.php';
+	require_once 'src/HTTPBot.php';
     
     use Durendal\webBot as webBot;
 
@@ -85,8 +89,12 @@ This script takes an optional parameter of a subreddit name the default is 'tale
 This class is able to leverage the curl_multi_* functions to make multiple requests at once in batch mode. You can use a proxy with this function the same as you would with any other request, however at this time there is no way to specify a different proxy for each request. This may change in the future if I get the time. Send an array of arrays as the sole parameter, each array should have at least one element: the URL. If the request is a POST request place a second value inside the array that is an array of POST parameters. You can mix and match POST and GET requests, it will determine which is which at execution time.
 
 Example:
+	
+	require_once 'src/HTTPBot.php';
+    
+    use Durendal\webBot as webBot;
 
-	$bot = new webBot("127.0.0.1:9050", "SOCKS");
+	$bot = new webBot\HTTPBot("127.0.0.1:9050", "SOCKS");
 	$creds = array("username" => "Durendal", "password" => "abc&123", "submit" => "true");
 	$sites = array(array("http://www.google.com"), array("http://www.bing.com"), array("http://www.cnn.com"), array("http://zqktlwi4fecvo6ri.onion"), array("http://www.example.com/login.php", $creds));
 	$results = $bot->curlMultiRequest($sites);
