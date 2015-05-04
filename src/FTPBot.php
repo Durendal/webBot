@@ -44,6 +44,7 @@ class FTPBot
      * @param string $password - The password to login with
      * @param string $host - The Hostname of the FTP server
      * @param int $port - The port of the FTP server (default: 21)
+     *
      * @return void
      */
     public function __construct($username, $password, $host, $port = 21)
@@ -88,6 +89,7 @@ class FTPBot
      *
      * @param string $uploadTo - The path on the remote server that you want to write the file to
      * @param string $filePath - The path to the file you wish to upload
+     *
      * @return void
      */
     public function upload($uploadTo, $filePath = null)
@@ -122,6 +124,7 @@ class FTPBot
      *
      * @param string $downloadTo - The path on the local server that you want to write the file to
      * @param string $filePath - The path to the file you wish to upload
+     *
      * @return void
      */
     public function download($downloadTo, $filePath = null)
@@ -150,6 +153,7 @@ class FTPBot
      *        query server for a directory listing
      *
      * @param string $dir - The directory to request a listing from (default: '')
+     *
      * @return string
      */
     public function ls($dir = '')
@@ -184,6 +188,7 @@ class FTPBot
      *                        - 2: Check that the common name exists and that it matches the host name of the server
      * @param string $certfile - The location of the certificate file you wish to use (default: '')
      * @param object $ch - The cURL handle to use (default: $this->ch)
+     *
      * @return object
      */
 
@@ -213,6 +218,7 @@ class FTPBot
      *
      * @param string $username - The username to login with
      * @param string $password - The password to login with
+     *
      * @return void
      */
     public function setCredentials($username, $password)
@@ -241,6 +247,7 @@ class FTPBot
      *
      * @param string $host - The hostname of the FTP server
      * @param int $port - The port of the FTP server (default: 21)
+     *
      * @return void
      */
     public function setHost($host, $port = 21)
@@ -267,6 +274,7 @@ class FTPBot
      *        Add a file to the list of files to upload/download
      *
      * @param string $filePath - The path to the file to add
+     *
      * @return void
      */
     public function pushFile($filePath)

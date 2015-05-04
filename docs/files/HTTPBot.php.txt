@@ -53,6 +53,7 @@ class HTTPBot
      * @param string $type - The type of Proxy to use(HTTP or SOCKS) (default: 'HTTP')
      * @param string $credentials - The Credentials to use for the proxy (default: null)
      * @param string $cookies - The file to store cookies for the bot (default: 'cookies.txt')
+     *
      * @return void
      */            
 
@@ -73,6 +74,7 @@ class HTTPBot
      *        or if called without any parameters, it will simply invert its current value.
      *
      * @param bool $mode - Sets verbosity mode (default: null)
+     *
      * @return void
      */
 
@@ -105,6 +107,7 @@ class HTTPBot
      *        checks if $header already exists in the headers array, if not it adds it.
      *
      * @param string $header - Contains the Header to add
+     *
      * @return void
      */
     public function addHeader($header)
@@ -125,6 +128,7 @@ class HTTPBot
      *        otherwise it returns null.
      *
      * @param string $header - Contains the Header to check
+     *
      * @return int
      */
     public function checkHeader($header)
@@ -143,6 +147,7 @@ class HTTPBot
      *        checks for $header in $this->headers and deletes it if it exists.
      *
      * @param string $header - Contains the Header to delete
+     *
      * @return void
      */
     public function delHeader($header)
@@ -161,6 +166,7 @@ class HTTPBot
      *
      * @param string $header - Contains the Header to change
      * @param string $val - The value to change the header to
+     *
      * @return void         
      */
     public function changeHeader($header, $val)
@@ -198,6 +204,7 @@ class HTTPBot
      *                        - 2: Check that the common name exists and that it matches the host name of the server
      * @param string $certfile - The location of the certificate file you wish to use (default: '')
      * @param object $ch - The cURL handle to use (default: $this->ch)
+     *
      * @return object
      */
 
@@ -232,6 +239,7 @@ class HTTPBot
      * @param string $type - The type of the proxy(HTTP or SOCKS) (default: 'HTTP')
      * @param string $creds - The credentials to use for the proxy (default: null)
      * @param object $ch - The cURL handle to use (default: $this->ch)
+     *
      * @return object
      */
     public function setProxy($proxy = null, $type = 'HTTP', $creds = null, $ch = null)
@@ -296,6 +304,7 @@ class HTTPBot
      *        for this to take effect
      *
      * @param string $cookie - The file you want cookies written to
+     *
      * @return void
      */
     public function setCookie($cookie)
@@ -414,6 +423,7 @@ class HTTPBot
      *
      * @param string $url - The URL to add to the queue.
      * @param array $pData - Array of the POST data (only required for POST requests) (default: null)
+     *
      * @return void
      */
     public function pushURL($url, $pData = null)
@@ -505,6 +515,7 @@ class HTTPBot
      *
      * @param string $url - The URL to request (default: null)
      * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
+     *
      * @return string
      */
 
@@ -552,6 +563,7 @@ class HTTPBot
      * @param string $purl - The URL to request (default: null)
      * @param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
      * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
+     *
      * @return string
      */
     public function requestPOST($purl = null, $pData, $ref='')
@@ -596,6 +608,7 @@ class HTTPBot
      * @param string $url - The URL to send the request to
      * @param string $ref - The Referer to use in the request
      * @param string $pData - The POST data to send in the request
+     *
      * @return string
      */
     public function requestPUT($url=null, $ref = '', $pData)
@@ -650,6 +663,7 @@ class HTTPBot
      * @param string $url - The URL to request (default: null)
      * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
      * @param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData() (default: null)
+     *
      * @return string
      */
     public function requestHTTP($type = "GET", $url = null, $ref = '', $pData = null)
@@ -676,6 +690,7 @@ class HTTPBot
      *        POST parameters to be sent.
      *
      * @param array $nodes - Contains an array of arrays, each subarray contains at least one URL and an optional set of POST parameters to send (default: $this->urls)
+     *
      * @return array
      */
     function curlMultiRequest($nodes = null)
@@ -747,6 +762,7 @@ class HTTPBot
      *        generates a urlencoded string from an associative array of POST parameters
      *
      * @param array $data - An array of POST parameters in array($key => $val, ...) format
+     *
      * @return string
      */
     public function generatePOSTData($data)
@@ -786,6 +802,7 @@ class HTTPBot
      *                      - false: include portion after delineator
      * @param bool $type - true: include delineator in parsed string
      *                   - false: exclude delineator in parsed string
+     *
      * @return string
      */
     public function splitString($string, $delineator, $desired, $type)
@@ -823,6 +840,7 @@ class HTTPBot
      * @param string $stop - Defines the end of the substring
      * @param bool $type - true: exclude delineators in parsed string
      *                      - false: include delineators in parsed string
+     *
      * @return string
      */
     public function returnBetween($string, $start, $stop, $type)
@@ -840,6 +858,7 @@ class HTTPBot
      * @param string $string - String that contains the tags
      * @param string $begTag - Name of the open tag (i.e. "<a>")
      * @param string $closeTag - Name of the closing tag (i.e. "</title>")
+     *
      * @return array
      */
     public function parseArray($string, $begTag, $closeTag)
@@ -856,6 +875,7 @@ class HTTPBot
      *
      * @param string $tag - The tag that contains the attribute
      * @param string $attribute - The attribute, whose value you seek
+     *
      * @return string
      */
     public function getAttribute($tag, $attribute)
@@ -877,6 +897,7 @@ class HTTPBot
      * @param string $string - The target of your parse
      * @param string $openTag - The starting delimitor
      * @param string $closeTag - The ending delimitor
+     *
      * @return string
      */
     public function remove($string, $openTag, $closeTag)
@@ -897,6 +918,7 @@ class HTTPBot
      *        Returns a "Cleans-up" (parsable) version raw HTML
      *
      * @param string $inputString - raw HTML
+     *
      * @return string
      */
     public function tidyHTML($inputString)
@@ -934,6 +956,7 @@ class HTTPBot
      *        Uses regular expressions to check for the validity of a URL
      *
      * @param string $url - The URL to validated
+     *
      * @return int
      */
     public function validateURL($url)
