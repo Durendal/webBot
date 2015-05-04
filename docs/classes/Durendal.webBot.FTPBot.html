@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-760370163"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-436295558"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-760370163" class="accordion-body collapse in">
+            <div id="namespace-436295558" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-798067010"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1798287179"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-798067010" class="accordion-body collapse ">
+            <div id="namespace-1798287179" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-743029379"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2129203665"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-743029379" class="accordion-body collapse ">
+            <div id="namespace-2129203665" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -206,9 +206,9 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\Durendal\webBot</small>FTPBot</h1>
-                    <p><em>FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
-       providing several functions to manipulate the curl_setopt() function in various ways.</em></p>
-                    
+                    <p><em>FTPBot()</em></p>
+                    <p>FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
+providing several functions to manipulate the curl_setopt() function in various ways.</p>
                     
                                         
                     <section id="summary">
@@ -346,7 +346,7 @@
 
                                 <h4>Type</h4>
                 string
-                &mdash; - The password of the account on the FTP Server                            </article>
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -370,7 +370,7 @@
 
                                 <h4>Type</h4>
                 string
-                &mdash; - The address of the FTP Server                            </article>
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -388,13 +388,13 @@
             <a id="property_port" name="property_port" class="anchor"></a>
             <article class="property">
                 <h3 class="private ">$port</h3>
-                <pre class="signature">$port : integer</pre>
+                <pre class="signature">$port : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                integer
-                &mdash; - The port to connect to                            </article>
+                string
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -412,13 +412,13 @@
             <a id="property_files" name="property_files" class="anchor"></a>
             <article class="property">
                 <h3 class="private ">$files</h3>
-                <pre class="signature">$files : array</pre>
+                <pre class="signature">$files : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                array
-                &mdash; - The list of files to upload or download                            </article>
+                string
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -436,13 +436,13 @@
             <a id="property_ch" name="property_ch" class="anchor"></a>
             <article class="property">
                 <h3 class="private ">$ch</h3>
-                <pre class="signature">$ch : object</pre>
+                <pre class="signature">$ch : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                object
-                &mdash; - The cURL handle to use                            </article>
+                string
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -466,7 +466,7 @@
 
                                 <h4>Type</h4>
                 string
-                &mdash; - The protocol to use (default: ftp)                            </article>
+                &mdash; - The username of the account on the FTP Server                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -813,7 +813,7 @@ they can be ommitted.</p>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">setHost(string  <span class="argument">$host</span>, integer  <span class="argument">$port = 21</span>) : void</pre>
                 <p><em>setHost($host, $port)</em></p>
-                <p>Sets the host and port of the remost server</p>
+                <p>Sets the host and port of the remote server</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -1084,7 +1084,7 @@ Returns 1 on success or 0 on failure.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 3rd, 2015 at 21:52.
+                    on May 3rd, 2015 at 22:06.
                 </section>
             </section>
         </section>

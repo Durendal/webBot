@@ -12,28 +12,28 @@
 namespace Durendal\webBot;
 
 /**
+ *    FTPBot()
+ *
  *        FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
  *        providing several functions to manipulate the curl_setopt() function in various ways.
- *        
+ *
  */
 
 class FTPBot
 {
-    /** @var string $username - The username of the account on the FTP Server */
-    private $username;
-    /** @var string $password - The password of the account on the FTP Server */
-    private $password;
-    /** @var string $host - The address of the FTP Server */
-    private $host;
-    /** @var int $port - The port to connect to */
-    private $port;
-    /** @var array $files - The list of files to upload or download */
-    private $files;
-    /** @var object $ch - The cURL handle to use */
-    private $ch;
-    /** @var string $protocol - The protocol to use (default: ftp) */
-    private $protocol;
 
+    /**
+     * @var string $username - The username of the account on the FTP Server 
+     * @var string $password - The password of the account on the FTP Server 
+     * @var string $host - The address of the FTP Server 
+     * @var int $port - The port to connect to 
+     * @var array $files - The list of files to upload or download 
+     * @var object $ch - The cURL handle to use 
+     * @var string $protocol - The protocol to use (default: ftp) 
+     */
+    
+    private $username, $password, $host, $port, $files, $ch, $protocol;
+    
     /**
      *    __construct($username, $password, $host, $port)
      *
@@ -237,7 +237,7 @@ class FTPBot
     /**
      *    setHost($host, $port)
      *
-     *        Sets the host and port of the remost server
+     *        Sets the host and port of the remote server
      *
      * @param string $host - The hostname of the FTP server
      * @param int $port - The port of the FTP server (default: 21)
