@@ -31,6 +31,8 @@ class FTPBot
     private $files;
     /** @var object $ch - The cURL handle to use */
     private $ch;
+    /** @var string $protocol - The protocol to use (default: ftp) */
+    private $protocol;
 
     /**
      *    __construct($username, $password, $host, $port)
@@ -52,6 +54,7 @@ class FTPBot
         $this->port = $port;
         $this->ch = $this->setupCURL();
         $this->files = array();
+        $this->protocol = 'ftp://';
     }
 
     /**
@@ -65,7 +68,7 @@ class FTPBot
     {
             
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "ftp://".$this->host."/");
+        curl_setopt($ch, CURLOPT_URL, $this->protocol.$this->host."/");
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -98,7 +101,7 @@ class FTPBot
         if(!$file)
             die("Unable to open $filePath\n");
         
-        curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host.'/'.$uploadTo);
+        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host.'/'.$uploadTo);
         curl_setopt($this->ch, CURLOPT_UPLOAD, true);
         curl_setopt($this->ch, CURLOPT_INFILE, $file);
         curl_setopt($this->ch, CURLOPT_PORT, $this->port);
@@ -130,7 +133,7 @@ class FTPBot
     			return null;
         $file = fopen($downloadTo, 'w+');
         
-        curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/".$filePath);
+        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host."/".$filePath);
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
@@ -153,9 +156,7 @@ class FTPBot
     {
         if($dir[0] != '/')
             $dir = '/'.$dir;
-        $url = "ftp://".$this->host.'/'.$dir."/";
-        print $url."\n";
-        curl_setopt($this->ch, CURLOPT_URL, $url);
+        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host.'/'.$dir."/");
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
         curl_exec($this->ch);
         $result = curl_exec($this->ch);
@@ -300,6 +301,33 @@ class FTPBot
     {
     	curl_close($this->ch);
     	$this->ch = $this->setupCURL();
+    }
+
+    /**
+     *    setProtocol($protocol)
+     *
+     *        Set the protocol to use e.g.: ftp, sftp, ftps, tftp
+     *        Returns 1 on success or 0 on failure.
+     *
+     * @param string $protocol - The protocol to use in calls
+     *
+     * @return int
+     */
+
+    public function setProtocol($protocol = 'ftp://')
+    {
+        if(!stristr($protocol, "://"))
+            $protocol += "://";
+        switch($protocol) {
+            case "ftp://":
+            case "sftp://":
+            case "ftps://":
+            case "tftp://":
+                $this->protocol = $protocol;
+                return 1;
+            default:
+                return 0;
+        }
     }
 
 }
