@@ -31,22 +31,18 @@ namespace Durendal\webBot;
 class HTTPBot
 {
 
-    /** @var string $cookies - Location of cookie file */
-    private $cookies;        
-    /** @var string $proxy - Address of currently set proxy */
-    private $proxy;        
-    /**    @var string $proxyType - Type of proxy (HTTP or SOCKS) */
-    private $proxyType;        
-    /** @var string $credentials - Credentials to use for proxy */
-    private $credentials;    
-    /** @var array $urls - queue of URLs to process */
-    private $urls;            
-    /** @var bool $verbose - verbose output from class */
-    private $verbose;        
-    /** @var array $headers - Array of headers to use for requests */
-    private $headers;        
-    /** @var object $ch - cURL Handle */
-    private $ch;            
+    /** 
+     * @var string $cookies - Location of cookie file 
+     * @var string $proxy - Address of currently set proxy 
+     * @var string $proxyType - Type of proxy (HTTP or SOCKS) 
+     * @var string $credentials - Credentials to use for proxy 
+     * @var array $urls - queue of URLs to process 
+     * @var bool $verbose - verbose output from class 
+     * @var array $headers - Array of headers to use for requests 
+     * @var object $ch - cURL Handle 
+     */
+
+    private $cookies, $proxy, $proxyType, $credentials, $urls, $verbose, $headers, $ch;
         
     /**
      *    __construct($proxy, $type, $credentials, $cookies)
