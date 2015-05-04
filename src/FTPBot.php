@@ -327,7 +327,7 @@ class FTPBot
     public function setProtocol($protocol = 'ftp://')
     {
         if(!stristr($protocol, "://"))
-            $protocol += "://";
+            $protocol .= "://";
         switch($protocol) {
             case "ftp://":
             case "sftp://":
