@@ -59,8 +59,11 @@ This class also comes packaged with a number of parsing routines written by Mike
 
 Example:
 
-	require_once 'webBot.php';
-	$bot = new webBot();
+	require_once 'HTTPBot.php';
+    
+    use Durendal\webBot as webBot;
+
+	$bot = new webBot\HTTPBot();
 	$subreddit = ($argc > 1) ? $argv[1] : 'talesfromtechsupport';
 	$page = $bot->requestGET("http://www.reddit.com/r/$subreddit/.rss");
 	$posts = $bot->parseArray($page, "<item>", "</item>");
