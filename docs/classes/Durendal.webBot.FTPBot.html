@@ -144,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1825806021"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-906112689"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1825806021" class="accordion-body collapse in">
+            <div id="namespace-906112689" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-388663732"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-177333635"></a>
                                 <a href="../namespaces/Durendal.html" style="margin-left: 30px; padding-left: 0">Durendal</a>
             </div>
-            <div id="namespace-388663732" class="accordion-body collapse ">
+            <div id="namespace-177333635" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-733178350"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1841164259"></a>
                                 <a href="../namespaces/Durendal.webBot.html" style="margin-left: 30px; padding-left: 0">webBot</a>
             </div>
-            <div id="namespace-733178350" class="accordion-body collapse ">
+            <div id="namespace-1841164259" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -239,6 +239,9 @@ providing several functions to manipulate the curl_setopt() function in various 
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_popFile" class="">popFile()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_rebuildHandle" class="">rebuildHandle()</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#method_setProtocol" class="">setProtocol()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#method_getProtocol" class="">getProtocol()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#method_setTimeout" class="">setTimeout()</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#method_getTimeout" class="">getTimeout()</a><br />
                                                             </section>
                             <section class="span4">
                                                                     <em>No public properties found</em>
@@ -270,6 +273,7 @@ providing several functions to manipulate the curl_setopt() function in various 
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_files" class="">$files</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_ch" class="">$ch</a><br />
                                                                     <a href="../classes/Durendal.webBot.FTPBot.html#property_protocol" class="">$protocol</a><br />
+                                                                    <a href="../classes/Durendal.webBot.FTPBot.html#property_timeout" class="">$timeout</a><br />
                                                             </section>
                             <section class="span4">
                                 <em>N/A</em>
@@ -461,6 +465,30 @@ providing several functions to manipulate the curl_setopt() function in various 
             <article class="property">
                 <h3 class="private ">$protocol</h3>
                 <pre class="signature">$protocol : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; - The username of the account on the FTP Server                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_timeout" name="property_timeout" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$timeout</h3>
+                <pre class="signature">$timeout : string</pre>
                 <p><em></em></p>
                 
 
@@ -1006,6 +1034,98 @@ Returns 1 on success or 0 on failure.</p>
         </aside>
     </div>
 
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getProtocol" name="method_getProtocol" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getProtocol()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getProtocol() : string</pre>
+                <p><em>getProtocol()</em></p>
+                <p>Returns the currently set protocol</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTimeout" name="method_setTimeout" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setTimeout()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTimeout(integer  <span class="argument">$timeout</span>) : void</pre>
+                <p><em>setTimeout($timeout)</em></p>
+                <p>Sets the timeout to $timeout as long as its a positive integer</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$timeout </td>
+                                <td><ul>
+<li>The length of time in seconds to wait before timing out.</li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTimeout" name="method_getTimeout" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getTimeout()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTimeout() : integer</pre>
+                <p><em>getTimeout()</em></p>
+                <p>Returns the currently set timeout</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
                                                                     <div class="row-fluid">
         <div class="span8 content class">
             <a id="method_setupCURL" name="method_setupCURL" class="anchor"></a>
@@ -1084,7 +1204,7 @@ Returns 1 on success or 0 on failure.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 3rd, 2015 at 22:18.
+                    on May 3rd, 2015 at 23:55.
                 </section>
             </section>
         </section>

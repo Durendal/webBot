@@ -30,9 +30,10 @@ class FTPBot
      * @var array $files - The list of files to upload or download 
      * @var object $ch - The cURL handle to use 
      * @var string $protocol - The protocol to use (default: ftp) 
+     * @var int $timeout - The timeout to use for cURL requests
      */
     
-    private $username, $password, $host, $port, $files, $ch, $protocol;
+    private $username, $password, $host, $port, $files, $ch, $protocol, $timeout;
     
     /**
      *    __construct($username, $password, $host, $port)
@@ -56,6 +57,7 @@ class FTPBot
         $this->ch = $this->setupCURL();
         $this->files = array();
         $this->protocol = 'ftp://';
+        $this->setTimeout(300);
     }
 
     /**
@@ -111,7 +113,7 @@ class FTPBot
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
-        if(strlen($err) > 0)
+        if($errno)
             die("$errno: $err\n");
         fclose($file);
         $this->rebuildHandle();
@@ -128,7 +130,7 @@ class FTPBot
      * @return void
      */
     public function download($downloadTo, $filePath = null)
-    {
+    {   
     	if(!$filePath)
     		if(count($this->files) > 0)
     			$filePath = $this->popFile();
@@ -136,12 +138,14 @@ class FTPBot
     			return null;
         $file = fopen($downloadTo, 'w+');
         
+        $filePath = str_replace("+", "%20", str_replace(array("%2F", "%2f"), "/", urlencode($filePath)));
+
         curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host."/".$filePath);
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
-        if(strlen($err) > 0)
+        if($errno)
             die("$errno: $err\n");
         fclose($file);
         $this->rebuildHandle();
@@ -158,16 +162,19 @@ class FTPBot
      */
     public function ls($dir = '')
     {
-        if($dir[0] != '/')
-            $dir = '/'.$dir;
-        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host.'/'.$dir."/");
+        // Ensure we have appropriate trailing slashes
+        if(substr($this->host, -1) != '/')
+            $this->host .= '/';
+        $url = $this->protocol.$this->host.(($dir == '') ? '' : ((substr($dir, -1) == '/') ? "$dir" : "$dir/"));
+        
+        curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
-        curl_exec($this->ch);
+
         $result = curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
 
-        if(strlen($err) > 0)
+        if($errno)
             die("$errno: $err\n");
         $this->rebuildHandle();
 
@@ -325,7 +332,7 @@ class FTPBot
     public function setProtocol($protocol = 'ftp://')
     {
         if(!stristr($protocol, "://"))
-            $protocol += "://";
+            $protocol .= "://";
         switch($protocol) {
             case "ftp://":
             case "sftp://":
@@ -336,6 +343,50 @@ class FTPBot
             default:
                 return 0;
         }
+    }
+
+    /**
+     *    getProtocol()
+     *
+     *        Returns the currently set protocol
+     *
+     * @return string
+     */
+
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
+     *    setTimeout($timeout)
+     *
+     *        Sets the timeout to $timeout as long as its a positive integer
+     *
+     * @param int $timeout - The length of time in seconds to wait before timing out.
+     *
+     * @return void
+     */
+
+    public function setTimeout($timeout)
+    {
+        if($timeout > 0) {
+            $this->timeout = $timeout;
+            curl_setopt($this->ch, CURLOPT_TIMEOUT, $this->timeout);
+        }
+    }
+
+    /**
+     *    getTimeout()
+     *
+     *        Returns the currently set timeout
+     *
+     * @return int
+     */
+
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 
 }
