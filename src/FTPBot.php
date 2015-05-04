@@ -158,11 +158,13 @@ class FTPBot
      */
     public function ls($dir = '')
     {
-        if($dir[0] != '/')
-            $dir = '/'.$dir;
-        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host.'/'.$dir."/");
+        if(substr($this->host, -1) != '/')
+            $this->host .= '/';
+        $url = $this->protocol.$this->host.(($dir == '') ? '' : ((substr($dir, -1) == '/') ? "$dir" : "$dir/"));
+        print $url."\n";
+        curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
-        curl_exec($this->ch);
+
         $result = curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);

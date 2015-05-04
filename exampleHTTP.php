@@ -1,9 +1,11 @@
 <?php
 
-	require_once 'webBot.php';
+	require_once 'src/HTTPBot.php';
+
+	use Durendal\webBot as webBot;
 
 	// Vanilla instantiation, no proxy
-	$bot = new webBot();
+	$bot = new webBot\HTTPBot();
 	
 	$bot->setVerbose();
 	$subreddit = ($argc > 1) ? $argv[1] : 'talesfromtechsupport';
@@ -16,8 +18,7 @@
 	$titles = array();
 	$links = array();
 
-	for($i = 0; $i < count($posts); $i++)
-	{
+	for($i = 0; $i < count($posts); $i++) {
 		$ii = $i+1;
 
 		// Remove the <title> and </title> tags, ensure the last parameter is 1 or they will remain.
@@ -44,8 +45,7 @@
 	$sites = array(array("http://www.google.com"), array("http://www.bing.com"), array("http://www.cnn.com"), array("http://zqktlwi4fecvo6ri.onion"));
 	$results = $bot->curlMultiRequest($sites);
 	
-	foreach($results as $key => $page)
-	{
+	foreach($results as $key => $page) {
 		$key = str_replace(array("http://", "https://"), "", $key);
 		print $key . " Len: " . strlen($page) . "\n";
 		file_put_contents("$key.html", $page);
@@ -70,8 +70,7 @@
 	$titles = array();
 	$links = array();
 
-	for($i = 0; $i < count($posts); $i++)
-	{
+	for($i = 0; $i < count($posts); $i++) {
 		$ii = $i+1;
 		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
 		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
@@ -85,8 +84,7 @@
 	// Empty out the $bot->urls stack
 	$results = $bot->curlMultiRequest();
 	
-	foreach($results as $key => $page)
-	{
+	foreach($results as $key => $page) {
 		// Make $key a little bit nicer for a filename
 		$key = str_replace(array("http://", "https://", ".rss", "www.reddit.com/r/"), "", $key);
 		$key = substr($key, 0, -1);
