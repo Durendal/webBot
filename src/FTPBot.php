@@ -9,7 +9,7 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+//namespace Durendal\webBot;
 
 /**
  *        FTPBot is a class for interacting with FTP using cURL and PHP. It should significantly simplify the process
@@ -95,9 +95,13 @@ class FTPBot
     		else
     			return null;
     	$file = fopen($filePath, 'r');
-    	curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host."/".$uploadTo);
+        if(!$file)
+            die("Unable to open $filePath\n");
+        
+        curl_setopt($this->ch, CURLOPT_URL, "ftp://".$this->host.'/'.$uploadTo);
         curl_setopt($this->ch, CURLOPT_UPLOAD, true);
         curl_setopt($this->ch, CURLOPT_INFILE, $file);
+        curl_setopt($this->ch, CURLOPT_PORT, $this->port);
         curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($filePath));
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
@@ -163,6 +167,42 @@ class FTPBot
         $this->rebuildHandle();
 
         return $result;
+    }
+
+    /**
+     *    setSSL($verify, $hostval, $certfile, $ch)
+     *        
+     *        Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to true
+     *        then the following $hostval and $certfile parameters are required, otherwise
+     *        they can be ommitted.
+     *
+     * @param bool $verify - Whether or not to verify SSL Certificates (default: false)
+     * @param int $hostval - Set the level of verification required: (default: 0)
+     *                        - 0: Don’t check the common name (CN) attribute
+     *                        - 1: Check that the common name attribute at least exists
+     *                        - 2: Check that the common name exists and that it matches the host name of the server
+     * @param string $certfile - The location of the certificate file you wish to use (default: '')
+     * @param object $ch - The cURL handle to use (default: $this->ch)
+     * @return object
+     */
+
+    public function setSSL($verify = false, $hostval = 0, $certfile = '', $ch = null)
+    {
+        if(!$ch)
+            $ch = $this->ch;
+        
+        if($verify){
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            if($hostval >= 0 && $hostval < 3 && $certfile != ''){
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
+                curl_setopt($ch, CURLOPT_CAINFO, $certfile);
+            }
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
+        return $ch;
     }
 
     /**
