@@ -69,8 +69,7 @@ Example:
 	$posts = $bot->parseArray($page, "<item>", "</item>");
 	$titles = array();
 	$links = array();
-	for($i = 0; $i < count($posts); $i++)
-	{
+	for($i = 0; $i < count($posts); $i++) {
 		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
 		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
 		print "Title #$i: ".$titles[$i]."\n";
@@ -92,8 +91,7 @@ Example:
 	$sites = array(array("http://www.google.com"), array("http://www.bing.com"), array("http://www.cnn.com"), array("http://zqktlwi4fecvo6ri.onion"), array("http://www.example.com/login.php", $creds));
 	$results = $bot->curlMultiRequest($sites);
 	
-	foreach($results as $key => $page)
-	{
+	foreach($results as $key => $page) {
 		$key = str_replace(array("http://", "https://"), "", $key);
 		print "Len: " . strlen($page) . "\n";
 		file_put_contents("$key.html", $page);
@@ -120,8 +118,7 @@ Example:
 	$titles = array();
 	$links = array();
 
-	for($i = 0; $i < count($posts); $i++)
-	{
+	for($i = 0; $i < count($posts); $i++) {
 		$ii = $i+1;
 		$titles[$i] = $bot->returnBetween($posts[$i], "<title>", "</title>", 1);
 		$links[$i] = $bot->returnBetween($posts[$i], "<link>", "</link>", 1);
@@ -135,8 +132,7 @@ Example:
 	// Empty out the $bot->urls stack
 	$results = $bot->curlMultiRequest();
 	
-	foreach($results as $key => $page)
-	{
+	foreach($results as $key => $page) {
 		// Make $key a little bit nicer for a filename
 		$key = substr(str_replace(array("http://", "https://", ".rss", "www.reddit.com/r/"), "", $key), 0, -1);
 		print $key . " Len: " . strlen($page) . "\n";
