@@ -12,7 +12,7 @@
  */
 
 namespace Durendal\webBot;
-
+require_once 'response.php';
 /**
  *        HTTPBot is a class for interacting with cURL through PHP. It should significantly simplify the process
  *        providing several functions to manipulate the curl_setopt() function in various ways.
@@ -63,8 +63,10 @@ class HTTPBot
         $this->ch = $this->setupCURL();
         $this->ch = $this->setProxy($proxy, $type, $credentials);
         $this->urls = array();
-        $verbose = true;
+        $verbose = false;
         $this->defaultHeaders();            
+
+
     }
 
     /**
@@ -80,10 +82,7 @@ class HTTPBot
 
     public function setVerbose($mode = null)
     {
-        if($mode)
-            $this->verbose = $mode;
-        else
-            $this->verbose = !$this->verbose;
+        $this->verbose = ($mode) ? $mode : !$this->verbose;
     }
 
     /**
@@ -95,9 +94,9 @@ class HTTPBot
      */
     public function defaultHeaders()
     {
-        $this->addHeader("Connection: Keep-alive");
-        $this->addHeader("Keep-alive: 300");
-        $this->addHeader("Expect:");
+        //$this->addHeader("Connection: Keep-alive");
+        //$this->addHeader("Keep-alive: 300");
+        //$this->addHeader("Expect:");
         $this->addHeader("User-Agent: " . $this->randomAgent());
     }
 
@@ -295,6 +294,7 @@ class HTTPBot
         return array('proxy' => $this->proxy, 'credentials' => $this->credentials, 'type' => $this->proxyType);
     }
 
+
     /**
      *    setCookie($cookie)
      *
@@ -307,9 +307,16 @@ class HTTPBot
      *
      * @return void
      */
+
     public function setCookie($cookie)
     {
         $this->cookies = $cookie;
+    }
+
+
+    public function generateCookies()
+    {
+        return implode(";", $this->cookies);
     }
 
     /**
@@ -322,6 +329,43 @@ class HTTPBot
     public function getCookie()
     {
         return $this->cookies;
+    }
+
+    /**
+     *      downloadImage($url, $outfile, $ref)
+     *
+     *          Will download an image from specified URL and save it to $outfile.
+     *
+     * @param string $url - The URL of the image
+     * @param string $outfile - The location to write the image to
+     * @param string $ref - The value to use as a referer in the request (default: $url)
+     *
+     * @return void
+     */
+
+    public function downloadImage($url, $outfile = "image.jpg", $ref = NULL)
+    {
+
+        if(!$ref)
+            $ref = $url;
+        $this->delHeader("Referer");
+        $this->addHeader("Referer: $ref");
+        $fp = fopen($outfile, "wb");
+        curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, array($this, "cookieSnatcher"));
+        curl_setopt($this->ch, CURLOPT_URL, $url);
+        curl_setopt($this->ch, CURLOPT_FILE, $fp);
+        curl_setopt($this->ch, CURLOPT_HEADER, FALSE);
+        curl_exec($this->ch);
+        curl_setopt($this->ch, CURLOPT_HEADER, TRUE);
+        #curl_setopt($this->ch, CURLOPT_FILE, NULL);
+        fclose($fp);
+        $errno = curl_errno($this->ch);
+        $err = curl_error($this->ch);
+        if($errno)
+            die("$errno: $err\n");
+
+        $this->rebuildHandle();
+        $this->delHeader("Referer");
     }
 
     /**
@@ -503,6 +547,7 @@ class HTTPBot
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookies);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookies);
+        //curl_setopt($ch, CURLOPT_COOKIEFILE, NULL);
 
         return $ch;
     }
@@ -541,6 +586,7 @@ class HTTPBot
         curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_POST, 0);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+        var_dump($this->headers);
         $x = curl_exec($this->ch);
 
         $errno = curl_errno($this->ch);
@@ -550,7 +596,7 @@ class HTTPBot
 
         $this->delHeader("Referer");
         
-        return $x;
+        return new response($x);
     }
 
 
@@ -568,6 +614,7 @@ class HTTPBot
      */
     public function requestPOST($purl = null, $pData, $ref='')
     {
+        print "test\n";
         if($purl == null)
             if($this->urlCount() > 0)
                 $purl = $this->popURL();
@@ -584,20 +631,23 @@ class HTTPBot
                         
         curl_setopt($this->ch, CURLOPT_URL, $purl);
         curl_setopt($this->ch, CURLOPT_POST, 1);
+        var_dump($pData);
+        var_dump($this->headers);
         curl_setopt($this->ch, CURLOPT_POSTFIELDS, $pData);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
-        
+        curl_setopt($this->ch, CURLOPT_POSTREDIR, 3);
         $x = curl_exec($this->ch);
 
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
+        print "Right before die son\n";
         if($errno)
             die("$errno: $err\n");
 
         curl_setopt($this->ch, CURLOPT_POST, 0);
         $this->delHeader("Referer");
 
-        return $x;
+        return new response($x);
     }
 
     /**
@@ -651,7 +701,7 @@ class HTTPBot
         $this->ch = $this->rebuildHandle();
         $this->delHeader("Referer");
 
-        return $x;
+        return new response($x);
     }
 
     /**
@@ -965,6 +1015,30 @@ class HTTPBot
         .'[-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]'
         .'|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$/';
         return preg_match($pattern, $url);
+    }
+
+    /**
+     *      cookieSnatcher($ch, $headerLine)
+     *
+     *          Read through cookies sent and parse them how you see fit
+     *
+     * @param object $ch - The cURL handle to read from
+     * @param string $headerLine - The current line in headers to check
+     *
+     * @return int
+     */
+    function cookieSnatcher($ch, $headerLine) {
+        //print "============================================================\n";
+        //print $headerLine."\n";
+        //print "============================================================\n";
+        //if(preg_match('/^Location:\s*([^;]*)/mi', $headerLine, $page) == 1){
+        //    $this->cookies[] = $page[1];
+        //}
+        //if (preg_match('/^Set-Cookie:\s*([^;]*)/mi', $headerLine, $cookie) == 1){
+        //    $this->cookies[] = $cookie[1];
+            //print $cookie[1]."\n";
+        //}
+        return strlen($headerLine); // Needed by curl
     }
 
 }
