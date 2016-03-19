@@ -17,13 +17,13 @@ require_once 'response.php';
  *        HTTPBot is a class for interacting with cURL through PHP. It should significantly simplify the process
  *        providing several functions to manipulate the curl_setopt() function in various ways.
  *        
- *         Some of the main features:<br>
- *            Optional stack based URL queue<br>
- *            curl\_multi\_* integration<br>
- *            Proxy support for HTTP and SOCKS proxies<br>
- *            Complete header customization<br>
- *            Enhanced SSL Support<br>
- *            Parsing methods for extracting useful data from scraped pages<br>
+ *         Some of the main features:
+ *            Optional stack based URL queue
+ *            curl\_multi\_* integration
+ *            Proxy support for HTTP and SOCKS proxies
+ *            Complete header customization
+ *            Enhanced SSL Support
+ *            Parsing methods for extracting useful data from scraped pages
  *
  *        All Parsing methods were written by Mike Schrenk in his book Webbots Spiders and Screenscrapers, the original source is available at http://www.schrenk.com/nostarch/webbots/DSP_download.php
  */
@@ -111,7 +111,8 @@ class HTTPBot
      */
     public function addHeader($header)
     {
-        if($this->checkHeader($header)){
+        if($this->checkHeader($header))
+        {
             if($this->verbose)
                 print "This header is already set. Try deleting it then resetting it.\n";
             return;
@@ -152,7 +153,8 @@ class HTTPBot
     public function delHeader($header)
     {
         // Ensure that $i is a valid index(which includes 0, if we only tested $i = ..., it would errenously return false)
-        if(($i = $this->checkHeader($header)) >= 0){
+        if(($i = $this->checkHeader($header)) >= 0)
+        {
             unset($this->headers[$i]);
             $this->headers = array_values($this->headers);
         }            
@@ -212,13 +214,17 @@ class HTTPBot
         if(!$ch)
             $ch = $this->ch;
         
-        if($verify){
+        if($verify)
+        {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            if($hostval >= 0 && $hostval < 3 && $certfile != ''){
+            if($hostval >= 0 && $hostval < 3 && $certfile != '')
+            {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
                 curl_setopt($ch, CURLOPT_CAINFO, $certfile);
             }
-        } else {
+        } 
+        else 
+        {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         }
@@ -248,7 +254,8 @@ class HTTPBot
         $this->proxyType = $type;
         if(!$ch)
             $ch = $this->ch;
-        if($proxy){
+        if($proxy)
+        {
             // Check for SOCKS or HTTP Proxy
             if(strtoupper($this->proxyType) == 'SOCKS')
                 curl_setopt($ch, CURLOPT_PROXYTYPE, 7);
@@ -259,7 +266,8 @@ class HTTPBot
             curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
             if($this->verbose)
                 print "Using {$this->proxyType} Proxy: {$this->proxy} ";
-            if($this->credentials){
+            if($this->credentials)
+            {
                 if($this->verbose)
                     print "Credentials: {$this->credentials}";
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->credentials);
@@ -267,7 +275,9 @@ class HTTPBot
             if($this->verbose)
                 print "\n";
         // Disable Proxy Support if called with no parameters
-        } else {
+        } 
+        else 
+        {
             if($this->verbose)
                 print "Disabling Proxy.\n";
             curl_setopt($ch, CURLOPT_PROXYTYPE, null);
@@ -488,7 +498,8 @@ class HTTPBot
      */
     public function popURL()
     {
-        if($this->urlCount() > 0){
+        if($this->urlCount() > 0)
+        {
             $url = array_pop($this->urls);
             if($this->verbose)
                 print "Popping " . $url[0] . " from list\n";
@@ -567,11 +578,14 @@ class HTTPBot
     public function requestGET($url = null, $ref='')
     {
         if($url == null)
-            if($this->urlCount() > 0){
+            if($this->urlCount() > 0)
+            {
 
                 $url = $this->popURL();
                 $url = $url[0];
-            } else {
+            } 
+            else 
+            {
                 if($this->verbose)
                     print "No URLs currently in stack\n";
                 return 0;
@@ -618,7 +632,8 @@ class HTTPBot
         if($purl == null)
             if($this->urlCount() > 0)
                 $purl = $this->popURL();
-            else {
+            else 
+            {
                 if($this->verbose)
                     print "No URLs currently in stack\n";
                 return 0;
@@ -666,7 +681,8 @@ class HTTPBot
     	if(!$url)
     		if($this->urlCount() > 0)
     			$url = $this->popURL();
-    		else{
+    		else
+            {
     			if($this->verbose)
     				print "No URLs currently in stack\n";
 
@@ -756,7 +772,8 @@ class HTTPBot
 
         $curlArray = array(); 
         $counter = $this->urlCount();
-        for($i = 0; $i < $counter; $i++){ 
+        for($i = 0; $i < $counter; $i++)
+        { 
             $url = $this->popURL();
             $curlArray[$i] = $this->setupCURL();
             $this->delHeader("Referer");
@@ -768,7 +785,8 @@ class HTTPBot
             curl_setopt($curlArray[$i], CURLOPT_RETURNTRANSFER,1);
             curl_setopt($curlArray[$i], CURLOPT_HTTPHEADER, $this->headers);
             curl_setopt($curlArray[$i], CURLOPT_POST, 0);
-            if(array_key_exists(1, $url) && $url[1] != null){
+            if(array_key_exists(1, $url) && $url[1] != null)
+            {
                 curl_setopt($curlArray[$i], CURLOPT_POST, 1);
                 curl_setopt($curlArray[$i], CURLOPT_POSTFIELDS, $this->generatePOSTData($url[1]));
             } 
@@ -776,23 +794,26 @@ class HTTPBot
             $this->delHeader("Referer");
         } 
         $active = null; 
-        do{ 
+        do
+        { 
             $mrc = curl_multi_exec($mh, $active); 
         } while($mrc == CURLM_CALL_MULTI_PERFORM); 
             
-        while($active && $mrc == CURLM_OK){
-            do{
+        while($active && $mrc == CURLM_OK)
+        {
+            do
+            {
                 $mrc = curl_multi_exec($mh, $active);
             } while ($mrc == CURLM_CALL_MULTI_PERFORM);
         }
         if ($mrc != CURLM_OK)
-              trigger_error("Curl multi read error $mrc\n", E_USER_WARNING);
+            trigger_error("Curl multi read error $mrc\n", E_USER_WARNING);
         
         $res = array(); 
-        foreach($nodes as $i => $url){
-
+        foreach($nodes as $i => $url)
+        {
             $curlError = curl_error($curlArray[$i]);
-              if($curlError == "")
+            if($curlError == "")
                 $res[$url[0]] = curl_multi_getcontent($curlArray[$i]); 
             else
                 if($this->verbose)
@@ -861,14 +882,17 @@ class HTTPBot
         $lc_str = strtolower($string);
         $marker = strtolower($delineator);
         // Return text true the delineator
-        if($desired == true){
+        if($desired == true)
+        {
             if($type == true) // Return text ESCL of the delineator
                 $split_here = strpos($lc_str, $marker);
             else // Return text false of the delineator
                 $split_here = strpos($lc_str, $marker)+strlen($marker);
             $parsed_string = substr($string, 0, $split_here);
         // Return text false the delineator
-        } else {
+        } 
+        else 
+        {
             if($type==true) // Return text ESCL of the delineator
                 $split_here = strpos($lc_str, $marker) + strlen($marker);
             else // Return text false of the delineator
@@ -974,16 +998,19 @@ class HTTPBot
     public function tidyHTML($inputString)
     {
         // Detect if Tidy is in configured
-        if(function_exists('tidy_get_release')){
+        if(function_exists('tidy_get_release'))
+        {
             # Tidy for PHP version 4
-            if(substr(phpversion(), 0, 1) == 4){
+            if(substr(phpversion(), 0, 1) == 4)
+            {
                 tidy_setopt('uppercase-attributes', TRUE);
                 tidy_setopt('wrap', 800);
                 tidy_parse_string($inputString);            
                 $cleanedHTML = tidy_get_output();  
             }
             # Tidy for PHP version 5
-            if(substr(phpversion(), 0, 1) >= 5){
+            if(substr(phpversion(), 0, 1) >= 5)
+            {
                 $config = array(
                                 'uppercase-attributes' => true,
                                 'wrap'                 => 800);
@@ -992,7 +1019,9 @@ class HTTPBot
                 $tidy->cleanRepair();
                 $cleanedHTML  = tidy_get_output($tidy);  
             }
-        } else {
+        } 
+        else 
+        {
             # Tidy not configured for this computer
             $cleanedHTML = $inputString;
         }
