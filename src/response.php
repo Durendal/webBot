@@ -1,4 +1,14 @@
 <?php
+/**
+ *        response.php - An object to hold HTTP Responses
+ *
+ *        This class helps dissecting the responses from HTTP requests
+ *        facilitates easy access to: Status code, headers, and content
+ *
+ * @author Durendal
+ * @license GPL
+ * @link https://github.com/Durendal/webBot
+ */
 
 namespace Durendal\webBot;
 
