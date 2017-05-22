@@ -1,4 +1,3 @@
-======
 webBot
 ======
 
@@ -9,7 +8,6 @@ Donations Appreciated:
 
 	BTC: 1NM3oe1k2wysV6B63iuzvQGVc9TrkespgU
 
-======
 ## Proxies
 
 An example of using it with tor:
@@ -31,7 +29,6 @@ if you then ran setProxy() with no parameters it would clear the proxy settings 
 	// index.html is an empty file
 
 
-===========
 ## Headers
 
 Headers can be completely customized, although the defaults are enough to make basic requests. These values can also be overridden, added to, or deleted at any time.
@@ -55,8 +52,6 @@ POST parameters should be sent as an array through generatePOSTData() which will
 		print "Failed to log in\n";
 
 
-
-===========
 ## Parsing
 
 This class also comes packaged with a number of parsing routines written by Mike Schrenk for his book Webbots, Spiders and Screenscrapers that I have found extremely useful in the past.
@@ -83,7 +78,6 @@ Example:
 
 This script takes an optional parameter of a subreddit name the default is 'talesfromtechsupport' It will scrape the RSS feed and post the front page of posts. This should illustrate the basic principles of using the bot. All parsing methods were adapted from original code written by Mike Schrenk in his book 'Webbots spiders and Screenscrapers'
 
-===============
 ## curl_multi_*
 
 This class is able to leverage the curl_multi_* functions to make multiple requests at once in batch mode. You can use a proxy with this function the same as you would with any other request, however at this time there is no way to specify a different proxy for each request. This may change in the future if I get the time. Send an array of arrays as the sole parameter, each array should have at least one element: the URL. If the request is a POST request place a second value inside the array that is an array of POST parameters. You can mix and match POST and GET requests, it will determine which is which at execution time.
@@ -105,7 +99,6 @@ Example:
 		file_put_contents("$key.html", $page);
 	}
 
-===============
 ## Stack based URL Queue
 
 You can optionally build a queue of URLs to scrape that acts as a FILO (First in last out) queue. This can work for individual or curl_multi_ requests, if its an individial request it will pop off the top URL and process it. If you run curl_multi it will process the entirety of the queue. In the future I may implement the option of selecting the number of urls to process. If there are items on the queue and you run requestGET(), requestPOST(), or requestHTTP() with an explicit url the queue will remain unaffected and the request will process normally.
