@@ -74,9 +74,9 @@ class Parser {
      */
     public static function returnBetween($string, $start, $stop, $type)
     {
-        $temp = self::splitString($string, $start, false, $type);
+        $temp = static::splitString($string, $start, false, $type);
 
-        return self::splitString($temp, $stop, true, $type);
+        return static::splitString($temp, $stop, true, $type);
     }
 
     /**
@@ -110,12 +110,12 @@ class Parser {
     public static function getAttribute($tag, $attribute)
     {
         // Use Tidy library to 'clean' input
-        $cleanedHTML = self::tidyHTML($tag);
+        $cleanedHTML = static::tidyHTML($tag);
         // Remove all line feeds from the string
         $cleanedHTML = str_replace(array("\r\n", "\n", "\r"), "", $cleanedHTML);
 
         // Use return_between() to find the properly quoted value for the attribute
-        return self::return_between($cleanedHTML, strtoupper($attribute)."=\"", "\"", true);
+        return static::return_between($cleanedHTML, strtoupper($attribute)."=\"", "\"", true);
     }
 
     /**
@@ -132,7 +132,7 @@ class Parser {
     public static function remove($string, $openTag, $closeTag)
     {
         # Get array of things that should be removed from the input string
-        $removeArray = self::parseArray($string, $openTag, $closeTag);
+        $removeArray = static::parseArray($string, $openTag, $closeTag);
 
         # Remove each occurrence of each array element from string;
         for($xx=0; $xx<count($removeArray); $xx++)
