@@ -15,7 +15,7 @@ namespace Durendal\webBot;
 class Proxy {
 
     /**
-     * @var string $type - The type of proxy (CURLPROXY_* constants)
+     * @var int $type - The type of proxy (CURLPROXY_* constants)
      * @var string $host - The address of the proxy to connect to
      * @var int $port - The port of the proxy to connect to
      * @var string $credentials - Any credentials needed to connect to the proxy
@@ -34,13 +34,13 @@ class Proxy {
      *
      * @param string $host - The address of the proxy
      * @param int $port - The port to connect to the proxy on
-     * @param string $type - The type of proxy (CURLPROXY_* constants)
+     * @param int $type - The type of proxy (CURLPROXY_* constants)
      * @param string $credentials - A string containing username:password format for the proxy
      *
      * @return void
      */
     public function __construct($host = "", $port = 0, $type=NULL, $credentials=NULL) {
-      $this->validTypes = array("CURLPROXY_HTTP", "CURLPROXY_HTTP_1_0", "CURLPROXY_SOCKS4", "CURLPROXY_SOCKS5", NULL);
+      $this->validTypes = array(CURLPROXY_HTTP, CURLPROXY_HTTP_1_0, CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, NULL);
       $this->setHost($host);
       $this->setPort($port);
       $this->setType($type);
@@ -86,7 +86,7 @@ class Proxy {
    * @return void
    */
   public function setHost($host) {
-    $this->host = $host;
+	  $this->host = (filter_var($host, FILTER_VALIDATE_URL)) ? $host : NULL;
   }
 
   /**

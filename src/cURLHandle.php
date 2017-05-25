@@ -43,8 +43,8 @@ require_once 'Proxy.php';
     */
    public function __construct($headers=NULL, $proxy=NULL) {
       $this->cookies  = NULL;
-      $this->handle   = $this->setupCURL();
-      $this->handle   = $this->setProxy($proxy);
+      $this->handle   = NULL;
+      $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy(); 
       $this->setHeaders($headers);
    }
 
@@ -64,7 +64,7 @@ require_once 'Proxy.php';
     * @return void
     */
    public function setCookies($cookies) {
-     $this->cookies = (is_a($cookies, "Cookies")) ? $cookies : new Cookies($this->handle);
+     $this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies($this->handle);
    }
 
   /**
@@ -78,7 +78,7 @@ require_once 'Proxy.php';
    * @return void
     */
    public function setHeaders($headers) {
-      $this->headers = (is_a($headers, "Headers")) ? $headers : new Headers();
+      $this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new Headers();
    }
 
   /**
@@ -94,7 +94,7 @@ require_once 'Proxy.php';
     */
    public function setProxy($proxy, $ch = NULL) {
 
-      $this->proxy = (is_a($proxy, "Proxy")) ? $proxy : new Proxy();
+      $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new Proxy();
 
       if(!$ch)
         $ch = $this->handle;

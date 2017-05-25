@@ -101,7 +101,7 @@
     * @return void
     */
    public function setProxy($proxy) {
-       $this->proxy = (is_a($proxy, "Proxy")) ? $proxy : new Proxy();
+       $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new Proxy();
    }
 
    /**
@@ -115,7 +115,7 @@
     * @return void
     */
 	public function setCookies($cookies) {
-		$this->cookies = (is_a($cookies, "Cookies")) ? $cookies : new Cookies($this->handle->getHandle());
+		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies($this->handle->getHandle());
 	}
 
    /**
@@ -140,7 +140,7 @@
     * @return void
     */
    public function setHeaders($headers) {
-     $this->headers = (is_a($headers, "Headers")) ? $headers : new Headers();
+     $this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new Headers();
 
    }
 

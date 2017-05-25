@@ -5,7 +5,8 @@ class webBotException extends Exception {}
 class ProxyException extends webBotException {}
 class InvalidProxyHostException extends ProxyException {}
 class InvalidProxyPortException extends ProxyException {}
-
+class InvalidProxyTypeException extends ProxyException {}
+	
 class CookiesException extends webBotException {}
 class InvalidCookieKeyException extends CookiesException {}
 class DuplicateCookieException extends CookiesException {}
