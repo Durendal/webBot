@@ -1,4 +1,16 @@
 <?php
+/**
+ *		Session.php - An object to encapsulate HTTP Sessions
+ *
+ *		This class encapsulates a HTTP Session. As such it will track cookies
+ *		and headers through multiple Requests
+ *
+ * @author Durendal
+ * @license GPL
+ * @link https://github.com/Durendal/webBot
+ */
+
+namespace Durendal\webBot;
 
 class Session {
 
