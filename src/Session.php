@@ -26,10 +26,10 @@ class Session {
 	$start;
 
 	public function __construct() {
-			$this->requests	= array();
-			$this->cookies	= NULL;
-			$this->proxy	= NULL;
-			$this->start	= time();
+		$this->requests	= array();
+		$this->cookies	= NULL;
+		$this->proxy	= NULL;
+		$this->start	= time();
 	}
 
 	public function __toString() {

@@ -25,11 +25,11 @@ class Response
 	 * @var array $headers - The headers of the response
 	 * @var int $uid - The UID of the response
 	 */
-	 private $status;
-	 private $content;
-	 private $headers;
-	 private $uid;
-	 private $parentHandle;
+	private $status;
+	private $content;
+	private $headers;
+	private $uid;
+	private $parentHandle;
 
 	/**
 	 *	__construct($curlData)
