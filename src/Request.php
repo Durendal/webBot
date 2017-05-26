@@ -21,15 +21,16 @@
  	 * @var string $cookies - Cookie Object to use
  	 * @var array $headers - Array of headers to use for requests
  	 * @var array $targetURL - URL to download
-   * @var string $method - HTTP method to use
+     * @var string $method - HTTP method to use
  	 * @var string $proxy - Currently set Proxy
  	 * @var object $handle - cURL Handle
-   * @var array $pData - additional data to be sent on POST and PUT requests
+     * @var array $pData - additional data to be sent on POST and PUT requests
  	 */
 
    private $cookies;
    private $headers;
    private $targetURL;
+   private $handle;
    private $method;
    private $proxy;
    private $handle;
@@ -48,27 +49,15 @@
     *
     * @return void
     */
-   public function __construct($url, $proxy, $method="GET", $cookies=NULL, $headers=NULL) {
+   public function __construct($url, $proxy, $method="GET", $cookies=NULL, $headers=NULL, $ch = NULL) {
 
-     $this->setURL($url);
      $this->method = $method;
+	 $this->pData = (strtoupper($pData) == "POST" || strtoupper($pData) == "PUT") ? array() : NULL;
+     $this->setURL($url);
      $this->setProxy($proxy);
-     $this->pData = (strtoupper($pData) == "POST" || strtoupper($pData) == "PUT") ? array() : NULL;
-
-     if($headers)
-       $this->setHeaders($headers);
-     else
-       $this->headers = new Headers();
-
-     $this->handle = new cURLHandle($headers=$this->headers, $proxy=$this->proxy);
-
-     if($cookies)
-        $this->setCookies($cookies);
-     else
-       $this->cookies = new Cookies($this->handle->getHandle());
-
-
-      $this->handle->setCookie($this->cookies);
+     $this->setHeaders($headers);
+	 $this->setCookies($cookies);
+	 $this->setHandle($ch);
    }
 
    public function __toString() {
@@ -155,6 +144,9 @@
      return $this->headers;
    }
 
+	public function setHandle($ch) {
+		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($this->proxy, $this->cookies, $this->headers);
+	}
    /**
     *   setURL($url)
     *
@@ -178,6 +170,10 @@
    public function getURL() {
      return $this->url;
    }
+
+	public function setHandle($ch) {
+		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($this->proxy, $this->cookies, $this->headers);
+	}
 
    /**
     *   run()

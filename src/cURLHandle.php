@@ -2,7 +2,7 @@
 /**
  *		cURLHandle.php - An object to represent a cURL handle on HTTPBot
  *
- *		This class helps constructing HTTP requests
+ *		This class helps constructing cURL Handles
  *
  * @author Durendal
  * @license GPL
@@ -10,9 +10,12 @@
  */
  namespace Durendal\webBot;
 
+use Durendal\webBot as webBot;
+
 require_once 'Cookies.php';
 require_once 'Headers.php';
 require_once 'Proxy.php';
+require_once 'Exceptions.php';
 
  class cURLHandle {
 
@@ -41,11 +44,12 @@ require_once 'Proxy.php';
     *
     * @return void
     */
-   public function __construct($headers=NULL, $proxy=NULL) {
-      $this->cookies  = NULL;
-      $this->handle   = NULL;
-      $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy(); 
+   public function __construct($proxy=NULL, $cookies = NULL, $headers = NULL) {
+
+      $this->handle = $this->setupCURL();
+      $this->handle = $this->setProxy($proxy);
       $this->setHeaders($headers);
+	  $this->setCookies($cookies);
    }
 
 	public function __toString() {
@@ -63,8 +67,9 @@ require_once 'Proxy.php';
     *
     * @return void
     */
-   public function setCookies($cookies) {
-     $this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies($this->handle);
+   public function setCookies($cookies, $ch = NULL) {
+     $this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new webBot\Cookies();
+	 $this->cookies->init($this->handle);
    }
 
   /**
@@ -77,8 +82,9 @@ require_once 'Proxy.php';
    *
    * @return void
     */
-   public function setHeaders($headers) {
-      $this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new Headers();
+   public function setHeaders($headers, $ch = NULL) {
+      $this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new webBot\Headers();
+	  $this->headers->init($this->handle)
    }
 
   /**
@@ -94,29 +100,8 @@ require_once 'Proxy.php';
     */
    public function setProxy($proxy, $ch = NULL) {
 
-      $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new Proxy();
-
-      if(!$ch)
-        $ch = $this->handle;
-
-      $proxy = $this->proxy->getProxy();
-
-      curl_setopt($ch, CURLOPT_PROXYTYPE, $proxy['type']);
-      curl_setopt($ch, CURLOPT_PROXYUSERPWD, NULL);
-
-      // Check for valid proxy type
-      if(!$proxy['type']) {
-        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 0);
-        curl_setopt($ch, CURLOPT_PROXY, NULL);
-      } else {
-
-      curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-      curl_setopt($ch, CURLOPT_PROXY, $proxy['host']);
-
-      if($this->credentials)
-        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy['credentials']);
-      }
-      return $ch;
+      $this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy();
+	  $this->proxy->init($this->handle);
    }
 
    /**
@@ -224,7 +209,6 @@ require_once 'Proxy.php';
  		curl_setopt($ch, CURLOPT_HEADER, 1);
  		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookies->getCookieJar());
  		curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookies->getCookieJar());
- 		//curl_setopt($ch, CURLOPT_COOKIEFILE, NULL);
 
  		return $ch;
  	}
@@ -278,7 +262,7 @@ require_once 'Proxy.php';
 
  		$this->headers->delHeader("Referer");
 
- 		return new Response($x);
+ 		return new Response($ch, $x);
  	}
 
  	/**
@@ -422,7 +406,7 @@ require_once 'Proxy.php';
   {
     $params = '';
     foreach($data as $key => $val)
-      $params .= urlencode($key) . '=' . urlencode($val) . '&';
+      $params .= curl_escape($this->handle, $key) . '=' . curl_escape($this->handle, $val) . '&';
 
     // trim trailing &
     return substr($params, 0, -1);

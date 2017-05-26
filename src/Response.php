@@ -12,6 +12,10 @@
 
 namespace Durendal\webBot;
 
+use Durendal\webBot as webBot;
+
+require_once 'Headers.php';
+
 class Response
 {
 
@@ -25,6 +29,7 @@ class Response
 	 private $content;
 	 private $headers;
 	 private $uid;
+	 private $parentHandle;
 
 	/**
 	 *	__construct($curlData)
@@ -35,13 +40,16 @@ class Response
 	 *
 	 * @return string
 	 */
-	public function __construct($curlData)
+	public function __construct($ch, $response)
 	{
-		list($headers, $this->content) = explode("\r\n\r\n", $curlData, 2);
+		$this->parentHandle = $ch;
+		list($headers, $this->content) = explode("\r\n\r\n", $response, 2);
+		$this->status = curl_getinfo($this->parentHandle, CURLINFO_HTTP_CODE);
+		//$headers = array_filter(explode("\n", curl_getinfo($this->parentHandle, CURLINFO_HEADER_OUT)), function($value) { return $value !== '' && $value !== ' ' && strlen($value) != 1; });
 		$headers = http_parse_headers($headers);
-		$this->status = substr(array_shift($this->headers), 9, 3);
-		$this->headers = new Headers($headers);
-		$this->uid = hash('md5', $this->content.time());
+		//$this->status = substr(array_shift($this->headers), 9, 3);
+		$this->headers = new webBot\Headers($headers);
+		$this->uid = hash('md5', sprintf("%s%d", $this->content, time()));
 	}
 
 	public function __toString() {

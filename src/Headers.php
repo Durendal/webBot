@@ -12,12 +12,16 @@
 
 namespace Durendal\webBot;
 
+use Durendal\webBot as webBot;
+
+require_once 'Exceptions.php';
+
 class Headers {
     private $headers;
 
-    public function __construct($headers = NULL) {
-        $this->headers = (is_array($headers)) ? $headers : array();
-        if(!$headers)
+    public function __construct($headers = array()) {
+        $this->headers = $headers;
+        if(count($headers) == 0)
           $this->defaultHeaders();
     }
 
