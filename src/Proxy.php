@@ -45,36 +45,55 @@ class Proxy {
 	 * @return void
 	 */
 	public function __construct($host = "", $port = 0, $type=NULL, $credentials=NULL, $ch = NULL) {
-		$this->parentHandle = NULL;
+		$this->parentHandle = $ch;
 		$this->validTypes = array(CURLPROXY_HTTP, CURLPROXY_HTTP_1_0, CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, NULL);
 		$this->setHost($host);
 		$this->setPort($port);
 		$this->setType($type);
 		$this->setCredentials($credentials);
-		if($ch)
-			$this->init($ch);
+		if($this->parentHandle)
+			$this->init($this->parentHandle);
 	}
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Proxy object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return "<{$this->type} Proxy - {$this->host}:{$this->port}>";
+		return sprintf("<%s Proxy - %s:%d Credentials: %s>", $this->type, $this->host, $this->port, $this->credentials);
 	}
 
+	/**
+	 *	init($ch)
+	 *
+	 *		Initialize the proxy settings on $ch
+	 *
+	 * @param resource $ch - The cURL Handle to apply cookies to
+	 *
+	 * @return void
+	 */
 	public function init($ch) {
 		$this->parentHandle = $ch;
 		curl_setopt($this->parentHandle, CURLOPT_PROXYTYPE, $this->type);
 		curl_setopt($this->parentHandle, CURLOPT_PROXYUSERPWD, NULL);
 
 		// Check for valid proxy type
-		if(!$this->type) {
+		if($this->type === NULL) {
 			curl_setopt($this->parentHandle, CURLOPT_HTTPPROXYTUNNEL, 0);
 			curl_setopt($this->parentHandle, CURLOPT_PROXY, NULL);
+			curl_setopt($this->parentHandle, CURLOPT_PROXYPORT, NULL);
+
 		} else {
 
 			curl_setopt($this->parentHandle, CURLOPT_HTTPPROXYTUNNEL, 1);
 			curl_setopt($this->parentHandle, CURLOPT_PROXY, $this->host);
+			curl_setopt($this->parentHandle, CURLOPT_PROXYPORT, $this->port);
 
-		if($this->credentials)
-			curl_setopt($this->parentHandle, CURLOPT_PROXYUSERPWD, $this->credentials);
+			if($this->credentials)
+				curl_setopt($this->parentHandle, CURLOPT_PROXYUSERPWD, $this->credentials);
 		}
 	}
 

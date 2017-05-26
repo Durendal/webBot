@@ -14,8 +14,15 @@ namespace Durendal\webBot;
 
 class Parser {
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Parser object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return "<Parser - >";
+		return sprintf("<Parser - >");
 	}
 	/**
 	 *	splitString($string, $delineator, $desired, $type)

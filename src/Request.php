@@ -10,6 +10,8 @@
  */
 namespace Durendal\webBot;
 
+use Durendal\webBot as webBot;
+
 require_once 'Cookies.php';
 require_once 'Headers.php';
 require_once 'Response.php';
@@ -33,8 +35,8 @@ class Request
 	private $handle;
 	private $method;
 	private $proxy;
-	private $handle;
 	private $pData;
+	private $response;
 
 	/**
 	 *   __construct($url, $proxy, $method="GET", $cookies=NULL, $headers=NULL)
@@ -49,7 +51,7 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function __construct($url, $proxy, $method="GET", $cookies=NULL, $headers=NULL, $ch = NULL) {
+	public function __construct($url, $proxy=NULL, $method="GET", $pData = NULL, $cookies=NULL, $headers=NULL, $ch = NULL) {
 		$this->method = $method;
 		$this->pData = (strtoupper($pData) == "POST" || strtoupper($pData) == "PUT") ? array() : NULL;
 		$this->setURL($url);
@@ -59,8 +61,15 @@ class Request
 		$this->setHandle($ch);
 	}
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Request object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return "<HTTP Request - {$this->targetURL}>";
+		return sprintf("<HTTP Request - %s>", $this->targetURL);
 	}
 
 	/**
@@ -103,7 +112,7 @@ class Request
 	 * @return void
 	 */
 	public function setCookies($cookies) {
-		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies($this->handle->getHandle());
+		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies();
 	}
 
 	/**
@@ -128,7 +137,7 @@ class Request
 	 * @return void
 	 */
 	public function setHeaders($headers) {
-		$this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new Headers();
+		$this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new webBot\Headers();
 	}
 
 	/**
@@ -146,6 +155,9 @@ class Request
 		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($this->proxy, $this->cookies, $this->headers);
 	}
 
+	public function getHandle() {
+		return $this->handle;
+	}
 	/**
 	 *   setURL($url)
 	 *
@@ -167,11 +179,7 @@ class Request
 	 * @return string $this->url - The currently set URL
 	 */
 	public function getURL() {
-		return $this->url;
-	}
-
-	public function setHandle($ch) {
-		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($this->proxy, $this->cookies, $this->headers);
+		return $this->targetURL;
 	}
 
 	/**
@@ -179,9 +187,12 @@ class Request
 	 *
 	 *     Executes the request with its set proxy, header, and cookie settings
 	 *
+	 * @param string $ref - Referer to send with request, default is the URL being requested.
+	 *
 	 * @return object Response - The response to the HTTP Request
 	 */
-	public function run() {
-		return $this->handle->requestHTTP($this->getURL(), $this->method, '', $this->pData);
+	public function run($ref = NULL) {
+		$ref = ($ref) ? $ref : $this->getURL();
+		return $this->handle->requestHTTP($this->getURL(), $this->method, $ref, $this->pData);
 	}
 }

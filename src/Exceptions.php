@@ -28,7 +28,7 @@ class ResponseException extends  webBotException {}
 
 class cURLHandleException extends webBotException {}
 
-class URLException extends cURLHandlesException {}
+class URLException extends cURLHandleException {}
 class InvalidURLException extends URLException {}
 class MissingURLException extends URLException {}
 

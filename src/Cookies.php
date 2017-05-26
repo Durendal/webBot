@@ -17,6 +17,11 @@ require_once 'Exceptions.php';
 
 class Cookies
 {
+	/**
+	 * @var array $cookies - An array containing a list of currently set cookies
+	 * @var string $cookieJar - A string containing the location of the cookie file
+	 * @var resource $parentHandle - The cURL Handle bound to the Cookies object
+	 */
 	private $cookies;
 	private $cookieJar;
 	private $parentHandle;
@@ -34,24 +39,60 @@ class Cookies
 	 */
 	public function __construct($ch = NULL, $cookies = array(), $cookieJar = "cookies.txt") {
 		$this->parentHandle = NULL;
+		$this->cookies = array();
 		$this->setCookieJar($cookieJar);
 
 		if($ch)
 			$this->init($ch, $cookies);
 	}
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Cookies object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return "<HTTP Cookies - >";
+		return sprintf("<HTTP Cookies - %d cookies currently set>", count($this->cookies));
 	}
 
+	/**
+	 *	setCookieJar($cookieJar)
+	 *
+	 *		Sets the location of the file to use for reading/writing cookies.
+	 *
+	 * @param string $cookieJar - The path to the file to store cookies in
+	 *
+	 * @return void
+	 */
 	public function setCookieJar($cookieJar) {
 		$this->cookieJar = $cookieJar;
 	}
 
+	/**
+	 *	getCookieJar()
+	 *
+	 *		Returns the location of the file to use for reading/writing cookies.
+	 *
+	 * @return string $this->cookieJar - The path of the file to read/write cookies from
+	 */
 	public function getCookieJar() {
 		return $this->cookieJar;
 	}
 
+	/**
+	 *	init($ch, $cookies = array())
+	 *
+	 *		Initialize the cookies settings on $ch, additionally an array of
+	 *		cookies in key => value format can be submitted and added to the
+	 *		handle.
+	 *
+	 * @param resource $ch - The cURL Handle to apply cookies to
+	 * @param array $cookies - Additional set of cookies to add.
+	 *
+	 * @return void
+	 */
 	public function init($ch, $cookies = array()) {
 		$this->parentHandle = $ch;
 

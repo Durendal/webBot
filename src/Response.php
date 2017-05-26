@@ -52,6 +52,13 @@ class Response
 		$this->uid = hash('md5', sprintf("%s%d", $this->content, time()));
 	}
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Response object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return "<HTTP Response - >";
 	}

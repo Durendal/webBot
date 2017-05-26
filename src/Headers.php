@@ -17,7 +17,13 @@ use Durendal\webBot as webBot;
 require_once 'Exceptions.php';
 
 class Headers {
+
+	/**
+	 * @var array headers - Array of headers submitted or returned from a request
+	 * @var resource parentHandle - The cURL Handle bound to the headers object
+	 */
 	private $headers;
+	private $parentHandle;
 
 	public function __construct($headers = array()) {
 		$this->headers = $headers;
@@ -25,8 +31,34 @@ class Headers {
 			$this->defaultHeaders();
 	}
 
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the Headers object.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
-		return "<HTTP Headers - >";
+		return sprintf("<HTTP Headers - %d Headers currently set>", count($this->headers));
+	}
+
+	/**
+	 *	init($ch, $headers = array())
+	 *
+	 *		Initialize the headers settings on $ch, additionally an array of
+	 *		headers can be submitted and added to the
+	 *		handle.
+	 *
+	 * @param resource $ch - The cURL Handle to apply cookies to
+	 * @param array $headers - Additional set of headers to add.
+	 *
+	 * @return void
+	 */
+	public function init($ch) {
+		$this->parentHandle = $ch;
+		curl_setopt($this->parentHandle, CURLOPT_HTTPHEADER, $this->headers);
+		curl_setopt($this->parentHandle, CURLINFO_HEADER_OUT, TRUE);
+		curl_setopt($this->parentHandle, CURLOPT_HEADER, 1);
 	}
 	/**
 	 *	defaultHeaders()
@@ -40,7 +72,7 @@ class Headers {
 		//$this->addHeader("Connection: Keep-alive");
 		//$this->addHeader("Keep-alive: 300");
 		//$this->addHeader("Expect:");
-		$this->addHeader("User-Agent: " . $this->randomAgent());
+		$this->addHeader(sprintf("User-Agent: %s", $this->randomAgent()));
 	}
 
 	/**
@@ -50,14 +82,15 @@ class Headers {
 	 *
 	 * @param string $header - Contains the Header to add
 	 *
-	 * @return void
+	 * @return boolean - Denotes if header was successfully added
 	 */
 	public function addHeader($header)
 	{
-		if($this->checkHeader($header))
-			return;
+		if($this->checkHeader($header) !== NULL)
+			return FALSE;
 
 		$this->headers[] = $header;
+		return TRUE;
 	}
 
 	/**
@@ -92,7 +125,7 @@ class Headers {
 	public function delHeader($header)
 	{
 		// Ensure that $i is a valid index(which includes 0, if we only tested $i = ..., it would errenously return false)
-		if(($i = $this->checkHeader($header)) >= 0) {
+		if(($i = $this->checkHeader($header)) !== NULL) {
 			unset($this->headers[$i]);
 			$this->headers = array_values($this->headers);
 		}
@@ -114,7 +147,7 @@ class Headers {
 		if(stristr($val, $header))
 			$this->addHeader($val);
 		else
-			$this->addHeader("$header: $val");
+			$this->addHeader(sprintf("%s: %s", $header, $val));
 	}
 
 	/**
