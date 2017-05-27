@@ -144,5 +144,6 @@ Special Thanks to:
 
 	Viviparous
 	Yani
+	John Kozan
 
 For providing suggestions to help make webBot better :)
