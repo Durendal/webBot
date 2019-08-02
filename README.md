@@ -6,7 +6,7 @@ webBot.php aims to simplify the use of cURL with php. At the moment it only hand
 
 Donations Appreciated:
 
-	BTC: 1NM3oe1k2wysV6B63iuzvQGVc9TrkespgU
+	BTC: 3QjZrbqe8EGV9E6mTr2J5rkuqHVTGdXRH2
 
 ## Proxies
 
