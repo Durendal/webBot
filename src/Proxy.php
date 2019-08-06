@@ -67,37 +67,6 @@ class Proxy {
 	}
 
 	/**
-	 *	init($ch)
-	 *
-	 *		Initialize the proxy settings on $ch
-	 *
-	 * @param resource $ch - The cURL Handle to apply cookies to
-	 *
-	 * @return void
-	 */
-	public function init($ch) {
-		$this->parentHandle = $ch;
-		curl_setopt($this->parentHandle, CURLOPT_PROXYTYPE, $this->type);
-		curl_setopt($this->parentHandle, CURLOPT_PROXYUSERPWD, NULL);
-
-		// Check for valid proxy type
-		if($this->type === NULL) {
-			curl_setopt($this->parentHandle, CURLOPT_HTTPPROXYTUNNEL, 0);
-			curl_setopt($this->parentHandle, CURLOPT_PROXY, NULL);
-			curl_setopt($this->parentHandle, CURLOPT_PROXYPORT, NULL);
-
-		} else {
-
-			curl_setopt($this->parentHandle, CURLOPT_HTTPPROXYTUNNEL, 1);
-			curl_setopt($this->parentHandle, CURLOPT_PROXY, $this->host);
-			curl_setopt($this->parentHandle, CURLOPT_PROXYPORT, $this->port);
-
-			if($this->credentials)
-				curl_setopt($this->parentHandle, CURLOPT_PROXYUSERPWD, $this->credentials);
-		}
-	}
-
-	/**
 	 *  setType($type)
 	 *
 	 *    Checks that $type is a valid cURL proxy type or NULL

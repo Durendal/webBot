@@ -25,6 +25,7 @@ class Response
 	 * @var array $headers - The headers of the response
 	 * @var int $uid - The UID of the response
 	 */
+	private $raw;
 	private $status;
 	private $content;
 	private $headers;
@@ -42,12 +43,10 @@ class Response
 	 */
 	public function __construct($ch, $response)
 	{
-		$this->parentHandle = $ch;
-		list($headers, $this->content) = explode("\r\n\r\n", $response, 2);
-		$this->status = curl_getinfo($this->parentHandle, CURLINFO_HTTP_CODE);
-		//$headers = array_filter(explode("\n", curl_getinfo($this->parentHandle, CURLINFO_HEADER_OUT)), function($value) { return $value !== '' && $value !== ' ' && strlen($value) != 1; });
+		$this->raw = $response;
+		list($headers, $this->content) = explode("\r\n\r\n", $this->raw, 2);
+		$this->status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$headers = http_parse_headers($headers);
-		//$this->status = substr(array_shift($this->headers), 9, 3);
 		$this->headers = new webBot\Headers($headers);
 		$this->uid = hash('md5', sprintf("%s%d", $this->content, time()));
 	}
@@ -109,6 +108,17 @@ class Response
 	public function uid()
 	{
 		return $this->uid;
+	}
+
+	/**
+	 *	raw()
+	 *
+	 *		Returns the raw response
+	 *
+	 * @return string
+	 */
+	public function raw() {
+		return $this->raw;
 	}
 
 }

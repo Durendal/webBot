@@ -37,13 +37,9 @@ class Cookies
 	 *
 	 * @return void
 	 */
-	public function __construct($ch = NULL, $cookies = array(), $cookieJar = "cookies.txt") {
-		$this->parentHandle = NULL;
+	public function __construct($cookieJar = "cookies.txt") {
 		$this->cookies = array();
 		$this->setCookieJar($cookieJar);
-
-		if($ch)
-			$this->init($ch, $cookies);
 	}
 
 	/**
@@ -81,106 +77,11 @@ class Cookies
 		return $this->cookieJar;
 	}
 
-	/**
-	 *	init($ch, $cookies = array())
-	 *
-	 *		Initialize the cookies settings on $ch, additionally an array of
-	 *		cookies in key => value format can be submitted and added to the
-	 *		handle.
-	 *
-	 * @param resource $ch - The cURL Handle to apply cookies to
-	 * @param array $cookies - Additional set of cookies to add.
-	 *
-	 * @return void
-	 */
-	public function init($ch, $cookies = array()) {
-		$this->parentHandle = $ch;
-
-		curl_setopt($this->parentHandle, CURLINFO_HEADER_OUT, TRUE);
-
-		// Set cookie jar
-		curl_setopt($this->parentHandle, CURLOPT_COOKIEJAR, $this->cookieJar);
-		curl_setopt($this->parentHandle, CURLOPT_COOKIEFILE, $this->cookieJar);
-
-		// Clear Cookies in cookie jar
-		curl_setopt($this->parentHandle, CURLOPT_COOKIELIST, "SESS");
-
-		// Populate Cookiejar with any custom submitted cookies
-		foreach($cookies as $key => $value)
-			$this->setCookie($key, $value);
-
-		// Write cookies to cookie jar
-		curl_setopt($this->parentHandle, CURLOPT_COOKIELIST, "FLUSH");
-
-		$this->cookies = $this->getCookies();
+	public function setCookie($key, $value) {
+		$this->cookies[$key] = $value;
 	}
 
-	/**
-	 *	setCookie($cookie)
-	 *
-	 *		sets the cookie file to $cookie and rebuilds the curl handler.
-	 *		note that if you already have an instance of the curlHandler
-	 *		instantiated, you will need to rebuild it via rebuildHandle()
-	 *		for this to take effect
-	 *
-	 * @param string $key - The name for the cookie being added
-	 * @param string $value - The value of the cookie being added
-	 *
-	 * @return void
-	 */
-	public function setCookie($key, $value)
-	{
-		if($this->parentHandle == NULL)
-			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
-
-		curl_setopt($this->parentHandle, CURLOPT_COOKIELIST, sprintf("%s=%s", $key, $value));
-		curl_setopt($this->parentHandle, CURLOPT_COOKIELIST, "FLUSH");
-
-		$this->cookies = $this->getCookies();
-
-	}
-
-	/**
-	 *    generateCookies()
-	 *
-	 *      Returns a string built from an array of Cookies
-	 *
-	 * @return string - A string containing the currently set cookies
-	 */
-	public function generateCookies($host)
-	{
-		if($this->parentHandle == NULL)
-			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
-
-		$cookieStr = "";
-
-		foreach($this->cookies[$host] as $val)
-			$cookieStr .= sprintf("%s=%s; ", $val['name'], $val['value']);
-
-		return substr($cookieStr, 0, strlen($cookieStr)-1);
-	}
-
-	/**
-	 *	getCookies()
-	 *
-	 *		returns the current set of cookies
-	 *
-	 * @return string
-	 */
-	public function getCookies()
-	{
-		if($this->parentHandle == NULL)
-			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
-
-		$cookies = curl_getinfo($this->parentHandle, CURLINFO_COOKIELIST);
-
-		foreach($cookies as $i => $val) {
-			$val = explode("\t", $val);
-			if(count($val) == 7)
-				$this->cookies[$val[0]][] = array('flag' => $val[1], 'path' => $val[2], 'secure' => $val[3], 'expiration' => $val[4], 'name' => $val[5], 'value' => $val[6]);
-			unset($cookies[$i]);
-		}
-
+	public function getCookies() {
 		return $this->cookies;
 	}
 }

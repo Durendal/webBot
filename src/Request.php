@@ -16,6 +16,7 @@ require_once 'Cookies.php';
 require_once 'Headers.php';
 require_once 'Response.php';
 require_once 'Proxy.php';
+require_once 'Data.php';
 
 class Request
 {
@@ -36,6 +37,7 @@ class Request
 	private $method;
 	private $proxy;
 	private $pData;
+	private $query;
 	private $response;
 
 	/**
@@ -51,16 +53,39 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function __construct($url, $proxy=NULL, $method="GET", $pData = NULL, $cookies=NULL, $headers=NULL, $ch = NULL) {
+	public function __construct($url, $settings = array('proxy'=>NULL, 'method'=>"GET", 'pData' => NULL, 'cookies'=>NULL, 'headers'=>NULL, 'ch' => NULL, 'query' => NULL)) {
+		extract($settings);
 		$this->method = $method;
-		$this->pData = (strtoupper($pData) == "POST" || strtoupper($pData) == "PUT") ? array() : NULL;
+		$this->pData = $this->setData($pData, $method);
+		$this->query = $this->setQuery($query);
 		$this->setURL($url);
+		$this->setProxy($proxy);
 		$this->setProxy($proxy);
 		$this->setHeaders($headers);
 		$this->setCookies($cookies);
 		$this->setHandle($ch);
 	}
 
+	public function __destruct() {
+		unset($this->handle);
+		unset($this->method);
+		unset($this->proxy);
+		unset($this->pData);
+		unset($this->query);
+		unset($this->targetURL);
+	}
+
+	public function setData($data, $method) {
+		if(is_a($data, "Durendal\webBot\RequestData")) {
+			$this->pData = (strtoupper($method) == "GET") ? NULL : $data;
+		}
+	}
+	
+	public function setQuery($query, $method) {
+		if(is_a($query, "Durendal\webBot\RequestQuery")) {
+			$this->query = $query;
+		}
+	}
 	/**
 	 *	__toString()
 	 *
@@ -73,21 +98,6 @@ class Request
 	}
 
 	/**
-	 *   addPOSTData($data)
-	 *
-	 *     Takes an array of key->value pairs to be sent as POST data and adds
-	 *     to the current POST data array
-	 *
-	 * @param array $data - The Data to add to the Array
-	 *
-	 * @return void
-	 */
-	public function addPOSTData($data) {
-		if(is_array($data))
-			$this->pData = array_merge($data, $this->pData);
-	}
-
-	/**
 	 *   setProxy($proxy)
 	 *
 	 *     Checks that $proxy is a valid proxy object, if so it assigns it to
@@ -97,8 +107,8 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function setProxy($proxy) {
-		$this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new Proxy();
+	public function setProxy($proxy=NULL) {
+		$this->handle->setProxy($proxy);
 	}
 
 	/**
@@ -112,7 +122,7 @@ class Request
 	 * @return void
 	 */
 	public function setCookies($cookies) {
-		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new Cookies();
+		$this->handle->setCookies($cookies);
 	}
 
 	/**
@@ -123,7 +133,7 @@ class Request
 	 * @return object $cookies - The currently set cookie object
 	 */
 	public function getCookies() {
-		return $this->cookies;
+		return $this->handle->getCookies();
 	}
 
 	/**
@@ -137,7 +147,7 @@ class Request
 	 * @return void
 	 */
 	public function setHeaders($headers) {
-		$this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new webBot\Headers();
+		$this->handle->setHeaders($headers);
 	}
 
 	/**
@@ -148,7 +158,7 @@ class Request
 	 * @return object $this->headers - The currently set headers object
 	 */
 	public function getHeaders() {
-		return $this->headers;
+		return $this->handle->getHeaders();
 	}
 
 	public function setHandle($ch) {

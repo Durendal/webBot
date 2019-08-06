@@ -43,24 +43,6 @@ class Headers {
 	}
 
 	/**
-	 *	init($ch, $headers = array())
-	 *
-	 *		Initialize the headers settings on $ch, additionally an array of
-	 *		headers can be submitted and added to the
-	 *		handle.
-	 *
-	 * @param resource $ch - The cURL Handle to apply cookies to
-	 * @param array $headers - Additional set of headers to add.
-	 *
-	 * @return void
-	 */
-	public function init($ch) {
-		$this->parentHandle = $ch;
-		curl_setopt($this->parentHandle, CURLOPT_HTTPHEADER, $this->headers);
-		curl_setopt($this->parentHandle, CURLINFO_HEADER_OUT, TRUE);
-		curl_setopt($this->parentHandle, CURLOPT_HEADER, 1);
-	}
-	/**
 	 *	defaultHeaders()
 	 *
 	 *		sets some default headers to use for requests, these can be edited and added to.
@@ -69,8 +51,8 @@ class Headers {
 	 */
 	public function defaultHeaders()
 	{
-		//$this->addHeader("Connection: Keep-alive");
-		//$this->addHeader("Keep-alive: 300");
+		$this->addHeader("Connection: Keep-alive");
+		$this->addHeader("Keep-alive: 300");
 		//$this->addHeader("Expect:");
 		$this->addHeader(sprintf("User-Agent: %s", $this->randomAgent()));
 	}

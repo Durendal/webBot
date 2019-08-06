@@ -25,10 +25,10 @@ class Session {
 	 * @var object $proxy - The proxy to use for the Session
 	 * @var int $start - Timestamp recording the creation of the session
 	 */
-	protected $requests;
-	protected $cookies;
-	protected $proxy;
-	protected $start;
+	private $requests;
+	private $cookies;
+	private $proxy;
+	private $start;
 
 	public function __construct($persist=false, $proxy=NULL, $cookies=NULL, $ch=NULL) {
 		$this->requests	= array();
@@ -87,7 +87,7 @@ class Session {
 	public function __toString() {
 		$count = count($this->requests);
 		$time = $this->getTimeInUse();
-		return "<HTTP Session - $time - Requests: $count>"
+		return "<HTTP Session - $time - Requests: $count>";
 	}
 
 

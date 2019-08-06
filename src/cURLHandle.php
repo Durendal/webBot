@@ -31,6 +31,8 @@ class cURLHandle {
 	private $cookies;
 	private $headers;
 	private $proxy;
+	private $query;
+	private $data;
 
 	/**
 	 *   __construct($proxy=NULL, $cookies = NULL, $headers=NULL)
@@ -44,12 +46,14 @@ class cURLHandle {
 	 *
 	 * @return void
 	 */
-	 public function __construct($proxy=NULL, $cookies = NULL, $headers = NULL) {
-
+	 public function __construct($settings = array('proxy'=>NULL, 'cookies'=>NULL, 'headers'=>NULL, 'query'=>NULL, 'data'=>NULL)) {
+		extract($settings);
 		$this->handle = $this->setupCURL();
 		$this->setProxy($proxy);
 		$this->setHeaders($headers);
 		$this->setCookies($cookies);
+		$this->setQuery($query);
+		$this->setData($data);
 	}
 
 	/**
@@ -76,7 +80,7 @@ class cURLHandle {
 	 */
 	public function setCookies($cookies) {
 		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new webBot\Cookies();
-		$this->cookies->init($this->handle);
+		$this->cookies->initCookies();
 	}
 
 	/**
@@ -91,7 +95,7 @@ class cURLHandle {
 	 */
 	public function setHeaders($headers) {
 		$this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new webBot\Headers();
-		$this->headers->init($this->handle);
+		$this->headers->initHeaders();
 	}
 
 	/**
@@ -106,15 +110,35 @@ class cURLHandle {
 	 */
 	public function setProxy($proxy) {
 		$this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy();
-		$this->initProxy());
+		$this->initProxy();
 	}
 
-		/**
-	 *	initProxy($ch)
+	/**
+	 *   setQuery($query)
+	 *
+	 * @param object $query - The RequestQuery object to use for this handle
+	 *
+	 * @return void
+	 */
+	public function setQuery($query) {
+		$this->query = (is_a($query, "Durendal\webBot\RequestQuery")) ? $query : new webBot\RequestQuery();
+	}
+
+	/**
+	 *   setData($data)
+	 *
+	 * @param object $data - The RequestData object to use for this handle
+	 *
+	 * @return void
+	 */
+	public function setData($data) {
+		$this->data = (is_a($data, "Durendal\webBot\RequestData")) ? $data : new webBot\RequestData();
+	}
+
+	/**
+	 *	initProxy($this->handle)
 	 *
 	 *		Initialize the proxy settings on $this->handle
-	 *
-	 * @param resource $ch - The cURL Handle to apply cookies to
 	 *
 	 * @return void
 	 */
@@ -139,6 +163,117 @@ class cURLHandle {
 	}
 
 	/**
+	 *	initCookies()
+	 *
+	 *		Initialize the cookies settings on $this->handle, additionally an array of
+	 *		cookies in key => value format can be submitted and added to the
+	 *		handle.
+	 *
+	 *
+	 * @return void
+	 */
+	public function initCookies() {
+		$cookies = $this->cookies->getCookies();
+
+		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
+
+		// Set cookie jar
+		curl_setopt($this->handle, CURLOPT_COOKIEJAR, $this->cookieJar);
+		curl_setopt($this->handle, CURLOPT_COOKIEFILE, $this->cookieJar);
+
+		// Clear Cookies in cookie jar
+		curl_setopt($this->handle, CURLOPT_COOKIELIST, "SESS");
+
+		// Populate Cookiejar with any custom submitted cookies
+		foreach($cookies as $key => $value)
+			$this->setCookie($key, $value);
+
+		// Write cookies to cookie jar
+		curl_setopt($this->handle, CURLOPT_COOKIELIST, "FLUSH");
+
+		$this->cookies = $this->getCookies();
+	}
+
+		/**
+	 *	initHeaders()
+	 *
+	 *		Initialize the headers settings on the curl handle
+	 *
+	 * @return void
+	 */
+	public function initHeaders() {
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
+		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
+		curl_setopt($this->handle, CURLOPT_HEADER, 1);
+	}
+
+	/**
+	 *	setCookie($cookie)
+	 *
+	 *		Adds a new cookie
+	 *
+	 * @param string $key - The name for the cookie being added
+	 * @param string $value - The value of the cookie being added
+	 *
+	 * @return void
+	 */
+	public function setCookie($key, $value)
+	{
+		if($this->handle == NULL)
+			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
+
+		curl_setopt($this->handle, CURLOPT_COOKIELIST, sprintf("%s=%s", $key, $value));
+		curl_setopt($this->handle, CURLOPT_COOKIELIST, "FLUSH");
+
+		$this->getCookies();
+
+	}
+
+	/**
+	 *    generateCookies()
+	 *
+	 *      Returns a string built from an array of Cookies
+	 *
+	 * @return string - A string containing the currently set cookies
+	 */
+	public function generateCookies($host)
+	{
+		if($this->handle == NULL)
+			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
+		$this->getCookies(); // Update cookie object
+		$cookieStr = "";
+		$cookies = $this->cookies->getCookies();
+		foreach($cookies[$host] as $val)
+			$cookieStr .= sprintf("%s=%s; ", $val['name'], $val['value']);
+
+		return substr($cookieStr, 0, strlen($cookieStr)-1);
+	}
+
+	/**
+	 *	getCookies()
+	 *
+	 *		updates $this->cookies object and returns the currently set cookies
+	 *
+	 * @return array
+	 */
+	public function getCookies()
+	{
+		if($this->handle == NULL)
+			throw new webBot\UninitializedCookieException("Must Initialize Cookie Object before setting cookies.");
+
+		$cookies = curl_getinfo($this->handle, CURLINFO_COOKIELIST);
+
+		foreach($cookies as $key => $val) {
+			$val = explode("\t", $val);
+			if(count($val) == 7)
+				$this->cookies->setCookie($val[0]][], array('flag' => $val[1], 'path' => $val[2], 'secure' => $val[3], 'expiration' => $val[4], 'name' => $val[5], 'value' => $val[6]));
+			unset($cookies[$key]);
+		}
+
+		return $this->cookies->getCookies();
+	}
+
+	/**
 	 *   getHandle()
 	 *
 	 *     Returns the currently set cURL Handle
@@ -149,10 +284,6 @@ class cURLHandle {
 		return $this->handle;
 	}
 
-	public function getCookies() {
-		return $this->cookies->getCookies();
-	}
-
 	public function getHeaders() {
 		return $this->headers->getHeaders();
 	}
@@ -161,7 +292,7 @@ class cURLHandle {
 		return $this->proxy->getProxy();
 	}
 	/**
-	 *	setSSL($verify, $hostval, $certfile, $ch)
+	 *	setSSL($verify, $hostval, $certfile)
 	 *
 	 *		Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to TRUE
 	 *		then the following $hostval and $certfile parameters are required, otherwise
@@ -173,29 +304,25 @@ class cURLHandle {
 	 *						- 1: Check that the common name attribute at least exists
 	 *						- 2: Check that the common name exists and that it matches the host name of the server
 	 * @param string $certfile - The location of the certificate file you wish to use (default: '')
-	 * @param object $ch - The cURL handle to use (default: $ch)
 	 *
 	 * @return object
 	 */
-	public function setSSL($verify = FALSE, $hostval = 0, $certfile = '', $ch = NULL)
+	public function setSSL($verify = FALSE, $hostval = 0, $certfile = '')
 	{
-		if(!$ch)
-			$ch = $this->handle;
-
 		if($verify) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+			curl_setopt($, CURLOPT_SSL_VERIFYPEER, TRUE);
 			if($hostval >= 0 && $hostval < 3 && $certfile != '')
 			{
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
-				curl_setopt($ch, CURLOPT_CAINFO, $certfile);
+				curl_setopt($this->handle, CURLOPT_SSL_VERIFYHOST, $hostval);
+				curl_setopt($this->handle, CURLOPT_CAINFO, $certfile);
 			}
 		}
 		else {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+			curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($this->handle, CURLOPT_SSL_VERIFYHOST, FALSE);
 		}
 
-		return $ch;
+		return $this->handle;
 	}
 
 	/**
@@ -209,10 +336,8 @@ class cURLHandle {
 	 *
 	 * @return void
 	 */
-	public function binaryDownload($url, $outfile = "image.jpg", $ref = NULL, $ch = NULL)
+	public function binaryDownload($url, $outfile = "image.jpg", $ref = NULL)
 	{
-		if(!$ch)
-			$ch = $this->handle;
 		if(!$ref)
 			$ref = $url;
 
@@ -221,17 +346,17 @@ class cURLHandle {
 
 		$fp = fopen($outfile, "wb");
 
-		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, "cookieSnatcher"));
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-		curl_setopt($ch, CURLOPT_HEADER, FALSE);
-		curl_exec($ch);
-		curl_setopt($ch, CURLOPT_HEADER, TRUE);
-		#curl_setopt($ch, CURLOPT_FILE, NULL);
+		curl_setopt($this->handle, CURLOPT_HEADERFUNCTION, array($this, "cookieSnatcher"));
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($this->handle, CURLOPT_FILE, $fp);
+		curl_setopt($this->handle, CURLOPT_HEADER, FALSE);
+		curl_exec($this->handle);
+		curl_setopt($this->handle, CURLOPT_HEADER, TRUE);
+		#curl_setopt($this->handle, CURLOPT_FILE, NULL);
 		fclose($fp);
 
-		$errno = curl_errno($ch);
-		$err = curl_error($ch);
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
 
 		if($errno)
 			die("$errno: $err\n");
@@ -250,12 +375,12 @@ class cURLHandle {
 	private function setupCURL()
 	{
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		$this->handle = curl_init();
+		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($this->handle, CURLOPT_FOLLOWLOCATION, 1);
 
-		return $ch;
+		return $this->handle;
 	}
 
 	/**
@@ -265,11 +390,15 @@ class cURLHandle {
 	 *
 	 * @return void
 	 */
-	public function rebuildHandle()
+	public function rebuildHandle($cookies=NULL, $headers=NULL, $query=NULL, $data=NULL)
 	{
 		curl_close($this->handle);
 		$this->handle = $this->setupCURL();
 		$this->setProxy($this->proxy);
+		$this->setCookies($cookies);
+		$this->setQuery($query);
+		$this->setData($data);
+		$this->setHeaders($headers);
 	}
 
 	/**
@@ -279,34 +408,27 @@ class cURLHandle {
 	 *		if no $ref is specified it will use the $url
 	 *
 	 * @param string $url - The URL to request (default: NULL)
-	 * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
 	 *
 	 * @return string
 	 */
-	public function requestGET($url, $ref='', $ch = NULL)
+	public function requestGET($url)
 	{
-		if(!$ch)
-			$ch = $this->handle;
+		if(strlen($this->query->getEncoded()) > 0) 
+			$url .= $this->query->getEncoded();
+		
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($this->handle, CURLOPT_POST, 0);
 
-		if($ref == '')
-			$ref = $url;
+		$x = curl_exec($this->handle);
 
-		$this->headers->delHeader("Referer");
-		$this->headers->addHeader(sprintf("Referer: %s", $ref));
-
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, 0);
-
-		$x = curl_exec($ch);
-
-		$errno = curl_errno($ch);
-		$err = curl_error($ch);
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
 		$this->headers->delHeader("Referer");
 
-		return new webBot\Response($ch, $x);
+		return new webBot\Response($this->handle, $x);
 	}
 
 	/**
@@ -316,42 +438,35 @@ class cURLHandle {
 	 *		and the parameters specified in $pData. If no $ref is specified it will use the $url
 	 *
 	 * @param string $purl - The URL to request (default: NULL)
-	 * @param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData()
-	 * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
 	 *
 	 * @return string
 	 */
-	public function requestPOST($purl, $pData, $ref = '', $ch = NULL)
+	public function requestPOST($url)
 	{
-		if(!$ch)
-			$ch = $this->handle;
 
-		if($ref == '')
-			$ref = $purl;
+		if(strlen($this->query->getEncoded()) > 0) 
+			$url .= $this->query->getEncoded();
+		
+		if(strlen($this->data->getEncoded()) > 0) 
+			$pData = $this->data->getEncoded();
 
-		$this->headers->delHeader("Referer");
-		$this->headers->addHeader(sprintf("Referer: %s", $ref));
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($this->handle, CURLOPT_POST, 1);
+		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
+		curl_setopt($this->handle, CURLOPT_POSTREDIR, 3);
+		$x = curl_exec($this->handle);
 
-		if(is_array($pData))
-			$pData = $this->generatePOSTData($pData);
-
-		curl_setopt($ch, CURLOPT_URL, $purl);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $pData);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
-		curl_setopt($ch, CURLOPT_POSTREDIR, 3);
-		$x = curl_exec($ch);
-
-		$errno = curl_errno($ch);
-		$err = curl_error($ch);
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
 
 		if($errno)
 			die("$errno: $err\n");
 
-		curl_setopt($ch, CURLOPT_POST, 0);
+		curl_setopt($this->handle, CURLOPT_POST, 0);
 		$this->headers->delHeader("Referer");
 
-		return new webBot\Response($ch, $x);
+		return new webBot\Response($this->handle, $x);
 	}
 
 	/**
@@ -365,43 +480,39 @@ class cURLHandle {
 	 *
 	 * @return string
 	 */
-	public function requestPUT($url, $ref = '', $pData, $ch = NULL)
+	public function requestPUT($url)
 	{
 
-		if(!$ch)
-			$ch = $this->handle;
-
-		if($ref == '')
-			$ref = $url;
+		if(strlen($this->query->getEncoded()) > 0) 
+			$url .= $this->query->getEncoded();
+		
+		if(strlen($this->data->getEncoded()) > 0) 
+			$pData = $this->data->getEncoded();
 
 		$fh = tmpfile();
 		fwrite($fh, $pData);
 		fseek($fh, 0);
 
-		$this->headers->delHeader("Referer");
-		$this->headers->addHeader(sprintf("Referer: %s", $ref));
 		$fh = fopen($file, 'r');
 		$fileContents = file_get_contents($file);
 
-		if(is_array($pData))
-			$pData = $this->generatePOSTData($pData);
 
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_PUT, TRUE);
-		curl_setopt($ch, CURLOPT_INFILE, $fh);
-		curl_setopt($ch, CURLOPT_INFILESIZE, strlen($pData));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($this->handle, CURLOPT_PUT, TRUE);
+		curl_setopt($this->handle, CURLOPT_INFILE, $fh);
+		curl_setopt($this->handle, CURLOPT_INFILESIZE, strlen($pData));
+		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
 
-		$x = curl_exec($ch);
+		$x = curl_exec($this->handle);
 
-		$errno = curl_errno($ch);
-		$err = curl_error($ch);
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
-		$ch = $this->rebuildHandle();
+		$this->handle = $this->rebuildHandle();
 		$this->headers->delHeader("Referer");
 
 		return new webBot\Response($x);
@@ -414,59 +525,35 @@ class cURLHandle {
 	 *
 	 * @param string $method - The type of request to make(GET or POST) (default: 'GET')
 	 * @param string $url - The URL to request (default: NULL)
-	 * @param string $ref - The Referer to use for the request(default is to set the $url value) (default: '')
-	 * @param string $pData - The POST parameters to send, this string should have been returned from $this->generatePOSTData() (default: NULL)
 	 *
 	 * @return string
 	 */
-	public function requestHTTP($url, $method = "GET", $ref = '', $pData = NULL, $ch = NULL)
+	public function requestHTTP($url, $method = "GET")
 	{
-		if(!$ch)
-			$ch = $this->handle;
-
 		switch($method) {
 
 			case "GET":
-				return $this->requestGET($url, $ref, $ch);
+				return $this->requestGET($url);
 			case "POST":
-				return $this->requestPOST($url, $pData, $ref, $ch);
+				return $this->requestPOST($url);
 			case "PUT":
-				return $this->requestPUT($url, $ref, $pData, $ch);
+				return $this->requestPUT($url);
 			default:
 				return NULL;
 		}
 	}
 
 	/**
-	 *	generatePOSTData($data)
-	 *
-	 *		generates a urlencoded string from an associative array of POST parameters
-	 *
-	 * @param array $data - An array of POST parameters in array($key => $val, ...) format
-	 *
-	 * @return string
-	 */
-	public function generatePOSTData($data)
-	{
-		$params = '';
-		foreach($data as $key => $val)
-			$params .= curl_escape($this->handle, $key) . '=' . curl_escape($this->handle, $val) . '&';
-
-		// trim trailing &
-		return substr($params, 0, -1);
-	}
-
-	/**
-	 *	  cookieSnatcher($ch, $headerLine)
+	 *	  cookieSnatcher($this->handle, $headerLine)
 	 *
 	 *		  Read through cookies sent and parse them how you see fit
 	 *
-	 * @param object $ch - The cURL handle to read from
+	 * @param object $this->handle - The cURL handle to read from
 	 * @param string $headerLine - The current line in headers to check
 	 *
 	 * @return int
 	 */
-	function cookieSnatcher($ch, $headerLine) {
+	function cookieSnatcher($this->handle, $headerLine) {
 		//print "============================================================\n";
 		//print $headerLine."\n";
 		//print "============================================================\n";
