@@ -44,7 +44,7 @@ class Proxy {
 	 *
 	 * @return void
 	 */
-	public function __construct($host = "", $port = 0, $type=NULL, $credentials=NULL, $ch = NULL) {
+	public function __construct($host="", $port=0, $type=NULL, $credentials=NULL, $ch=NULL) {
 		$this->parentHandle = $ch;
 		$this->validTypes = array(CURLPROXY_HTTP, CURLPROXY_HTTP_1_0, CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, NULL);
 		$this->setHost($host);

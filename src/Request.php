@@ -193,6 +193,6 @@ class Request
 	 */
 	public function run($ref = NULL) {
 		$ref = ($ref) ? $ref : $this->getURL();
-		return $this->handle->requestHTTP($this->getURL(), $this->method, $ref, $this->pData);
+		return new webBot\Response($this->handle->requestHTTP($this->getURL(), $this->method, $ref, $this->pData));
 	}
 }

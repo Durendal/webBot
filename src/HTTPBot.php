@@ -62,12 +62,15 @@ class HTTPBot
 
 	public function __construct($proxy = NULL)
 	{
-		$this->urls = new SplStack();
-		$this->requests = new SplStack();
+		$this->urls = new \Ds\Stack();
+		$this->requests = new \Ds\Stack();
 
 		$this->proxy = (is_a($proxy, "Proxy")) ? $proxy : new Proxy();
 	}
 
+	public function requestGET($url, $headers=null, $params=null) {
+	
+	}
 
 	/**
 	 *	curlMultiRequest($nodes)
@@ -135,9 +138,6 @@ class HTTPBot
 			$curlError = curl_error($curlArray[$i]);
 			if($curlError == "")
 				$res[$url[0]] = curl_multi_getcontent($curlArray[$i]);
-			else
-				if($this->verbose)
-					print "Curl error on handle $url: $curlError\n";
 			curl_multi_remove_handle($mh, $curlArray[$i]);
 		}
 

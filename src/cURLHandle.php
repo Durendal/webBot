@@ -106,7 +106,36 @@ class cURLHandle {
 	 */
 	public function setProxy($proxy) {
 		$this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy();
-		$this->proxy->init($this->handle);
+		$this->initProxy());
+	}
+
+		/**
+	 *	initProxy($ch)
+	 *
+	 *		Initialize the proxy settings on $this->handle
+	 *
+	 * @param resource $ch - The cURL Handle to apply cookies to
+	 *
+	 * @return void
+	 */
+	public function initProxy() {
+		extract($this->proxy->getProxy());
+		curl_setopt($this->handle, CURLOPT_PROXYTYPE, $type);
+		curl_setopt($this->handle, CURLOPT_PROXYUSERPWD, NULL);
+
+		// Check for valid proxy type
+		if($type === NULL) {
+			curl_setopt($this->handle, CURLOPT_HTTPPROXYTUNNEL, 0);
+			curl_setopt($this->handle, CURLOPT_PROXY, NULL);
+			curl_setopt($this->handle, CURLOPT_PROXYPORT, NULL);
+		} else {
+			curl_setopt($this->handle, CURLOPT_HTTPPROXYTUNNEL, 1);
+			curl_setopt($this->handle, CURLOPT_PROXY, $host);
+			curl_setopt($this->handle, CURLOPT_PROXYPORT, $port);
+
+			if($credentials)
+				curl_setopt($this->handle, CURLOPT_PROXYUSERPWD, $credentials);
+		}
 	}
 
 	/**
@@ -277,7 +306,7 @@ class cURLHandle {
 
 		$this->headers->delHeader("Referer");
 
-		return new Response($ch, $x);
+		return new webBot\Response($ch, $x);
 	}
 
 	/**
@@ -322,7 +351,7 @@ class cURLHandle {
 		curl_setopt($ch, CURLOPT_POST, 0);
 		$this->headers->delHeader("Referer");
 
-		return new Response($ch, $x);
+		return new webBot\Response($ch, $x);
 	}
 
 	/**
@@ -375,7 +404,7 @@ class cURLHandle {
 		$ch = $this->rebuildHandle();
 		$this->headers->delHeader("Referer");
 
-		return new Response($x);
+		return new webBot\Response($x);
 	}
 
 	/**
