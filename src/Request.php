@@ -216,6 +216,6 @@ class Request
 	 * @return object Response - The response to the HTTP Request
 	 */
 	public function run() {
-		return new webBot\Response($this->handle, $this->handle->requestHTTP($this->getURL(), $this->method));
+		return new webBot\Response($this->handle, $this->handle->request($this->getURL(), $this->method));
 	}
 }
