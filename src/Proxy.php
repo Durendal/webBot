@@ -29,7 +29,7 @@ class Proxy {
 	private $host;
 	private $port;
 	private $credentials;
-	private $validTypes;
+	static private $validTypes;
 
 	/**
 	 *    __construct($host="", $port=0, $type=NULL, $credentials=NULL)
@@ -44,11 +44,14 @@ class Proxy {
 	 * @return void
 	 */
 	public function __construct($host="", $port=0, $type=NULL, $credentials=NULL) {
-		$this->validTypes = array(
-			'HTTP' => CURLPROXY_HTTP, 
+		self::$validTypes = array(
+			'HTTP' => CURLPROXY_HTTP,
 			'HTTP1.0' => CURLPROXY_HTTP_1_0, 
-			'SOCKS4' => CURLPROXY_SOCKS4, 
+			'HTTPS' => CURLPROXY_HTTPS,
+			'SOCKS4' => CURLPROXY_SOCKS4,
+			'SOCKS4A' => CURLPROXY_SOCKS4A,
 			'SOCKS5' => CURLPROXY_SOCKS5, 
+			'SOCKS5_HOSTNAME' => CURLPROXY_SOCKS5_HOSTNAME,
 			'None' => NULL
 		);
 		$this->setHost($host);
@@ -57,8 +60,8 @@ class Proxy {
 		$this->setCredentials($credentials);
 	}
 
-	public function getValidTypes() {
-		return $this->validTypes;
+	public static function getValidTypes() {
+		return self::$validTypes;
 	}
 
 	/**
@@ -83,7 +86,7 @@ class Proxy {
 	 * @return void
 	 */
 	public function setType($type) {
-		$this->type = (in_array($type, $this->validTypes)) ? $type : NULL;
+		$this->type = (in_array($type, self::$validTypes)) ? $type : NULL;
 	}
 
 	/**
