@@ -8,9 +8,9 @@
  * @license GPL
  * @link https://github.com/Durendal/webBot
  */
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Cookies.php';
 require_once 'Response.php';
@@ -18,13 +18,15 @@ require_once 'Headers.php';
 require_once 'Proxy.php';
 require_once 'Exceptions.php';
 
-class cURLHandle {
+class CURLHandle {
 
 	/**
 	 * @var object $handle - The cURL handle
 	 * @var object $cookies - The Cookies object to use for this handle
 	 * @var object $headers - The Headers object to use for this handle
 	 * @var object $proxy - The Proxy object to use for this handle
+	 * @var object $query - The RequestQuery object to use for this handle
+	 * @var object $data - The RequestData object to use for this handle 
 	 */
 
 	private $handle;
@@ -47,6 +49,11 @@ class cURLHandle {
 	 * @return void
 	 */
 	 public function __construct($settings = array('proxy'=>NULL, 'cookies'=>NULL, 'headers'=>NULL, 'query'=>NULL, 'data'=>NULL)) {
+		$proxy = NULL;
+		$cookies = NULL;
+		$headers = NULL;
+		$query = NULL;
+		$data = NULL;
 		extract($settings);
 		$this->handle = $this->setupCURL();
 		$this->setProxy($proxy);
@@ -54,6 +61,15 @@ class cURLHandle {
 		$this->setCookies($cookies);
 		$this->setQuery($query);
 		$this->setData($data);
+	}
+
+	public function __destruct() {
+		unset($this->handle);
+		unset($this->proxy);
+		unset($this->headers);
+		unset($this->query);
+		unset($this->data);
+		unset($this->cookies);
 	}
 
 	/**
@@ -79,8 +95,8 @@ class cURLHandle {
 	 * @return void
 	 */
 	public function setCookies($cookies) {
-		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new webBot\Cookies();
-		$this->cookies->initCookies();
+		$this->cookies = (is_a($cookies, "WebBot\WebBot\Cookies")) ? $cookies : new webBot\Cookies();
+		$this->initCookies();
 	}
 
 	/**
@@ -94,8 +110,8 @@ class cURLHandle {
 	 * @return void
 	 */
 	public function setHeaders($headers) {
-		$this->headers = (is_a($headers, "Durendal\webBot\Headers")) ? $headers : new webBot\Headers();
-		$this->headers->initHeaders();
+		$this->headers = (is_a($headers, "WebBot\WebBot\Headers")) ? $headers : new webBot\Headers();
+		$this->initHeaders();
 	}
 
 	/**
@@ -109,7 +125,7 @@ class cURLHandle {
 	 * @return void
 	 */
 	public function setProxy($proxy) {
-		$this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy();
+		$this->proxy = (is_a($proxy, "WebBot\WebBot\Proxy")) ? $proxy : new webBot\Proxy();
 		$this->initProxy();
 	}
 
@@ -121,7 +137,7 @@ class cURLHandle {
 	 * @return void
 	 */
 	public function setQuery($query) {
-		$this->query = (is_a($query, "Durendal\webBot\RequestQuery")) ? $query : new webBot\RequestQuery();
+		$this->query = (is_a($query, "WebBot\WebBot\RequestQuery")) ? $query : new webBot\RequestQuery();
 	}
 
 	/**
@@ -132,7 +148,7 @@ class cURLHandle {
 	 * @return void
 	 */
 	public function setData($data) {
-		$this->data = (is_a($data, "Durendal\webBot\RequestData")) ? $data : new webBot\RequestData();
+		$this->data = (is_a($data, "WebBot\WebBot\RequestData")) ? $data : new webBot\RequestData();
 	}
 
 	/**
@@ -178,8 +194,8 @@ class cURLHandle {
 		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
 
 		// Set cookie jar
-		curl_setopt($this->handle, CURLOPT_COOKIEJAR, $this->cookieJar);
-		curl_setopt($this->handle, CURLOPT_COOKIEFILE, $this->cookieJar);
+		curl_setopt($this->handle, CURLOPT_COOKIEJAR, $this->cookies->getCookieJar());
+		curl_setopt($this->handle, CURLOPT_COOKIEFILE, $this->cookies->getCookieJar());
 
 		// Clear Cookies in cookie jar
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, "SESS");
@@ -191,7 +207,7 @@ class cURLHandle {
 		// Write cookies to cookie jar
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, "FLUSH");
 
-		$this->cookies = $this->getCookies();
+		$this->getCookies();
 	}
 
 		/**
@@ -266,7 +282,7 @@ class cURLHandle {
 		foreach($cookies as $key => $val) {
 			$val = explode("\t", $val);
 			if(count($val) == 7)
-				$this->cookies->setCookie($val[0]][], array('flag' => $val[1], 'path' => $val[2], 'secure' => $val[3], 'expiration' => $val[4], 'name' => $val[5], 'value' => $val[6]));
+				$this->cookies->setCookie($val[0], array('flag' => $val[1], 'path' => $val[2], 'secure' => $val[3], 'expiration' => $val[4], 'name' => $val[5], 'value' => $val[6]));
 			unset($cookies[$key]);
 		}
 
@@ -310,7 +326,7 @@ class cURLHandle {
 	public function setSSL($verify = FALSE, $hostval = 0, $certfile = '')
 	{
 		if($verify) {
-			curl_setopt($, CURLOPT_SSL_VERIFYPEER, TRUE);
+			curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, TRUE);
 			if($hostval >= 0 && $hostval < 3 && $certfile != '')
 			{
 				curl_setopt($this->handle, CURLOPT_SSL_VERIFYHOST, $hostval);
@@ -336,14 +352,8 @@ class cURLHandle {
 	 *
 	 * @return void
 	 */
-	public function binaryDownload($url, $outfile = "image.jpg", $ref = NULL)
+	public function binaryDownload($url, $outfile = "image.jpg")
 	{
-		if(!$ref)
-			$ref = $url;
-
-		$this->headers->delHeader("Referer");
-		$this->headers->addHeader(sprintf("Referer: %s", $ref));
-
 		$fp = fopen($outfile, "wb");
 
 		curl_setopt($this->handle, CURLOPT_HEADERFUNCTION, array($this, "cookieSnatcher"));
@@ -414,7 +424,7 @@ class cURLHandle {
 	public function requestGET($url)
 	{
 		if(strlen($this->query->getEncoded()) > 0) 
-			$url .= $this->query->getEncoded();
+			$url .= '?' . $this->query->getEncoded();
 		
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_POST, 0);
@@ -425,8 +435,6 @@ class cURLHandle {
 		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
-
-		$this->headers->delHeader("Referer");
 
 		return new webBot\Response($this->handle, $x);
 	}
@@ -445,7 +453,7 @@ class cURLHandle {
 	{
 
 		if(strlen($this->query->getEncoded()) > 0) 
-			$url .= $this->query->getEncoded();
+			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
 			$pData = $this->data->getEncoded();
@@ -464,7 +472,6 @@ class cURLHandle {
 			die("$errno: $err\n");
 
 		curl_setopt($this->handle, CURLOPT_POST, 0);
-		$this->headers->delHeader("Referer");
 
 		return new webBot\Response($this->handle, $x);
 	}
@@ -484,7 +491,7 @@ class cURLHandle {
 	{
 
 		if(strlen($this->query->getEncoded()) > 0) 
-			$url .= $this->query->getEncoded();
+			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
 			$pData = $this->data->getEncoded();
@@ -513,7 +520,6 @@ class cURLHandle {
 			die("$errno: $err\n");
 
 		$this->handle = $this->rebuildHandle();
-		$this->headers->delHeader("Referer");
 
 		return new webBot\Response($x);
 	}
@@ -548,12 +554,12 @@ class cURLHandle {
 	 *
 	 *		  Read through cookies sent and parse them how you see fit
 	 *
-	 * @param object $this->handle - The cURL handle to read from
+	 * @param object $ch - The cURL handle to read from
 	 * @param string $headerLine - The current line in headers to check
 	 *
 	 * @return int
 	 */
-	function cookieSnatcher($this->handle, $headerLine) {
+	function cookieSnatcher($ch, $headerLine) {
 		//print "============================================================\n";
 		//print $headerLine."\n";
 		//print "============================================================\n";
@@ -561,7 +567,7 @@ class cURLHandle {
 		//	$this->cookies[] = $page[1];
 		//}
 		if (preg_match('/^Set-Cookie:\s*([^;]*)/mi', $headerLine, $cookie) == 1)
-			$this->cookies[] = $cookie[1];
+			$this->newCookies[] = $cookie[1];
 		//print $cookie[1]."\n";
 		//}
 		return strlen($headerLine); // Needed by curl

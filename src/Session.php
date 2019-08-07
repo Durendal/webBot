@@ -16,7 +16,7 @@ use WebBot\WebBot as webBot;
 
 require_once 'Proxy.php';
 require_once 'Cookies.php';
-require_once 'cURLHandle.php';
+require_once 'CURLHandle.php';
 require_once 'Request.php';
 
 class Session {
@@ -44,7 +44,7 @@ class Session {
 	}
 
 	public function setCookies($cookies) {
-		$this->cookies = (is_a($cookies, "Durendal\webBot\Cookies")) ? $cookies : new webBot\Cookies();
+		$this->cookies = (is_a($cookies, "WebBot\WebBot\Cookies")) ? $cookies : new webBot\Cookies();
 	}
 
 	public function getCookies() {
@@ -52,7 +52,7 @@ class Session {
 	}
 
 	public function setProxy($proxy) {
-		$this->proxy = (is_a($proxy, "Durendal\webBot\Proxy")) ? $proxy : new webBot\Proxy();
+		$this->proxy = (is_a($proxy, "WebBot\WebBot\Proxy")) ? $proxy : new webBot\Proxy();
 		$this->proxy->init($this->handle);
 	}
 
@@ -65,7 +65,7 @@ class Session {
 	}
 
 	public function addRequest($request) {
-		if(is_a($request, "Durendal\webBot\Request")){
+		if(is_a($request, "WebBot\WebBot\Request")){
 			$this->requests[] = $request;
 		}
 	}
@@ -75,10 +75,10 @@ class Session {
 	}
 
 	public function setCurlHandle($ch) {
-		if(is_a($ch, "Durendal\webBot\cURLHandle")) {
+		if(is_a($ch, "WebBot\WebBot\cURLHandle")) {
 			$this->curlHandle = $ch;
 		} else {
-			$this->curlHandle = new webBot\cURLHandle($this->getProxy, $this->getCookies);
+			$this->curlHandle = new webBot\CURLHandle($this->getProxy, $this->getCookies);
 		}
 	}
 
@@ -90,13 +90,13 @@ class Session {
 		extract($settings);
 		$reqSettings = array('method'=>'GET');
 		if($query)
-			$reqSettings['query'] = is_a($query, 'Durendal\webBot\RequestQuery') ? $query : new webBot\RequestQuery();
+			$reqSettings['query'] = is_a($query, 'WebBot\WebBot\RequestQuery') ? $query : new webBot\RequestQuery();
 		if($headers)
-			$reqSettings['headers'] = is_a($headers, 'Durendal\webBot\Headers') ? $headers : new webBot\Headers();
+			$reqSettings['headers'] = is_a($headers, 'WebBot\WebBot\Headers') ? $headers : new webBot\Headers();
 		if($cookies)
-			$reqSettings['cookies'] = is_a($cookies, 'Durendal\webBot\Cookies') ? $cookies : new webBot\Cookies();
+			$reqSettings['cookies'] = is_a($cookies, 'WebBot\WebBot\Cookies') ? $cookies : new webBot\Cookies();
 		if($proxy)
-			$reqSettings['proxy'] = is_a($proxy, 'Durendal\webBot\Proxy') ? $proxy : new webBot\Proxy();
+			$reqSettings['proxy'] = is_a($proxy, 'WebBot\WebBot\Proxy') ? $proxy : new webBot\Proxy();
 
 		$request = new webBot\Request($url, $reqSettings);
 

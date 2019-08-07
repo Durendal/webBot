@@ -120,13 +120,13 @@ class Request
 	}
 
 	public function setData($data, $method) {
-		if(is_a($data, "Durendal\webBot\RequestData")) {
+		if(is_a($data, "WebBot\WebBot\RequestData")) {
 			$this->handle->setData((strtoupper($method) == "GET") ? NULL : $data);
 		}
 	}
 	
 	public function setQuery($query, $method) {
-		if(is_a($query, "Durendal\webBot\RequestQuery")) {
+		if(is_a($query, "WebBot\WebBot\RequestQuery")) {
 			$this->handle->setQuery($query);
 		}
 	}
@@ -175,7 +175,7 @@ class Request
 		if(!$cookies)
 			$cookies = new webBot\Cookies();
 		$settings = array('proxy' => $proxy, 'cookies' => $cookies, 'headers' => $headers);
-		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($settings);
+		$this->handle = (is_a($ch, "WebBot\WebBot\cURLHandle")) ? $ch : new webBot\cURLHandle($settings);
 		$this->setProxy($proxy);
 		$this->setCookies($cookies);
 		$this->setHeaders($headers);
