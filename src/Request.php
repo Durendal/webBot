@@ -117,7 +117,7 @@ class Request
 		$this->handle->setCookies($cookies);
 	}
 
-	public function setData($data, $method) {
+	public function setData($data, $method='POST') {
 		if(is_a($data, "WebBot\WebBot\RequestData")) {
 			$this->handle->setData((strtoupper($method) == "GET") ? NULL : $data);
 		}
@@ -152,6 +152,10 @@ class Request
 	 */
 	public function setHeaders($headers) {
 		$this->handle->setHeaders($headers);
+	}
+
+	public function addHeader($key, $value) {
+		$this->handle->addHeader($key, $value);
 	}
 
 	/**

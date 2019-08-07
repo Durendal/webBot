@@ -110,6 +110,11 @@ class CURLHandle {
 		$this->initHeaders();
 	}
 
+	public function addHeader($key, $value) {
+		$this->headers->addHeader($key, $value);
+		$this->initHeaders();
+	}
+
 	/**
 	 *   setProxy($proxy)
 	 *
