@@ -115,7 +115,7 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function setCookies($cookies) {
+	public function setCookies($cookies=NULL) {
 		$this->handle->setCookies($cookies);
 	}
 
@@ -216,6 +216,6 @@ class Request
 	 * @return object Response - The response to the HTTP Request
 	 */
 	public function run() {
-		return new webBot\Response($this->handle, $this->handle->request($this->getURL(), $this->method));
+		return $this->handle->request($this->getURL(), $this->method);
 	}
 }
