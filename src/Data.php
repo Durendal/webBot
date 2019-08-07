@@ -7,9 +7,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 class Data {
 	private $data;
@@ -27,7 +27,7 @@ class Data {
 	}
 
 	public function setData($data) {
-		if(validate_data($data))
+		if($this->validate_data($data))
 			$this->data = $data;
 		$this->encode();
 	}
@@ -39,15 +39,14 @@ class Data {
 	public function encode() {
 		$this->encodedData = '';
 		if(count($this->data) > 0) {
-			$this->encodedData .= '?';
 			foreach($this->data as $key => $value) 
-				$this->encodedData .= rawurlencode($key) ."=" . rawurlencode($value) . "&";
+				$this->encodedData .= rawurlencode($key) . "=" . rawurlencode($value) . "&";
 			$this->encodedData = substr($this->encodedData, 0, -1);
 		}
 	}
 
 	public function get() {
-		return $data;
+		return $this->data;
 	}
 
 	public function getEncoded() {
@@ -57,8 +56,30 @@ class Data {
 
 // Wrappers for Data with more meaningful names
 
-class RequestData extends Data {}
+class RequestData extends Data {
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the RequestData object.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return sprintf("<RequestData - {$this->encodedData} >");
+	}
+}
 
-class RequestQuery extends Data {}
+class RequestQuery extends Data {
+	/**
+	 *	__toString()
+	 *
+	 *		Returns a printable string representation of the RequestQuery object.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return sprintf("<RequestQuery - {$this->encodedData} >");
+	}
+}
 
 ?>

@@ -10,9 +10,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Exceptions.php';
 
@@ -30,7 +30,6 @@ class Proxy {
 	private $port;
 	private $credentials;
 	private $validTypes;
-	private $parentHandle;
 
 	/**
 	 *    __construct($host="", $port=0, $type=NULL, $credentials=NULL)
@@ -44,15 +43,22 @@ class Proxy {
 	 *
 	 * @return void
 	 */
-	public function __construct($host="", $port=0, $type=NULL, $credentials=NULL, $ch=NULL) {
-		$this->parentHandle = $ch;
-		$this->validTypes = array(CURLPROXY_HTTP, CURLPROXY_HTTP_1_0, CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, NULL);
+	public function __construct($host="", $port=0, $type=NULL, $credentials=NULL) {
+		$this->validTypes = array(
+			'HTTP' => CURLPROXY_HTTP, 
+			'HTTP1.0' => CURLPROXY_HTTP_1_0, 
+			'SOCKS4' => CURLPROXY_SOCKS4, 
+			'SOCKS5' => CURLPROXY_SOCKS5, 
+			'None' => NULL
+		);
 		$this->setHost($host);
 		$this->setPort($port);
 		$this->setType($type);
 		$this->setCredentials($credentials);
-		if($this->parentHandle)
-			$this->init($this->parentHandle);
+	}
+
+	public function getValidTypes() {
+		return $this->validTypes;
 	}
 
 	/**

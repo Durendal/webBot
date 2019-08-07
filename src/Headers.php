@@ -10,9 +10,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Exceptions.php';
 
@@ -20,15 +20,13 @@ class Headers {
 
 	/**
 	 * @var array headers - Array of headers submitted or returned from a request
-	 * @var resource parentHandle - The cURL Handle bound to the headers object
 	 */
 	private $headers;
-	private $parentHandle;
 
 	public function __construct($headers = array()) {
-		$this->headers = $headers;
-		if(count($headers) == 0)
-			$this->defaultHeaders();
+		$this->headers = array();
+		$this->addHeaders($headers);
+		$this->defaultHeaders();
 	}
 
 	/**
@@ -51,10 +49,14 @@ class Headers {
 	 */
 	public function defaultHeaders()
 	{
-		$this->addHeader("Connection: Keep-alive");
-		$this->addHeader("Keep-alive: 300");
-		//$this->addHeader("Expect:");
-		$this->addHeader(sprintf("User-Agent: %s", $this->randomAgent()));
+		$this->addHeader("Connection", "Keep-alive");
+		$this->addHeader("Keep-alive", "300");
+		$this->addHeader("User-Agent", $this->randomAgent());
+	}
+
+	public function addHeaders($headers) {
+		foreach($headers as $key => $value)
+			$this->addHeader($key, $value);
 	}
 
 	/**
@@ -66,33 +68,27 @@ class Headers {
 	 *
 	 * @return boolean - Denotes if header was successfully added
 	 */
-	public function addHeader($header)
+	public function addHeader($key, $value)
 	{
-		if($this->checkHeader($header) !== NULL)
+		if($this->checkHeader($key))
 			return FALSE;
 
-		$this->headers[] = $header;
+		$this->headers[$key] = $value;
 		return TRUE;
 	}
 
 	/**
 	 *	checkHeader($header)
 	 *
-	 *		checks if $header already exists in the headers array.
-	 *		If it finds the header it returns its index in the array,
-	 *		otherwise it returns null.
+	 *		checks if $key is a valid key to the $headers array
 	 *
-	 * @param string $header - Contains the Header to check
+	 * @param string $key - Contains the key of the header to check
 	 *
-	 * @return int
+	 * @return boolean
 	 */
-	public function checkHeader($header)
+	public function checkHeader($key)
 	{
-		if(count($this->headers) > 0)
-			foreach($this->headers as $i => $head)
-				if(stristr($head, $header))
-					return $i;
-		return NULL;
+		return array_key_exists($key, $this->headers);
 	}
 
 	/**
@@ -104,12 +100,10 @@ class Headers {
 	 *
 	 * @return void
 	 */
-	public function delHeader($header)
+	public function delHeader($key)
 	{
-		// Ensure that $i is a valid index(which includes 0, if we only tested $i = ..., it would errenously return false)
-		if(($i = $this->checkHeader($header)) !== NULL) {
-			unset($this->headers[$i]);
-			$this->headers = array_values($this->headers);
+		if($this->checkHeader($key)) {
+			unset($this->headers[$key]);
 		}
 	}
 
@@ -123,13 +117,11 @@ class Headers {
 	 *
 	 * @return void
 	 */
-	public function changeHeader($header, $val)
+	public function changeHeader($key, $val)
 	{
-		$this->delHeader($header);
-		if(stristr($val, $header))
-			$this->addHeader($val);
-		else
-			$this->addHeader(sprintf("%s: %s", $header, $val));
+		if($this->checkHeader($key))
+			$this->delHeader($key);
+		$this->addHeader($key, $val);
 	}
 
 	/**

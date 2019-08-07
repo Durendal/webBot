@@ -10,7 +10,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
+
+use WebBot\WebBot as webBot;
 
 require_once 'Proxy.php';
 require_once 'Cookies.php';
@@ -82,6 +84,23 @@ class Session {
 
 	public function getCurlHandle() {
 		return $this->curlHandle;
+	}
+
+	public function get($url, $settings=array('query'=>NULL, 'headers'=>NULL, 'cookies'=>NULL, 'proxy'=>NULL)) {
+		extract($settings);
+		$reqSettings = array('method'=>'GET');
+		if($query)
+			$reqSettings['query'] = is_a($query, 'Durendal\webBot\RequestQuery') ? $query : new webBot\RequestQuery();
+		if($headers)
+			$reqSettings['headers'] = is_a($headers, 'Durendal\webBot\Headers') ? $headers : new webBot\Headers();
+		if($cookies)
+			$reqSettings['cookies'] = is_a($cookies, 'Durendal\webBot\Cookies') ? $cookies : new webBot\Cookies();
+		if($proxy)
+			$reqSettings['proxy'] = is_a($proxy, 'Durendal\webBot\Proxy') ? $proxy : new webBot\Proxy();
+
+		$request = new webBot\Request($url, $reqSettings);
+
+		return $request.run();
 	}
 
 	public function __toString() {

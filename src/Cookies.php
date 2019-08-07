@@ -9,9 +9,9 @@
  * @license GPL
  * @link https://github.com/Durendal/webBot
  */
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Exceptions.php';
 
@@ -20,11 +20,9 @@ class Cookies
 	/**
 	 * @var array $cookies - An array containing a list of currently set cookies
 	 * @var string $cookieJar - A string containing the location of the cookie file
-	 * @var resource $parentHandle - The cURL Handle bound to the Cookies object
 	 */
 	private $cookies;
 	private $cookieJar;
-	private $parentHandle;
 
 	/**
 	 *   __construct(&$ch, $cookies = array(), $cookieJar = "cookies.txt")

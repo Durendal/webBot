@@ -10,9 +10,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Headers.php';
 
@@ -30,7 +30,6 @@ class Response
 	private $content;
 	private $headers;
 	private $uid;
-	private $parentHandle;
 
 	/**
 	 *	__construct($curlData)

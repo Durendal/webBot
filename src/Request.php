@@ -8,9 +8,9 @@
  * @license GPL
  * @link https://github.com/Durendal/webBot
  */
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
 
-use Durendal\webBot as webBot;
+use WebBot\WebBot as webBot;
 
 require_once 'Cookies.php';
 require_once 'Headers.php';
@@ -54,38 +54,32 @@ class Request
 	 * @return void
 	 */
 	public function __construct($url, $settings = array('proxy'=>NULL, 'method'=>"GET", 'pData' => NULL, 'cookies'=>NULL, 'headers'=>NULL, 'ch' => NULL, 'query' => NULL)) {
+		$proxy = NULL;
+		$method = "GET";
+		$pData = NULL;
+		$cookies = NULL;
+		$headers = NULL;
+		$ch = NULL;
+		$query = NULL;
 		extract($settings);
+		print("Proxy test\n");
+		var_dump($proxy);
 		$this->method = $method;
-		$this->pData = $this->setData($pData, $method);
-		$this->query = $this->setQuery($query);
 		$this->setURL($url);
-		$this->setProxy($proxy);
+		$this->setHandle($ch, $proxy, $headers, $cookies);
 		$this->setProxy($proxy);
 		$this->setHeaders($headers);
 		$this->setCookies($cookies);
-		$this->setHandle($ch);
+		
 	}
 
 	public function __destruct() {
 		unset($this->handle);
 		unset($this->method);
 		unset($this->proxy);
-		unset($this->pData);
-		unset($this->query);
 		unset($this->targetURL);
 	}
 
-	public function setData($data, $method) {
-		if(is_a($data, "Durendal\webBot\RequestData")) {
-			$this->pData = (strtoupper($method) == "GET") ? NULL : $data;
-		}
-	}
-	
-	public function setQuery($query, $method) {
-		if(is_a($query, "Durendal\webBot\RequestQuery")) {
-			$this->query = $query;
-		}
-	}
 	/**
 	 *	__toString()
 	 *
@@ -125,6 +119,18 @@ class Request
 		$this->handle->setCookies($cookies);
 	}
 
+	public function setData($data, $method) {
+		if(is_a($data, "Durendal\webBot\RequestData")) {
+			$this->handle->setData((strtoupper($method) == "GET") ? NULL : $data);
+		}
+	}
+	
+	public function setQuery($query, $method) {
+		if(is_a($query, "Durendal\webBot\RequestQuery")) {
+			$this->handle->setQuery($query);
+		}
+	}
+
 	/**
 	 *   getCookies()
 	 *
@@ -161,8 +167,18 @@ class Request
 		return $this->handle->getHeaders();
 	}
 
-	public function setHandle($ch) {
-		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($this->proxy, $this->cookies, $this->headers);
+	public function setHandle($ch, $proxy=NULL, $headers=NULL, $cookies=NULL) {
+		if(!$proxy)
+			$proxy = new webBot\Proxy();
+		if(!$headers)
+			$headers = new webBot\Headers();
+		if(!$cookies)
+			$cookies = new webBot\Cookies();
+		$settings = array('proxy' => $proxy, 'cookies' => $cookies, 'headers' => $headers);
+		$this->handle = (is_a($ch, "Durendal\webBot\cURLHandle")) ? $ch : new webBot\cURLHandle($settings);
+		$this->setProxy($proxy);
+		$this->setCookies($cookies);
+		$this->setHeaders($headers);
 	}
 
 	public function getHandle() {
@@ -197,12 +213,9 @@ class Request
 	 *
 	 *     Executes the request with its set proxy, header, and cookie settings
 	 *
-	 * @param string $ref - Referer to send with request, default is the URL being requested.
-	 *
 	 * @return object Response - The response to the HTTP Request
 	 */
-	public function run($ref = NULL) {
-		$ref = ($ref) ? $ref : $this->getURL();
-		return new webBot\Response($this->handle->requestHTTP($this->getURL(), $this->method, $ref, $this->pData));
+	public function run() {
+		return new webBot\Response($this->handle, $this->handle->requestHTTP($this->getURL(), $this->method));
 	}
 }

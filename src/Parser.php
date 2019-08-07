@@ -10,7 +10,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\WebBot;
+
+use WebBot\WebBot as webBot;
 
 class Parser {
 

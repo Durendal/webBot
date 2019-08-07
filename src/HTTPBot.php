@@ -11,7 +11,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace webBot\WebBot;
+
+use WebBot\WebBot as webBot;
 
 require_once 'Response.php';
 require_once 'Proxy.php';

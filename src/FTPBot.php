@@ -9,7 +9,9 @@
  * @link https://github.com/Durendal/webBot
  */
 
-namespace Durendal\webBot;
+namespace WebBot\webBot;
+
+use WebBot\WebBot as webBot;
 
 /**
  *    FTPBot()
