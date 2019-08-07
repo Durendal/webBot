@@ -64,12 +64,8 @@ class CURLHandle {
 	}
 
 	public function __destruct() {
+		curl_close($this->handle);
 		unset($this->handle);
-		unset($this->proxy);
-		unset($this->headers);
-		unset($this->query);
-		unset($this->data);
-		unset($this->cookies);
 	}
 
 	/**
@@ -189,8 +185,6 @@ class CURLHandle {
 	 * @return void
 	 */
 	public function initCookies() {
-		$cookies = $this->cookies->getCookies();
-
 		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
 
 		// Set cookie jar
@@ -201,7 +195,7 @@ class CURLHandle {
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, "SESS");
 
 		// Populate Cookiejar with any custom submitted cookies
-		foreach($cookies as $key => $value)
+		foreach($this->cookies->getCookies() as $key => $value)
 			$this->setCookie($key, $value);
 
 		// Write cookies to cookie jar
@@ -412,7 +406,7 @@ class CURLHandle {
 	}
 
 	/**
-	 *	requestGET($url, $ref)
+	 *	requestGET($url)
 	 *
 	 *		makes a GET based HTTP Request to the url specified in $url using the referer specified in $ref
 	 *		if no $ref is specified it will use the $url
@@ -421,7 +415,7 @@ class CURLHandle {
 	 *
 	 * @return string
 	 */
-	public function requestGET($url)
+	public function get($url)
 	{
 		if(strlen($this->query->getEncoded()) > 0) 
 			$url .= '?' . $this->query->getEncoded();
@@ -440,7 +434,7 @@ class CURLHandle {
 	}
 
 	/**
-	 *	requestPOST($url, $pData, $ref)
+	 *	requestPOST($url)
 	 *
 	 *		makes a POST based HTTP Request to the url specified in $url using the referer specified in $ref
 	 *		and the parameters specified in $pData. If no $ref is specified it will use the $url
@@ -449,7 +443,7 @@ class CURLHandle {
 	 *
 	 * @return string
 	 */
-	public function requestPOST($url)
+	public function post($url)
 	{
 
 		if(strlen($this->query->getEncoded()) > 0) 
@@ -477,17 +471,15 @@ class CURLHandle {
 	}
 
 	/**
-	 *	requestPUT($url, $ref, $pData)
+	 *	put($url)
 	 *
 	 *		Makes a PUT based HTTP request to the url and POST data specified.
 	 *
 	 * @param string $url - The URL to send the request to
-	 * @param string $ref - The Referer to use in the request
-	 * @param string $pData - The POST data to send in the request
 	 *
 	 * @return string
 	 */
-	public function requestPUT($url)
+	public function put($url)
 	{
 
 		if(strlen($this->query->getEncoded()) > 0) 
@@ -496,18 +488,46 @@ class CURLHandle {
 		if(strlen($this->data->getEncoded()) > 0) 
 			$pData = $this->data->getEncoded();
 
-		$fh = tmpfile();
-		fwrite($fh, $pData);
-		fseek($fh, 0);
-
-		$fh = fopen($file, 'r');
-		$fileContents = file_get_contents($file);
-
-
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_PUT, TRUE);
-		curl_setopt($this->handle, CURLOPT_INFILE, $fh);
-		curl_setopt($this->handle, CURLOPT_INFILESIZE, strlen($pData));
+		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
+		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
+
+		$x = curl_exec($this->handle);
+
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
+		if($errno)
+			die("$errno: $err\n");
+
+		$this->handle = $this->rebuildHandle();
+
+		return new webBot\Response($x);
+	}
+
+	/**
+	 *	delete($url)
+	 *
+	 *		Makes a DELETE based HTTP request to the url and POST data specified.
+	 *
+	 * @param string $url - The URL to send the request to
+	 *
+	 * @return string
+	 */
+	public function delete($url)
+	{
+
+		if(strlen($this->query->getEncoded()) > 0) 
+			$url .= '?' . $this->query->getEncoded();
+		
+		if(strlen($this->data->getEncoded()) > 0) 
+			$pData = $this->data->getEncoded();
+
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
 		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
@@ -534,16 +554,18 @@ class CURLHandle {
 	 *
 	 * @return string
 	 */
-	public function requestHTTP($url, $method = "GET")
+	public function request($url, $method = "GET")
 	{
 		switch($method) {
 
 			case "GET":
-				return $this->requestGET($url);
+				return $this->get($url);
 			case "POST":
-				return $this->requestPOST($url);
+				return $this->post($url);
 			case "PUT":
-				return $this->requestPUT($url);
+				return $this->put($url);
+			case "DELETE":
+				return $this->delete($url);
 			default:
 				return NULL;
 		}
