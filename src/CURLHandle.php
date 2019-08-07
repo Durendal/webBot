@@ -508,6 +508,43 @@ class CURLHandle {
 	}
 
 	/**
+	 *	patch($url)
+	 *
+	 *		Makes a PATCH based HTTP request to the url and POST data specified.
+	 *
+	 * @param string $url - The URL to send the request to
+	 *
+	 * @return string
+	 */
+	public function patch($url)
+	{
+
+		if(strlen($this->query->getEncoded()) > 0) 
+			$url .= '?' . $this->query->getEncoded();
+		
+		if(strlen($this->data->getEncoded()) > 0) 
+			$pData = $this->data->getEncoded();
+
+		curl_setopt($this->handle, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
+		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
+
+		$x = curl_exec($this->handle);
+
+		$errno = curl_errno($this->handle);
+		$err = curl_error($this->handle);
+		if($errno)
+			die("$errno: $err\n");
+
+		$this->handle = $this->rebuildHandle();
+
+		return new webBot\Response($x);
+	}
+
+	/**
 	 *	delete($url)
 	 *
 	 *		Makes a DELETE based HTTP request to the url and POST data specified.
@@ -547,7 +584,7 @@ class CURLHandle {
 	/**
 	 *	requestHTTP($type, $url, $ref, $pData)
 	 *
-	 *		simple wrapper method for requestGET, requestPUT and requestPOST. Returns NULL on error
+	 *		simple wrapper method for get, post, put, patch, and delete. Returns NULL on error
 	 *
 	 * @param string $method - The type of request to make(GET or POST) (default: 'GET')
 	 * @param string $url - The URL to request (default: NULL)
@@ -557,13 +594,14 @@ class CURLHandle {
 	public function request($url, $method = "GET")
 	{
 		switch($method) {
-
 			case "GET":
 				return $this->get($url);
 			case "POST":
 				return $this->post($url);
 			case "PUT":
 				return $this->put($url);
+			case "PATCH":
+				return $this->patch($url);
 			case "DELETE":
 				return $this->delete($url);
 			default:
