@@ -196,7 +196,7 @@ class CURLHandle {
 
 		// Populate Cookiejar with any custom submitted cookies
 		foreach($this->cookies->getCookies() as $key => $value)
-			$this->setCookie($key, $value);
+			$this->setCookie($key, implode(" ", $value));
 
 		// Write cookies to cookie jar
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, "FLUSH");
@@ -234,7 +234,7 @@ class CURLHandle {
 
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, sprintf("%s=%s", $key, $value));
 		curl_setopt($this->handle, CURLOPT_COOKIELIST, "FLUSH");
-
+		$this->cookies->setCookie($key, $value);
 		$this->getCookies();
 
 	}

@@ -27,7 +27,9 @@ class CURLHandleTest extends TestCase {
 	}
 
 	public function testInitializingCookies() {
-		$testCookies = new webBot\Cookies();
+		$testCookies = new webBot\Cookies();	
+		foreach($this->handle->getCookies() as $key => $value)
+			$testCookies->setCookie($key, $value);
 		$this->assertEquals($this->handle->getCookies(), $testCookies->getCookies());
 	}
 

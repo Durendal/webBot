@@ -12,10 +12,18 @@ require_once __DIR__.'/../src/Headers.php';
 class ResponseTest extends TestCase {
 	
 	public function setUp(): void {
+		$now = time();
 		$headers = new webBot\Headers();
-		$cookies = new webBot\Cookies();
+		$cookies = new webBot\Cookies("cookies-$now.txt");
 		$proxy = new webBot\Proxy();
-		$this->request = new webBot\Request(array('proxy'=>$proxy, 'cookies'=>$cookies, 'headers'=>$headers,'method'=>'GET'));
+		$this->request = new webBot\Request(
+			array(
+				'proxy' => $proxy, 
+				'cookies' => $cookies, 
+				'headers' => $headers,
+				'method' => 'GET'
+			)
+		);
 		$this->request->setURL('https://jsonplaceholder.typicode.com/posts/2/');
 		$this->response = $this->request->run();
 	}

@@ -62,8 +62,6 @@ class Request
 		$ch = NULL;
 		$query = NULL;
 		extract($settings);
-		print("Proxy test\n");
-		var_dump($proxy);
 		$this->method = $method;
 		$this->setURL($url);
 		$this->setHandle($ch, $proxy, $headers, $cookies);
