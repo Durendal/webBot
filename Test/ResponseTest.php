@@ -10,13 +10,23 @@ require_once __DIR__.'/../src/Cookies.php';
 require_once __DIR__.'/../src/Headers.php';
 
 class ResponseTest extends TestCase {
-	
-	public function setUp(): void {
+	static $getRequest;
+	static $postRequest;
+	static $putRequest;
+	static $patchRequest;
+	static $deleteRequest;
+	static $getResponse;
+	static $postResponse;
+	static $putResponse;
+	static $patchResponse;
+	static $deleteResponse;
+
+	public static function setUpBeforeClass(): void {
 		$now = time();
 		$headers = new webBot\Headers();
 		$cookies = new webBot\Cookies("cookies-$now.txt");
 		$proxy = new webBot\Proxy();
-		$this->getRequest = new webBot\Request(
+		self::$getRequest = new webBot\Request(
 			array(
 				'proxy' => $proxy, 
 				'cookies' => $cookies, 
@@ -24,10 +34,10 @@ class ResponseTest extends TestCase {
 				'method' => 'GET'
 			)
 		);
-		$this->getRequest->setURL('https://jsonplaceholder.typicode.com/posts/2/');
-		$this->getResponse = $this->getRequest->run();
+		self::$getRequest->setURL('https://jsonplaceholder.typicode.com/posts/2/');
+		self::$getResponse = self::$getRequest->run();
 		
-		$this->postRequest = new webBot\Request(
+		self::$postRequest = new webBot\Request(
 			array(
 				'proxy' => $proxy,
 				'cookies' => $cookies,
@@ -35,18 +45,18 @@ class ResponseTest extends TestCase {
 				'method' => 'POST'
 			)
 		);
-		$this->postRequest->setURL('https://jsonplaceholder.typicode.com/posts');
-		$this->postRequest->setData(
+		self::$postRequest->setURL('https://jsonplaceholder.typicode.com/posts');
+		self::$postRequest->setData(
 			array(
 				'title' => 'foo',
 				'body' => 'bar',
 				'userId' => 1
 			)
 		);
-		$this->postRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
-		$this->postResponse = $this->postRequest->run();
+		self::$postRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$postResponse = self::$postRequest->run();
 		
-		$this->putRequest = new webBot\Request(
+		self::$putRequest = new webBot\Request(
 			array(
 				'proxy' => $proxy,
 				'cookies' => $cookies,
@@ -54,8 +64,8 @@ class ResponseTest extends TestCase {
 				'method' => 'PUT'
 			)
 		);
-		$this->putRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
-		$this->putRequest->setData(
+		self::$putRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
+		self::$putRequest->setData(
 			array(
 				'id' => 1,
 				'title' => 'foo',
@@ -63,10 +73,10 @@ class ResponseTest extends TestCase {
 				'userId' => 1
 			)
 		);
-		$this->putRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
-		$this->putResponse = $this->putRequest->run();
+		self::$putRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$putResponse = self::$putRequest->run();
 
-		$this->patchRequest = new webBot\Request(
+		self::$patchRequest = new webBot\Request(
 			array(
 				'proxy' => $proxy,
 				'cookies' => $cookies,
@@ -74,12 +84,12 @@ class ResponseTest extends TestCase {
 				'method' => 'PATCH'
 			)
 		);
-		$this->patchRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
-		$this->patchRequest->setData(array('title' => 'foo'));
-		$this->patchRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
-		$this->patchResponse = $this->patchRequest->run();
+		self::$patchRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
+		self::$patchRequest->setData(array('title' => 'foo'));
+		self::$patchRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$patchResponse = self::$patchRequest->run();
 
-		$this->deleteRequest = new webBot\Request(
+		self::$deleteRequest = new webBot\Request(
 			array(
 				'proxy' => $proxy,
 				'cookies' => $cookies,
@@ -87,88 +97,88 @@ class ResponseTest extends TestCase {
 				'method' => 'DELETE'
 			)
 		);
-		$this->deleteRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
-		$this->deleteResponse = $this->deleteRequest->run();
+		self::$deleteRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
+		self::$deleteResponse = self::$deleteRequest->run();
 	}
 
 	public function testGetStatus() {
-		$this->assertEquals(200, $this->getResponse->status());
+		$this->assertEquals(200, self::$getResponse->status());
 	}
 
 	public function testGetContent() {
-		$this->assertTrue(strlen($this->getResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$getResponse->content()) > 0);
 	}
 
 	public function testGetHeaders() {
-		$this->assertTrue(count($this->getResponse->headers()->getHeaders()) > 0);
+		$this->assertTrue(count(self::$getResponse->headers()->getHeaders()) > 0);
 	}
 
 	public function testGetRaw() {
-		$this->assertTrue(strlen($this->getResponse->raw()) > 0);
+		$this->assertTrue(strlen(self::$getResponse->raw()) > 0);
 	}
 
 	public function testPostStatus() {
-		$this->assertEquals(200, $this->postResponse->status());
+		$this->assertEquals(200, self::$postResponse->status());
 	}
 
 	public function testPostContent() {
-		$this->assertTrue(strlen($this->postResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$postResponse->content()) > 0);
 	}
 
 	public function testPostHeaders() {
-		$this->assertTrue(count($this->postResponse->headers()->getHeaders()) > 0);
+		$this->assertTrue(count(self::$postResponse->headers()->getHeaders()) > 0);
 	}
 
 	public function testPostRaw() {
-		$this->assertTrue(strlen($this->postResponse->raw()) > 0);
+		$this->assertTrue(strlen(self::$postResponse->raw()) > 0);
 	}
 
 	public function testPutStatus() {
-		$this->assertEquals(200, $this->putResponse->status());
+		$this->assertEquals(200, self::$putResponse->status());
 	}
 
 	public function testPutContent() {
-		$this->assertTrue(strlen($this->putResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$putResponse->content()) > 0);
 	}
 
 	public function testPutHeaders() {
-		$this->assertTrue(count($this->putResponse->headers()->getHeaders()) > 0);
+		$this->assertTrue(count(self::$putResponse->headers()->getHeaders()) > 0);
 	}
 
 	public function testPutRaw() {
-		$this->assertTrue(strlen($this->putResponse->raw()) > 0);
+		$this->assertTrue(strlen(self::$putResponse->raw()) > 0);
 	}
 
 	public function testPatchStatus() {
-		$this->assertEquals(200, $this->patchResponse->status());
+		$this->assertEquals(200, self::$patchResponse->status());
 	}
 
 	public function testPatchContent() {
-		$this->assertTrue(strlen($this->patchResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$patchResponse->content()) > 0);
 	}
 
 	public function testPatchHeaders() {
-		$this->assertTrue(count($this->patchResponse->headers()->getHeaders()) > 0);
+		$this->assertTrue(count(self::$patchResponse->headers()->getHeaders()) > 0);
 	}
 
 	public function testPatchRaw() {
-		$this->assertTrue(strlen($this->patchResponse->raw()) > 0);
+		$this->assertTrue(strlen(self::$patchResponse->raw()) > 0);
 	}
 
 	public function testDeleteStatus() {
-		$this->assertEquals(200, $this->deleteResponse->status());
+		$this->assertEquals(200, self::$deleteResponse->status());
 	}
 
 	public function testDeleteContent() {
-		$this->assertTrue(strlen($this->deleteResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$deleteResponse->content()) > 0);
 	}
 
 	public function testDeleteHeaders() {
-		$this->assertTrue(count($this->deleteResponse->headers()->getHeaders()) > 0);
+		$this->assertTrue(count(self::$deleteResponse->headers()->getHeaders()) > 0);
 	}
 
 	public function testDeleteRaw() {
-		$this->assertTrue(strlen($this->deleteResponse->raw()) > 0);
+		$this->assertTrue(strlen(self::$deleteResponse->raw()) > 0);
 	}
 }
 
