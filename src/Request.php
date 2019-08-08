@@ -17,6 +17,7 @@ require_once 'Headers.php';
 require_once 'Response.php';
 require_once 'Proxy.php';
 require_once 'Data.php';
+require_once 'CURLHandle.php';
 
 class Request
 {
@@ -177,7 +178,7 @@ class Request
 		if(!$cookies)
 			$cookies = new webBot\Cookies();
 		$settings = array('proxy' => $proxy, 'cookies' => $cookies, 'headers' => $headers);
-		$this->handle = (is_a($ch, "WebBot\WebBot\cURLHandle")) ? $ch : new webBot\cURLHandle($settings);
+		$this->handle = (is_a($ch, "webBot\CURLHandle")) ? $ch : new webBot\CURLHandle($settings);
 		$this->setProxy($proxy);
 		$this->setCookies($cookies);
 		$this->setHeaders($headers);

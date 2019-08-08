@@ -64,8 +64,10 @@ class CURLHandle {
 	}
 
 	public function __destruct() {
-		curl_close($this->handle);
-		unset($this->handle);
+		if($this->handle){
+			curl_close($this->handle);
+			unset($this->handle);
+		}
 	}
 
 	/**
@@ -428,14 +430,14 @@ class CURLHandle {
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_POST, 0);
 
-		$x = curl_exec($this->handle);
+		$raw = curl_exec($this->handle);
 
 		$errno = curl_errno($this->handle);
 		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
-		return new webBot\Response($this->handle, $x);
+		return new webBot\Response($this->handle, $raw);
 	}
 
 	/**
@@ -455,14 +457,13 @@ class CURLHandle {
 			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
-			$pData = $this->data->getEncoded();
-
+			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
+		
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_POST, 1);
-		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
 		curl_setopt($this->handle, CURLOPT_POSTREDIR, 3);
-		$x = curl_exec($this->handle);
+		$raw = curl_exec($this->handle);
 
 		$errno = curl_errno($this->handle);
 		$err = curl_error($this->handle);
@@ -472,7 +473,7 @@ class CURLHandle {
 
 		curl_setopt($this->handle, CURLOPT_POST, 0);
 
-		return new webBot\Response($this->handle, $x);
+		return new webBot\Response($this->handle, $raw);
 	}
 
 	/**
@@ -491,25 +492,22 @@ class CURLHandle {
 			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
-			$pData = $this->data->getEncoded();
+			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_PUT, TRUE);
-		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
 		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
 
-		$x = curl_exec($this->handle);
+		$raw = curl_exec($this->handle);
 
 		$errno = curl_errno($this->handle);
 		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
-		$this->handle = $this->rebuildHandle();
-
-		return new webBot\Response($x);
+		return new webBot\Response($this->handle, $raw);
 	}
 
 	/**
@@ -528,25 +526,22 @@ class CURLHandle {
 			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
-			$pData = $this->data->getEncoded();
+			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
+		curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, "PATCH");
 		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
 
-		$x = curl_exec($this->handle);
+		$raw = curl_exec($this->handle);
 
 		$errno = curl_errno($this->handle);
 		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
-		$this->handle = $this->rebuildHandle();
-
-		return new webBot\Response($x);
+		return new webBot\Response($this->handle, $raw);
 	}
 
 	/**
@@ -565,25 +560,22 @@ class CURLHandle {
 			$url .= '?' . $this->query->getEncoded();
 		
 		if(strlen($this->data->getEncoded()) > 0) 
-			$pData = $this->data->getEncoded();
+			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-		curl_setopt($this->handle, CURLOPT_POSTFIELDS, $pData);
+		curl_setopt($this->handle, CURLOPT_CUSTOMREQUEST, "DELETE");
 		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
 
-		$x = curl_exec($this->handle);
+		$raw = curl_exec($this->handle);
 
 		$errno = curl_errno($this->handle);
 		$err = curl_error($this->handle);
 		if($errno)
 			die("$errno: $err\n");
 
-		$this->handle = $this->rebuildHandle();
-
-		return new webBot\Response($x);
+		return new webBot\Response($this->handle, $raw);
 	}
 
 	/**

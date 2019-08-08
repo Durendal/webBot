@@ -26,78 +26,54 @@ class ResponseTest extends TestCase {
 		$headers = new webBot\Headers();
 		$cookies = new webBot\Cookies("cookies-$now.txt");
 		$proxy = new webBot\Proxy();
-		self::$getRequest = new webBot\Request(
-			array(
-				'proxy' => $proxy, 
-				'cookies' => $cookies, 
-				'headers' => $headers,
-				'method' => 'GET'
-			)
-		);
-		self::$getRequest->setURL('https://jsonplaceholder.typicode.com/posts/2/');
+
+		self::$getRequest = new webBot\Request('https://jsonplaceholder.typicode.com/posts/2/');
+		self::$getRequest->addHeader('Content-type', 'application/json; charset=UTF-8');
 		self::$getResponse = self::$getRequest->run();
 		
 		self::$postRequest = new webBot\Request(
-			array(
-				'proxy' => $proxy,
-				'cookies' => $cookies,
-				'headers' => $headers,
-				'method' => 'POST'
-			)
+			'https://reqres.in/api/users',
+			array('method' => 'POST')
 		);
-		self::$postRequest->setURL('https://jsonplaceholder.typicode.com/posts');
 		self::$postRequest->setData(
 			array(
-				'title' => 'foo',
-				'body' => 'bar',
-				'userId' => 1
+				'name' => 'morpheus',
+				'job' => 'leader'
 			)
 		);
-		self::$postRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$postRequest->addHeader('Content-type', 'application/json; charset=UTF-8');
 		self::$postResponse = self::$postRequest->run();
 		
 		self::$putRequest = new webBot\Request(
-			array(
-				'proxy' => $proxy,
-				'cookies' => $cookies,
-				'headers' => $headers,
-				'method' => 'PUT'
-			)
+			'https://reqres.in/api/users/2',
+			array('method' => 'PUT')
 		);
-		self::$putRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
 		self::$putRequest->setData(
 			array(
-				'id' => 1,
-				'title' => 'foo',
-				'body' => 'bar',
-				'userId' => 1
+				'name' => 'morpheus',
+				'job' => 'zion resident'
 			)
 		);
-		self::$putRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$putRequest->addHeader('Content-type', 'application/json; charset=UTF-8');
 		self::$putResponse = self::$putRequest->run();
 
 		self::$patchRequest = new webBot\Request(
+			'https://reqres.in/api/users/2',
+			array('method' => 'PATCH')
+		);
+		self::$patchRequest->setData(			
 			array(
-				'proxy' => $proxy,
-				'cookies' => $cookies,
-				'headers' => $headers,
-				'method' => 'PATCH'
+				'name' => 'morpheus',
+				'job' => 'zion resident'
 			)
 		);
-		self::$patchRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
-		self::$patchRequest->setData(array('title' => 'foo'));
-		self::$patchRequest->addHeader('Content-Type', 'application/json; charset=UTF-8');
+		self::$patchRequest->addHeader('Content-type', 'application/json; charset=UTF-8');
 		self::$patchResponse = self::$patchRequest->run();
 
 		self::$deleteRequest = new webBot\Request(
-			array(
-				'proxy' => $proxy,
-				'cookies' => $cookies,
-				'headers' => $headers,
-				'method' => 'DELETE'
-			)
+			'https://reqres.in/api/users/2',
+			array('method' => 'DELETE')
 		);
-		self::$deleteRequest->setURL('https://jsonplaceholder.typicode.com/posts/1');
 		self::$deleteResponse = self::$deleteRequest->run();
 	}
 
@@ -118,7 +94,7 @@ class ResponseTest extends TestCase {
 	}
 
 	public function testPostStatus() {
-		$this->assertEquals(200, self::$postResponse->status());
+		$this->assertEquals(201, self::$postResponse->status());
 	}
 
 	public function testPostContent() {
@@ -166,11 +142,11 @@ class ResponseTest extends TestCase {
 	}
 
 	public function testDeleteStatus() {
-		$this->assertEquals(200, self::$deleteResponse->status());
+		$this->assertEquals(204, self::$deleteResponse->status());
 	}
 
 	public function testDeleteContent() {
-		$this->assertTrue(strlen(self::$deleteResponse->content()) > 0);
+		$this->assertTrue(strlen(self::$deleteResponse->content()) == 0);
 	}
 
 	public function testDeleteHeaders() {

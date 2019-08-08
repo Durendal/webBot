@@ -29,7 +29,9 @@ class Response
 	private $status;
 	private $content;
 	private $headers;
+	private $headers2;
 	private $uid;
+	private $error;
 
 	/**
 	 *	__construct($curlData)
@@ -48,6 +50,9 @@ class Response
 		$headers = http_parse_headers($headers);
 		$this->headers = new webBot\Headers($headers);
 		$this->uid = hash('md5', sprintf("%s%d", $this->content, time()));
+		$this->headers2 = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+		$this->error = curl_getinfo($ch, CURLINFO_OS_ERRNO);
+
 	}
 
 	/**
@@ -97,6 +102,10 @@ class Response
 		return $this->headers;
 	}
 
+	public function getHeaders2()
+	{
+		return $this->headers2;
+	}
 	/**
 	 *	uid()
 	 *
@@ -118,6 +127,17 @@ class Response
 	 */
 	public function raw() {
 		return $this->raw;
+	}
+
+	/**
+	 *	error()
+	 *
+	 *		Returns the error code of the request
+	 *
+	 * @return string
+	 */
+	public function error() {
+		return $this->error;
 	}
 
 }
