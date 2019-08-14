@@ -38,6 +38,6 @@ class CURLHandleTest extends TestCase {
 		$testHeaders = new webBot\Headers(array('User-Agent'=>$UA));
 		$this->assertEquals($this->handle->getHeaders(), $testHeaders->getHeaders());
 	}
-}
+};
 
 ?>

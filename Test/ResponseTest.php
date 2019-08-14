@@ -4,10 +4,6 @@ use PHPUnit\Framework\TestCase;
 use WebBot\WebBot as webBot;
 
 require_once __DIR__.'/../src/Response.php';
-require_once __DIR__.'/../src/CURLHandle.php';
-require_once __DIR__.'/../src/Proxy.php';
-require_once __DIR__.'/../src/Cookies.php';
-require_once __DIR__.'/../src/Headers.php';
 
 class ResponseTest extends TestCase {
 	static $getRequest;
@@ -15,6 +11,7 @@ class ResponseTest extends TestCase {
 	static $putRequest;
 	static $patchRequest;
 	static $deleteRequest;
+
 	static $getResponse;
 	static $postResponse;
 	static $putResponse;
@@ -23,9 +20,6 @@ class ResponseTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {
 		$now = time();
-		$headers = new webBot\Headers();
-		$cookies = new webBot\Cookies("cookies-$now.txt");
-		$proxy = new webBot\Proxy();
 
 		self::$getRequest = new webBot\Request('https://jsonplaceholder.typicode.com/posts/2/');
 		self::$getRequest->addHeader('Content-type', 'application/json; charset=UTF-8');

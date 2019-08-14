@@ -34,6 +34,33 @@ class RequestTest extends TestCase {
 		$this->request->setURL($url);
 		$response = $this->request->run();
 		$this->assertTrue(is_a($response, "WebBot\WebBot\Response"));
+		$this->assertEquals(200, $response->status());
+	}
+
+	public function testSetProxy() {
+		$firstProxy = $this->request->getProxy();
+		$proxy = new webBot\Proxy('127.0.0.1', 8080, webBot\Proxy::getValidTypes()['HTTP']);
+		$this->request->setProxy($proxy);
+		$secondProxy = $this->request->getProxy();
+		$this->assertFalse($firstProxy == $secondProxy);
+	}
+
+	public function testSetCookies() {
+		$firstCookies = $this->request->getCookies();
+		$cookies = new webBot\Cookies();
+		$key = '#TestCookie';
+		$vals = array(
+			'flag' => 'TRUE',
+			'path' => '/',
+			'secure' => 'FALSE',
+			'expiration' => '0',
+			'name' => 'ARRAffinity',
+			'value' => '0285cfbea9f2ee78f69010c84850bd5b73ee05f1ff7f634b0b6b20c1291ca357'
+		);
+		$cookies->setCookie($key, $vals);
+		$this->request->setCookies($cookies);
+		$secondCookies = $this->request->getCookies();
+		$this->assertFalse($firstCookies == $secondCookies);
 	}
 }
 

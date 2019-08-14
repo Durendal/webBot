@@ -42,7 +42,7 @@ class Request
 	private $response;
 
 	/**
-	 *   __construct($url, $proxy, $method="GET", $cookies=NULL, $headers=NULL)
+	 *   __construct($url, $proxy, $method="GET", $cookies=null, $headers=null)
 	 *
 	 *     Creates a Request object with any relevant proxy, cookies, and headers.
 	 *
@@ -54,14 +54,14 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function __construct($url, $settings = array('proxy'=>NULL, 'method'=>"GET", 'pData' => NULL, 'cookies'=>NULL, 'headers'=>NULL, 'ch' => NULL, 'query' => NULL)) {
-		$proxy = NULL;
+	public function __construct($url, $settings = array('proxy'=>null, 'method'=>"GET", 'pData' => null, 'cookies'=>null, 'headers'=>null, 'ch' => null, 'query' => null)) {
+		$proxy = null;
 		$method = "GET";
-		$pData = NULL;
-		$cookies = NULL;
-		$headers = NULL;
-		$ch = NULL;
-		$query = NULL;
+		$pData = null;
+		$cookies = null;
+		$headers = null;
+		$ch = null;
+		$query = null;
 		extract($settings);
 		$this->method = $method;
 		$this->setURL($url);
@@ -100,7 +100,7 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function setProxy($proxy=NULL) {
+	public function setProxy($proxy=null) {
 		$this->handle->setProxy($proxy);
 	}
 
@@ -114,13 +114,13 @@ class Request
 	 *
 	 * @return void
 	 */
-	public function setCookies($cookies=NULL) {
+	public function setCookies($cookies=null) {
 		$this->handle->setCookies($cookies);
 	}
 
 	public function setData($data, $method='POST') {
 		if(is_a($data, "WebBot\WebBot\RequestData")) {
-			$this->handle->setData((strtoupper($method) == "GET") ? NULL : $data);
+			$this->handle->setData((strtoupper($method) == "GET") ? null : $data);
 		}
 	}
 	
@@ -159,6 +159,10 @@ class Request
 		$this->handle->addHeader($key, $value);
 	}
 
+	public function getProxy() {
+		return $this->handle->getProxy();
+	}
+
 	/**
 	 *   getHeaders()
 	 *
@@ -170,14 +174,30 @@ class Request
 		return $this->handle->getHeaders();
 	}
 
-	public function setHandle($ch, $proxy=NULL, $headers=NULL, $cookies=NULL) {
+	public static function getValidTypes() {
+		return self::$validTypes;
+	}
+
+	public function setHandle(
+		$ch, 
+		$proxy = null, 
+		$headers = null, 
+		$cookies = null,
+		$data = null,
+		$query = null
+	) {
 		if(!$proxy)
 			$proxy = new webBot\Proxy();
 		if(!$headers)
 			$headers = new webBot\Headers();
 		if(!$cookies)
 			$cookies = new webBot\Cookies();
-		$settings = array('proxy' => $proxy, 'cookies' => $cookies, 'headers' => $headers);
+		if(!$data)
+			$data = new webBot\RequestData();
+		if(!$query)
+			$query = new webBot\RequestQuery();
+
+		$settings = array('proxy' => $proxy, 'cookies' => $cookies, 'headers' => $headers, 'query' => $query, 'data' => $data);
 		$this->handle = (is_a($ch, "webBot\CURLHandle")) ? $ch : new webBot\CURLHandle($settings);
 		$this->setProxy($proxy);
 		$this->setCookies($cookies);

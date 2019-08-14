@@ -29,7 +29,16 @@ class Proxy {
 	private $host;
 	private $port;
 	private $credentials;
-	static private $validTypes;
+	static private $validTypes = array(
+			'HTTP' => CURLPROXY_HTTP,
+			'HTTP1.0' => CURLPROXY_HTTP_1_0, 
+			'HTTPS' => CURLPROXY_HTTPS,
+			'SOCKS4' => CURLPROXY_SOCKS4,
+			'SOCKS4A' => CURLPROXY_SOCKS4A,
+			'SOCKS5' => CURLPROXY_SOCKS5, 
+			'SOCKS5_HOSTNAME' => CURLPROXY_SOCKS5_HOSTNAME,
+			'None' => NULL
+		);
 
 	/**
 	 *    __construct($host="", $port=0, $type=NULL, $credentials=NULL)
@@ -44,16 +53,7 @@ class Proxy {
 	 * @return void
 	 */
 	public function __construct($host="", $port=0, $type=NULL, $credentials=NULL) {
-		self::$validTypes = array(
-			'HTTP' => CURLPROXY_HTTP,
-			'HTTP1.0' => CURLPROXY_HTTP_1_0, 
-			'HTTPS' => CURLPROXY_HTTPS,
-			'SOCKS4' => CURLPROXY_SOCKS4,
-			'SOCKS4A' => CURLPROXY_SOCKS4A,
-			'SOCKS5' => CURLPROXY_SOCKS5, 
-			'SOCKS5_HOSTNAME' => CURLPROXY_SOCKS5_HOSTNAME,
-			'None' => NULL
-		);
+
 		$this->setHost($host);
 		$this->setPort($port);
 		$this->setType($type);
