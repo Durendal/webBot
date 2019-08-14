@@ -26,7 +26,7 @@ class CURLHandle {
 	 * @var object $headers - The Headers object to use for this handle
 	 * @var object $proxy - The Proxy object to use for this handle
 	 * @var object $query - The RequestQuery object to use for this handle
-	 * @var object $data - The RequestData object to use for this handle 
+	 * @var object $data - The RequestData object to use for this handle
 	 */
 
 	private $handle;
@@ -49,26 +49,12 @@ class CURLHandle {
 	 * @return void
 	 */
 	 public function __construct(
-		array $settings = array(
-			'proxy' => null, 
-			'cookies' => null, 
-			'headers' => null, 
-			'query' => null, 
-			'data' => null
-		)
+		 Proxy $proxy = null,
+		 Cookies $cookies = null,
+		 Headers $headers = null,
+		 RequestQuery $query = null,
+		 RequestData $data = null
 	) {
-
-		$check = extract($settings, EXTR_REFS);
-		if($check < 5){
-			var_dump($settings);
-			var_dump($proxy);
-			var_dump($cookies);
-			var_dump($headers);
-			var_dump($query);
-			var_dump($data);
-			die("WTF");
-		}
-			
 		$this->handle = $this->setupCURL();
 		$this->setProxy($proxy);
 		$this->setHeaders($headers);
@@ -298,13 +284,13 @@ class CURLHandle {
 			$val = explode("\t", $val);
 			if(count($val) == 7)
 				$this->cookies->setCookie(
-					$val[0], 
+					$val[0],
 					array(
-						'flag' => $val[1], 
-						'path' => $val[2], 
-						'secure' => $val[3], 
-						'expiration' => $val[4], 
-						'name' => $val[5], 
+						'flag' => $val[1],
+						'path' => $val[2],
+						'secure' => $val[3],
+						'expiration' => $val[4],
+						'name' => $val[5],
 						'value' => $val[6]
 					)
 				);
@@ -426,9 +412,9 @@ class CURLHandle {
 	 * @return void
 	 */
 	public function rebuildHandle(
-		Cookies $cookies = null, 
-		Headers $headers = null, 
-		RequestQuery $query = null, 
+		Cookies $cookies = null,
+		Headers $headers = null,
+		RequestQuery $query = null,
 		RequestData $data = null
 	) {
 		curl_close($this->handle);
@@ -452,9 +438,9 @@ class CURLHandle {
 	 */
 	public function get(string $url)
 	{
-		if(strlen($this->query->getEncoded()) > 0) 
+		if(strlen($this->query->getEncoded()) > 0)
 			$url .= '?' . $this->query->getEncoded();
-		
+
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_POST, 0);
 
@@ -481,12 +467,12 @@ class CURLHandle {
 	public function post(string $url)
 	{
 
-		if(strlen($this->query->getEncoded()) > 0) 
+		if(strlen($this->query->getEncoded()) > 0)
 			$url .= '?' . $this->query->getEncoded();
-		
-		if(strlen($this->data->getEncoded()) > 0) 
+
+		if(strlen($this->data->getEncoded()) > 0)
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
-		
+
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 		curl_setopt($this->handle, CURLOPT_POST, 1);
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers->getHeaders());
@@ -516,10 +502,10 @@ class CURLHandle {
 	public function put(string $url)
 	{
 
-		if(strlen($this->query->getEncoded()) > 0) 
+		if(strlen($this->query->getEncoded()) > 0)
 			$url .= '?' . $this->query->getEncoded();
-		
-		if(strlen($this->data->getEncoded()) > 0) 
+
+		if(strlen($this->data->getEncoded()) > 0)
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
@@ -550,10 +536,10 @@ class CURLHandle {
 	public function patch(string $url)
 	{
 
-		if(strlen($this->query->getEncoded()) > 0) 
+		if(strlen($this->query->getEncoded()) > 0)
 			$url .= '?' . $this->query->getEncoded();
-		
-		if(strlen($this->data->getEncoded()) > 0) 
+
+		if(strlen($this->data->getEncoded()) > 0)
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
@@ -584,10 +570,10 @@ class CURLHandle {
 	public function delete(string $url)
 	{
 
-		if(strlen($this->query->getEncoded()) > 0) 
+		if(strlen($this->query->getEncoded()) > 0)
 			$url .= '?' . $this->query->getEncoded();
-		
-		if(strlen($this->data->getEncoded()) > 0) 
+
+		if(strlen($this->data->getEncoded()) > 0)
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $this->data->getEncoded());
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);

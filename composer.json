@@ -1,24 +1,26 @@
 {
-    "name": "web-bot/web-bot",
-    "description": "A PHP class for interacting with the cURL library",
-    "license": "GPL",
-    "keywords": ["web-bot"],
-    "authors": [
-        {
-            "name": "Durendal",
-            "email": "durendal@durendals-domain.com"
-        }
-    ],
-    "require": {
-    	"php" : ">=7.3.8",
-	"ext-curl" : "*"
-    },
-  "require-dev": {
-      "phpunit/phpunit":  "8.0.0"
-  },
-    "autoload": {
-        "psr-4": {
-            "WebBot\\WebBot\\": "src"
-        }
-    }
+	"name": "web-bot/web-bot",
+	"description": "A PHP class for interacting with the cURL library",
+	"license": "GPL",
+	"keywords": [
+		"web-bot"
+	],
+	"authors": [
+		{
+			"name": "Durendal",
+			"email": "durendal@durendals-domain.com"
+		}
+	],
+	"require": {
+		"php": ">=7.0.0",
+		"ext-curl": "*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "8.0.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"WebBot\\WebBot\\": "src"
+		}
+	}
 }

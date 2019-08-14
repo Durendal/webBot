@@ -3,7 +3,7 @@
 use WebBot\WebBot as webBot;
 
 class Cookie {
-	
+
 	private $name;
 	private $value;
 	private $domain;
@@ -85,16 +85,16 @@ class Cookie {
 		$this->setAttribute('httpOnly', $httpOnly);
 	}
 
-	public function setCookie($attributes = array()) {
-		$name = "";
-		$value = "";
-		$domain = "";
-		$path = "/";
-		$expires = "NULL";
-		$maxAge = "NULL";
-		$secure = "FALSE";
-		httpOnly = "FALSE";
-		extract($attributes);
+	public function setCookie(
+		$name = "",
+		$value = "",
+		$domain = "",
+		$path = "/",
+		$expires = "NULL",
+		$maxAge = "NULL",
+		$secure = "FALSE",
+		$httpOnly = "FALSE"
+	) {
 		$this->setName($name);
 		$this->setValue($value);
 		$this->setPath($path);
