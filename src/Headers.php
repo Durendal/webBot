@@ -150,18 +150,9 @@ class Headers {
 			return $this->headers[$key];
 		return FALSE;
 	}
-	/**
-	 *	randomAgent()
-	 *
-	 *		returns a useragent at random to one from the list below
-	 *
-	 *	List of user-agents from: https://techblog.willshouse.com/2012/01/03/most-common-user-agents/
-	 *
-	 * @return string
-	 */
-	public function randomAgent()
-	{
-		$agents = array("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
+
+	public function getAgents() {
+		return array("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
 						"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36",
 						"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0",
 						"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/600.5.17 (KHTML, like Gecko) Version/8.0.5 Safari/600.5.17",
@@ -236,9 +227,20 @@ class Headers {
 						"Mozilla/5.0 (Windows NT 5.1; rv:36.0) Gecko/20100101 Firefox/36.0",
 						"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36 OPR/28.0.1750.51",
 						"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36");
+	}
 
-		return $agents[rand(0,count($agents)-1)];
-
+	/**
+	 *	randomAgent()
+	 *
+	 *		returns a useragent at random to one from the list below
+	 *
+	 *	List of user-agents from: https://techblog.willshouse.com/2012/01/03/most-common-user-agents/
+	 *
+	 * @return string
+	 */
+	public function randomAgent()
+	{
+		return $this->getAgents()[rand(0,count($this->getAgents())-1)];
 	}
 
 }

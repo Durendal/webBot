@@ -7,7 +7,6 @@
 	// Vanilla instantiation, no proxy
 	$bot = new webBot\HTTPBot();
 	
-	$bot->setVerbose();
 	$subreddit = ($argc > 1) ? $argv[1] : 'talesfromtechsupport';
 
 	// GET based HTTP Request to reddit
