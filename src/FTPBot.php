@@ -25,18 +25,25 @@ class FTPBot
 {
 
     /**
-     * @var string $username - The username of the account on the FTP Server 
-     * @var string $password - The password of the account on the FTP Server 
-     * @var string $host - The address of the FTP Server 
-     * @var int $port - The port to connect to 
-     * @var array $files - The list of files to upload or download 
-     * @var object $ch - The cURL handle to use 
-     * @var string $protocol - The protocol to use (default: ftp) 
+     * @var string $username - The username of the account on the FTP Server
+     * @var string $password - The password of the account on the FTP Server
+     * @var string $host - The address of the FTP Server
+     * @var int $port - The port to connect to
+     * @var array $files - The list of files to upload or download
+     * @var object $ch - The cURL handle to use
+     * @var string $protocol - The protocol to use (default: ftp)
      * @var int $timeout - The timeout to use for cURL requests
      */
-    
-    private $username, $password, $host, $port, $files, $ch, $protocol, $timeout;
-    
+
+    private $username;
+    private $password;
+    private $host;
+    private $port;
+    private $files;
+    private $ch;
+    private $protocol;
+    private $timeout;
+
     /**
      *    __construct($username, $password, $host, $port)
      *
@@ -64,17 +71,17 @@ class FTPBot
 
     /**
      *    setupCURL()
-     *    
+     *
      *        Creates and returns a new generic cURL handle
      *
      * @return object
      */
     private function setupCURL()
     {
-            
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->protocol.$this->host."/");
-        curl_setopt($ch, CURLOPT_USERPWD, $this->username.":".$this->password);
+        curl_setopt($ch, CURLOPT_URL, $this->protocol . $this->host . "/");
+        curl_setopt($ch, CURLOPT_USERPWD, $this->username . ":" . $this->password);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         //curl_setopt($ch, CURLOPT_FTP_SSL, CURLFTPSSL_ALL);
@@ -88,7 +95,7 @@ class FTPBot
 
     /**
      *    upload($filePath, $uploadTo)
-     *        
+     *
      *        Uploads a file to a remote server
      *
      * @param string $uploadTo - The path on the remote server that you want to write the file to
@@ -98,16 +105,19 @@ class FTPBot
      */
     public function upload($uploadTo, $filePath = null)
     {
-    	if(!$filePath)
-    		if(count($this->files) > 0)
-    			$filePath = $this->popFile();
-    		else
-    			return null;
-    	$file = fopen($filePath, 'r');
-        if(!$file)
+        if (!$filePath) {
+            if (count($this->files) > 0) {
+                $filePath = $this->popFile();
+            } else {
+                return null;
+            }
+        }
+        $file = fopen($filePath, 'r');
+        if (!$file) {
             die("Unable to open $filePath\n");
-        
-        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host.'/'.$uploadTo);
+        }
+
+        curl_setopt($this->ch, CURLOPT_URL, $this->protocol . $this->host . '/' . $uploadTo);
         curl_setopt($this->ch, CURLOPT_UPLOAD, true);
         curl_setopt($this->ch, CURLOPT_INFILE, $file);
         curl_setopt($this->ch, CURLOPT_PORT, $this->port);
@@ -115,8 +125,9 @@ class FTPBot
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
-        if($errno)
+        if ($errno) {
             die("$errno: $err\n");
+        }
         fclose($file);
         $this->rebuildHandle();
     }
@@ -132,23 +143,26 @@ class FTPBot
      * @return void
      */
     public function download($downloadTo, $filePath = null)
-    {   
-    	if(!$filePath)
-    		if(count($this->files) > 0)
-    			$filePath = $this->popFile();
-    		else
-    			return null;
+    {
+        if (!$filePath) {
+            if (count($this->files) > 0) {
+                $filePath = $this->popFile();
+            } else {
+                return null;
+            }
+        }
         $file = fopen($downloadTo, 'w+');
-        
+
         $filePath = str_replace("+", "%20", str_replace(array("%2F", "%2f"), "/", urlencode($filePath)));
 
-        curl_setopt($this->ch, CURLOPT_URL, $this->protocol.$this->host."/".$filePath);
+        curl_setopt($this->ch, CURLOPT_URL, $this->protocol . $this->host . "/" . $filePath);
         curl_setopt($this->ch, CURLOPT_FILE, $file);
         curl_exec($this->ch);
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
-        if($errno)
+        if ($errno) {
             die("$errno: $err\n");
+        }
         fclose($file);
         $this->rebuildHandle();
     }
@@ -165,10 +179,11 @@ class FTPBot
     public function ls($dir = '')
     {
         // Ensure we have appropriate trailing slashes
-        if(substr($this->host, -1) != '/')
+        if (substr($this->host, -1) != '/') {
             $this->host .= '/';
-        $url = $this->protocol.$this->host.(($dir == '') ? '' : ((substr($dir, -1) == '/') ? "$dir" : "$dir/"));
-        
+        }
+        $url = $this->protocol . $this->host . (($dir == '') ? '' : ((substr($dir, -1) == '/') ? "$dir" : "$dir/"));
+
         curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_FTPLISTONLY, 1);
 
@@ -176,8 +191,9 @@ class FTPBot
         $errno = curl_errno($this->ch);
         $err = curl_error($this->ch);
 
-        if($errno)
+        if ($errno) {
             die("$errno: $err\n");
+        }
         $this->rebuildHandle();
 
         return $result;
@@ -185,7 +201,7 @@ class FTPBot
 
     /**
      *    setSSL($verify, $hostval, $certfile, $ch)
-     *        
+     *
      *        Allows the user to adjust SSL settings on a cURL handle directly, If verify is set to true
      *        then the following $hostval and $certfile parameters are required, otherwise
      *        they can be ommitted.
@@ -203,12 +219,13 @@ class FTPBot
 
     public function setSSL($verify = false, $hostval = 0, $certfile = '', $ch = null)
     {
-        if(!$ch)
+        if (!$ch) {
             $ch = $this->ch;
-        
-        if($verify){
+        }
+
+        if ($verify) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            if($hostval >= 0 && $hostval < 3 && $certfile != ''){
+            if ($hostval >= 0 && $hostval < 3 && $certfile != '') {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $hostval);
                 curl_setopt($ch, CURLOPT_CAINFO, $certfile);
             }
@@ -234,7 +251,7 @@ class FTPBot
     {
         $this->username = $username;
         $this->password = $password;
-        curl_setopt($this->ch, CURLOPT_USERPWD, $this->username.":".$this->password);
+        curl_setopt($this->ch, CURLOPT_USERPWD, $this->username . ":" . $this->password);
     }
 
     /**
@@ -301,23 +318,24 @@ class FTPBot
      */
     public function popFile()
     {
-    	if(count($this->files) > 0)
+        if (count($this->files) > 0) {
             return array_pop($this->files);
+        }
 
         return null;
     }
 
     /**
      *    rebuildHandle()
-     *    
+     *
      *        Rebuilds a generic cURL handle
      *
      * @return void
      */
     public function rebuildHandle()
     {
-    	curl_close($this->ch);
-    	$this->ch = $this->setupCURL();
+        curl_close($this->ch);
+        $this->ch = $this->setupCURL();
     }
 
     /**
@@ -333,9 +351,10 @@ class FTPBot
 
     public function setProtocol($protocol = 'ftp://')
     {
-        if(!stristr($protocol, "://"))
+        if (!stristr($protocol, "://")) {
             $protocol .= "://";
-        switch($protocol) {
+        }
+        switch ($protocol) {
             case "ftp://":
             case "sftp://":
             case "ftps://":
@@ -370,7 +389,7 @@ class FTPBot
 
     public function setTimeout($timeout)
     {
-        if($timeout > 0) {
+        if ($timeout > 0) {
             $this->timeout = $timeout;
             curl_setopt($this->ch, CURLOPT_TIMEOUT, $this->timeout);
         }
@@ -388,5 +407,4 @@ class FTPBot
     {
         return $this->timeout;
     }
-
 }
